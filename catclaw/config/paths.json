@@ -1,0 +1,120 @@
+{
+  "$schema": "ShadowClaw snapshot path configuration",
+  "$version": "2.0.0",
+
+  "state_dir": "~/.openclaw",
+
+  "critical": {
+    "$comment": "丢失后无法恢复，必须备份",
+    "files": [
+      "openclaw.json",
+      "agents/main/agent/auth-profiles.json",
+      "agents/main/sessions/sessions.json",
+      "credentials/oauth.json",
+      "credentials/feishu-pairing.json",
+      "credentials/whatsapp/default/creds.json",
+      "memory/main.sqlite",
+      "workspace/AGENTS.md",
+      "workspace/SOUL.md",
+      "workspace/USER.md",
+      "workspace/IDENTITY.md",
+      "workspace/MEMORY.md"
+    ],
+    "directories": [
+      "memory/lancedb",
+      "workspace/memory"
+    ]
+  },
+
+  "important": {
+    "$comment": "丢失后可重建但耗时，建议备份",
+    "files": [
+      "agents/main/agent/models.json",
+      "cron/jobs.json",
+      "identity/device.json",
+      "identity/device-auth.json",
+      ".env",
+      "workspace/TOOLS.md",
+      "workspace/HEARTBEAT.md",
+      "workspace/BOOTSTRAP.md",
+      "workspace/tasks.json"
+    ],
+    "directories": [
+      "workspace/skills",
+      "skills"
+    ],
+    "glob": [
+      "agents/main/sessions/*.jsonl",
+      "feishu/dedup/*.json",
+      "devices/*.json"
+    ]
+  },
+
+  "optional": {
+    "$comment": "通常可以忽略或自动重建",
+    "files": [
+      "canvas/index.html"
+    ]
+  },
+
+  "exclude": {
+    "patterns": [
+      "extensions/**",
+      "logs/**",
+      "completions/**",
+      "delivery-queue/**",
+      "sandboxes/**",
+      "**/.git/**",
+      "**/node_modules/**",
+      "**/*.log",
+      "**/*.tmp",
+      "**/*.cache",
+      "**/__pycache__/**",
+      "openclaw.json.bak*",
+      "*.lock",
+      "snapshots/**"
+    ]
+  },
+
+  "size_limits": {
+    "default_max_mb": 10,
+    "overrides": {
+      "memory/main.sqlite": 100,
+      "agents/main/sessions/*.jsonl": 50,
+      "memory/lancedb/**": 100
+    }
+  },
+
+  "desensitize": {
+    "files": [
+      "openclaw.json",
+      "agents/main/agent/auth-profiles.json",
+      "credentials/oauth.json",
+      "credentials/feishu-pairing.json",
+      "credentials/whatsapp/default/creds.json",
+      ".env"
+    ],
+    "json_patterns": [
+      "token", "api_key", "apiKey", "apikey",
+      "secret", "appSecret", "password",
+      "private_key", "client_secret",
+      "access_token", "refresh_token",
+      "kimiCodeAPIKey", "kimiPluginAPIKey",
+      "appId"
+    ],
+    "value_patterns": [
+      "sk-[a-zA-Z0-9]{20,}",
+      "ghp_[a-zA-Z0-9]{36}",
+      "xoxb-[a-zA-Z0-9-]+"
+    ],
+    "env_patterns": [
+      "API_KEY=", "SECRET=", "TOKEN=", "PASSWORD="
+    ]
+  },
+
+  "github": {
+    "repo": "github.com/polegithub/shadowclaw",
+    "branch": "main",
+    "token_env": ["GH_TOKEN", "GITHUB_TOKEN"]
+  }
+}

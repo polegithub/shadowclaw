@@ -1,0 +1,462 @@
+#!/usr/bin/env bash
+#
+# ShadowClaw — OpenClaw Snapshot & Restore
+# CatClaw v2.0
+#
+# Usage:
+#   shadowclaw snapshot [-o dir] [--dry-run] [--no-desensitize]
+#   shadowclaw restore  [--force] <snapshot-dir>
+#   shadowclaw push     [-r repo] [-b branch]
+#   shadowclaw verify   <snapshot-dir>
+#   shadowclaw help
+#
+set -euo pipefail
+
+VERSION="2.0.0"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="${SCRIPT_DIR}/../config/paths.json"
+STATE_DIR="${OPENCLAW_DIR:-$HOME/.openclaw}"
+
+# ── Colors ──────────────────────────────────────────────────────────
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+BLUE='\033[0;34m'; CYAN='\033[0;36m'; NC='\033[0m'
+
+info()    { echo -e "${BLUE}[INFO]${NC} $*"; }
+ok()      { echo -e "${GREEN}[OK]${NC} $*"; }
+warn()    { echo -e "${YELLOW}[WARN]${NC} $*"; }
+err()     { echo -e "${RED}[ERROR]${NC} $*" >&2; }
+section() { echo -e "\n${CYAN}── $* ──${NC}"; }
+
+# ── Helpers ─────────────────────────────────────────────────────────
+need() {
+  for cmd in "$@"; do
+    command -v "$cmd" >/dev/null 2>&1 || { err "缺少依赖: $cmd"; exit 1; }
+  done
+}
+
+file_size_mb() {
+  local s
+  s=$(stat -c%s "$1" 2>/dev/null || stat -f%z "$1" 2>/dev/null || echo 0)
+  echo $(( s / 1024 / 1024 ))
+}
+
+# Read JSON arrays via jq
+cfg_arr() { jq -r "$1 // [] | .[]" "$CONFIG_FILE" 2>/dev/null; }
+
+# ── Desensitize ─────────────────────────────────────────────────────
+desensitize() {
+  local file="$1"
+  [[ -f "$file" ]] || return 0
+
+  info "🔒 脱敏: $(basename "$file")"
+
+  # JSON field patterns
+  while IFS= read -r pat; do
+    [[ -z "$pat" ]] && continue
+    sed -i "s/\"${pat}\": *\"[^\"]*\"/\"${pat}\": \"{{SECRET:${pat}}}\"/g" "$file" 2>/dev/null || true
+  done < <(cfg_arr '.desensitize.json_patterns')
+
+  # Value patterns (e.g. sk-xxx, ghp_xxx)
+  while IFS= read -r pat; do
+    [[ -z "$pat" ]] && continue
+    sed -i "s/\"${pat}\"/\"{{SECRET:redacted}}\"/g" "$file" 2>/dev/null || true
+  done < <(cfg_arr '.desensitize.value_patterns')
+
+  # .env KEY=value patterns
+  while IFS= read -r pat; do
+    [[ -z "$pat" ]] && continue
+    sed -i "s/\\(${pat}\\).*/\\1{{SECRET:env}}/g" "$file" 2>/dev/null || true
+  done < <(cfg_arr '.desensitize.env_patterns')
+}
+
+# ── Copy with size check ───────────────────────────────────────────
+# $1=src $2=dst $3=max_mb $4=label $5=dry_run
+copy_checked() {
+  local src="$1" dst="$2" max_mb="${3:-10}" label="${4:-}" dry="${5:-false}"
+
+  if [[ ! -e "$src" ]]; then
+    warn "跳过（不存在）: ${label:-$src}"
+    (( stats_skipped++ )) || true
+    return
+  fi
+
+  if [[ -f "$src" ]]; then
+    local mb; mb=$(file_size_mb "$src")
+    if (( mb > max_mb )); then
+      warn "跳过（${mb}MB > ${max_mb}MB）: ${label:-$src}"
+      (( stats_skipped++ )) || true
+      return
+    fi
+  fi
+
+  if [[ "$dry" == "false" ]]; then
+    mkdir -p "$(dirname "$dst")"
+    if [[ -d "$src" ]]; then
+      cp -r "$src" "$dst"
+    else
+      cp "$src" "$dst"
+    fi
+  fi
+
+  ok "${label:-$(basename "$src")}"
+  (( stats_copied++ )) || true
+}
+
+# ── CMD: snapshot ───────────────────────────────────────────────────
+cmd_snapshot() {
+  local output_dir="" dry_run=false do_desensitize=true
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -o|--output)  output_dir="$2"; shift 2 ;;
+      --dry-run)    dry_run=true; shift ;;
+      --no-desensitize) do_desensitize=false; shift ;;
+      *)            output_dir="$1"; shift ;;
+    esac
+  done
+
+  [[ -z "$output_dir" ]] && output_dir="./shadowclaw-snapshot-$(date +%Y%m%d-%H%M%S)"
+
+  section "ShadowClaw Snapshot v${VERSION}"
+  info "源:   $STATE_DIR"
+  info "目标: $output_dir"
+  $dry_run && warn "模拟运行模式 (--dry-run)"
+
+  stats_copied=0; stats_skipped=0
+
+  # ─ Critical files ─
+  section "🔴 必备文件"
+  while IFS= read -r rel; do
+    [[ -z "$rel" ]] && continue
+    copy_checked "$STATE_DIR/$rel" "$output_dir/$rel" 100 "🔴 $rel" "$dry_run"
+  done < <(cfg_arr '.critical.files')
+
+  # ─ Critical directories ─
+  while IFS= read -r rel; do
+    [[ -z "$rel" ]] && continue
+    if [[ -d "$STATE_DIR/$rel" ]]; then
+      copy_checked "$STATE_DIR/$rel" "$output_dir/$rel" 100 "🔴 $rel/" "$dry_run"
+    else
+      warn "跳过目录（不存在）: $rel"
+      (( stats_skipped++ )) || true
+    fi
+  done < <(cfg_arr '.critical.directories')
+
+  # ─ Important files ─
+  section "🟡 重要文件"
+  while IFS= read -r rel; do
+    [[ -z "$rel" ]] && continue
+    copy_checked "$STATE_DIR/$rel" "$output_dir/$rel" 10 "🟡 $rel" "$dry_run"
+  done < <(cfg_arr '.important.files')
+
+  # ─ Important directories ─
+  while IFS= read -r rel; do
+    [[ -z "$rel" ]] && continue
+    if [[ -d "$STATE_DIR/$rel" ]]; then
+      copy_checked "$STATE_DIR/$rel" "$output_dir/$rel" 10 "🟡 $rel/" "$dry_run"
+    else
+      warn "跳过目录（不存在）: $rel"
+      (( stats_skipped++ )) || true
+    fi
+  done < <(cfg_arr '.important.directories')
+
+  # ─ Important globs ─
+  while IFS= read -r pattern; do
+    [[ -z "$pattern" ]] && continue
+    for src in $STATE_DIR/$pattern; do
+      [[ -e "$src" ]] || continue
+      local rel="${src#$STATE_DIR/}"
+      copy_checked "$src" "$output_dir/$rel" 50 "🟡 $rel" "$dry_run"
+    done
+  done < <(cfg_arr '.important.glob')
+
+  # ─ Optional files ─
+  section "🟢 可选文件"
+  while IFS= read -r rel; do
+    [[ -z "$rel" ]] && continue
+    copy_checked "$STATE_DIR/$rel" "$output_dir/$rel" 10 "🟢 $rel" "$dry_run"
+  done < <(cfg_arr '.optional.files')
+
+  # ─ Desensitize ─
+  if [[ "$do_desensitize" == "true" && "$dry_run" == "false" ]]; then
+    section "🔒 脱敏处理"
+    while IFS= read -r rel; do
+      [[ -z "$rel" ]] && continue
+      desensitize "$output_dir/$rel"
+    done < <(cfg_arr '.desensitize.files')
+  fi
+
+  # ─ Manifest ─
+  if [[ "$dry_run" == "false" ]]; then
+    section "📋 Manifest"
+    cat > "$output_dir/manifest.json" <<EOF
+{
+  "version": "${VERSION}",
+  "tool": "shadowclaw",
+  "generated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "generated_by": "$(whoami)@$(hostname)",
+  "state_dir": "${STATE_DIR}",
+  "stats": {
+    "copied": ${stats_copied},
+    "skipped": ${stats_skipped}
+  }
+}
+EOF
+    ok "manifest.json"
+
+    # Secrets template
+    cat > "$output_dir/secrets-template.json" <<'TMPL'
+{
+  "_说明": "恢复后，在对应文件中将 {{SECRET:xxx}} 替换为真实值",
+  "openclaw.json": "gateway.auth.token, channels.*.appSecret, models.providers.*.apiKey",
+  "auth-profiles.json": "所有 API Key",
+  "credentials/*.json": "OAuth Token / 飞书配对 / WhatsApp 登录态",
+  ".env": "环境变量中的 *_KEY, *_SECRET, *_TOKEN"
+}
+TMPL
+    ok "secrets-template.json"
+  fi
+
+  # ─ Summary ─
+  section "完成"
+  info "已复制: $stats_copied | 已跳过: $stats_skipped"
+  info "输出: $output_dir"
+  $do_desensitize && warn "请检查快照确保无敏感信息泄漏"
+}
+
+# ── CMD: restore ────────────────────────────────────────────────────
+cmd_restore() {
+  local snapshot_dir="" force=false
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --force|-f) force=true; shift ;;
+      *)          snapshot_dir="$1"; shift ;;
+    esac
+  done
+
+  [[ -z "$snapshot_dir" ]] && { err "请指定快照目录"; echo "用法: shadowclaw restore [--force] <snapshot-dir>"; exit 1; }
+  [[ -d "$snapshot_dir" ]] || { err "快照目录不存在: $snapshot_dir"; exit 1; }
+
+  section "ShadowClaw Restore v${VERSION}"
+  info "来源: $snapshot_dir"
+  info "目标: $STATE_DIR"
+
+  # Show manifest if present
+  if [[ -f "$snapshot_dir/manifest.json" ]]; then
+    info "快照信息:"
+    jq -r '"  版本: \(.version)\n  时间: \(.generated_at)\n  来源: \(.generated_by)"' "$snapshot_dir/manifest.json" 2>/dev/null || true
+  fi
+
+  if [[ "$force" == "false" ]]; then
+    warn "此操作将覆盖现有配置!"
+    read -p "继续? [y/N] " -n 1 -r
+    echo
+    [[ $REPLY =~ ^[Yy]$ ]] || { info "已取消"; exit 0; }
+  fi
+
+  # ─ Backup current ─
+  local backup_dir="${STATE_DIR}/backup/$(date +%Y%m%d-%H%M%S)"
+  section "📦 备份当前状态"
+  mkdir -p "$backup_dir"
+
+  for item in openclaw.json agents credentials memory workspace cron identity .env; do
+    [[ -e "$STATE_DIR/$item" ]] && cp -r "$STATE_DIR/$item" "$backup_dir/" 2>/dev/null || true
+  done
+  ok "已备份到: $backup_dir"
+
+  # ─ Restore ─
+  section "📥 恢复文件"
+
+  # Restore directories and files from snapshot, preserving structure
+  for item in "$snapshot_dir"/*; do
+    local name; name=$(basename "$item")
+
+    # Skip meta files
+    [[ "$name" == "manifest.json" || "$name" == "secrets-template.json" ]] && continue
+
+    local target="$STATE_DIR/$name"
+
+    if [[ -d "$item" ]]; then
+      mkdir -p "$target"
+      cp -r "$item/"* "$target/" 2>/dev/null || true
+      ok "恢复目录: $name/"
+    elif [[ -f "$item" ]]; then
+      mkdir -p "$(dirname "$target")"
+      cp "$item" "$target"
+      ok "恢复文件: $name"
+    fi
+  done
+
+  # ─ Post-restore ─
+  section "✅ 恢复完成"
+  echo ""
+  echo "  后续步骤:"
+  echo "  1. 参考 secrets-template.json，填入真实凭证"
+  echo "  2. 在 openclaw.json 中替换 {{SECRET:xxx}} 占位符"
+  echo "  3. 重启: openclaw gateway restart"
+  echo "  4. 验证: openclaw status"
+  echo ""
+  info "回滚备份: $backup_dir"
+}
+
+# ── CMD: push ───────────────────────────────────────────────────────
+cmd_push() {
+  local repo="" branch="" snapshot_dir=""
+
+  repo=$(jq -r '.github.repo // empty' "$CONFIG_FILE" 2>/dev/null)
+  branch=$(jq -r '.github.branch // "main"' "$CONFIG_FILE" 2>/dev/null)
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -r|--repo)   repo="$2"; shift 2 ;;
+      -b|--branch) branch="$2"; shift 2 ;;
+      -s|--snapshot) snapshot_dir="$2"; shift 2 ;;
+      *)           shift ;;
+    esac
+  done
+
+  [[ -z "$repo" ]] && { err "未指定仓库。使用 -r 或在 config/paths.json 中配置"; exit 1; }
+
+  section "ShadowClaw Push v${VERSION}"
+  info "仓库: $repo"
+  info "分支: $branch"
+
+  # Find token
+  local token=""
+  for env_var in $(jq -r '.github.token_env // [] | .[]' "$CONFIG_FILE" 2>/dev/null); do
+    token="${!env_var:-}"
+    [[ -n "$token" ]] && break
+  done
+
+  [[ -z "$token" ]] && { err "未找到 GitHub Token (检查 GH_TOKEN / GITHUB_TOKEN)"; exit 1; }
+
+  # Generate snapshot first if not provided
+  if [[ -z "$snapshot_dir" ]]; then
+    snapshot_dir=$(mktemp -d)
+    trap "rm -rf '$snapshot_dir'" EXIT
+    cmd_snapshot -o "$snapshot_dir"
+  fi
+
+  # Security scan
+  section "🔒 安全检查"
+  local leaked=0
+  while IFS= read -r -d '' f; do
+    if grep -qE '"sk-[a-zA-Z0-9]{20,}"' "$f" 2>/dev/null; then
+      err "发现未脱敏密钥: $f"
+      leaked=1
+    fi
+    if grep -qE '"ghp_[a-zA-Z0-9]{36}"' "$f" 2>/dev/null; then
+      err "发现 GitHub Token: $f"
+      leaked=1
+    fi
+  done < <(find "$snapshot_dir" \( -name "*.json" -o -name ".env" \) -print0)
+
+  (( leaked )) && { err "快照中存在明文密钥，推送已中止!"; exit 1; }
+  ok "安全检查通过"
+
+  # Push via temp repo
+  local tmp; tmp=$(mktemp -d)
+  trap "rm -rf '$tmp' '$snapshot_dir'" EXIT
+
+  cd "$tmp"
+  git init -q
+  git config user.email "shadowclaw@openclaw.dev"
+  git config user.name "ShadowClaw"
+
+  cp -r "$snapshot_dir/"* .
+  git add -A
+  git commit -q -m "shadowclaw snapshot $(date '+%Y-%m-%d %H:%M:%S')"
+  git remote add origin "https://x-access-token:${token}@${repo}.git"
+
+  if git push -f origin "HEAD:${branch}" 2>&1; then
+    ok "推送成功! → ${repo} (${branch})"
+  else
+    err "推送失败"
+    exit 1
+  fi
+}
+
+# ── CMD: verify ─────────────────────────────────────────────────────
+cmd_verify() {
+  local snapshot_dir="$1"
+  [[ -d "$snapshot_dir" ]] || { err "目录不存在: $snapshot_dir"; exit 1; }
+
+  section "ShadowClaw Verify v${VERSION}"
+  info "检查: $snapshot_dir"
+
+  local issues=0
+
+  # Check critical files exist
+  while IFS= read -r rel; do
+    [[ -z "$rel" ]] && continue
+    if [[ ! -e "$snapshot_dir/$rel" ]]; then
+      warn "缺少必备文件: $rel"
+      (( issues++ )) || true
+    else
+      ok "✓ $rel"
+    fi
+  done < <(cfg_arr '.critical.files')
+
+  # Check for leaked secrets
+  local leaked=0
+  while IFS= read -r -d '' f; do
+    if grep -qE '"sk-[a-zA-Z0-9]{20,}"' "$f" 2>/dev/null; then
+      err "发现明文密钥: ${f#$snapshot_dir/}"
+      (( leaked++ )) || true
+    fi
+  done < <(find "$snapshot_dir" -name "*.json" -print0)
+
+  echo ""
+  if (( issues == 0 && leaked == 0 )); then
+    ok "快照验证通过 ✓"
+  else
+    warn "发现 $issues 个缺失文件, $leaked 个安全问题"
+  fi
+}
+
+# ── CMD: help ───────────────────────────────────────────────────────
+cmd_help() {
+  cat <<EOF
+ShadowClaw v${VERSION} — OpenClaw Snapshot & Restore
+
+命令:
+  snapshot  [-o dir] [--dry-run] [--no-desensitize]   生成快照
+  restore   [--force] <snapshot-dir>                   恢复环境
+  push      [-r repo] [-b branch] [-s snapshot-dir]    推送到 GitHub
+  verify    <snapshot-dir>                             验证快照完整性
+  help                                                 显示帮助
+
+示例:
+  shadowclaw snapshot                     # 生成快照
+  shadowclaw snapshot --dry-run           # 模拟运行
+  shadowclaw restore ./my-snapshot        # 恢复
+  shadowclaw push -b catclaw              # 推送到 catclaw 分支
+
+环境变量:
+  GH_TOKEN / GITHUB_TOKEN   GitHub 访问令牌
+  OPENCLAW_DIR               覆盖默认 state 目录 (~/.openclaw)
+
+配置: $(realpath "$CONFIG_FILE" 2>/dev/null || echo "$CONFIG_FILE")
+EOF
+}
+
+# ── Main ────────────────────────────────────────────────────────────
+main() {
+  need jq git
+
+  local cmd="${1:-help}"
+  shift || true
+
+  case "$cmd" in
+    snapshot|s)  cmd_snapshot "$@" ;;
+    restore|r)   cmd_restore "$@" ;;
+    push|p)      cmd_push "$@" ;;
+    verify|v)    cmd_verify "$@" ;;
+    help|--help|-h) cmd_help ;;
+    version|--version|-V) echo "ShadowClaw v${VERSION}" ;;
+    *) err "未知命令: $cmd"; cmd_help; exit 1 ;;
+  esac
+}
+
+main "$@"
