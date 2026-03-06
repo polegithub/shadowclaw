@@ -1,41 +1,39 @@
-# Kimi Claw 快照备份
+# ShadowClaw
 
-## 生成时间
-$(date)
+OpenClaw 环境快照与恢复方案
 
-## 包含内容
-- ✅ OpenClaw 配置（已脱敏）
-- ✅ 已安装 Skills 列表
-- ✅ 扩展插件列表
-- ✅ Workspace 文件结构
-- ✅ 记忆文件（MEMORY.md, SOUL.md, USER.md 等）
-- ✅ 恢复脚本
+## 简介
 
-## 快速恢复
+ShadowClaw 是一个用于备份和恢复 OpenClaw 环境的工具集，支持完整的环境迁移和快速恢复。
 
-```bash
-cd ~/.openclaw/workspace
-./snapshot/restore.sh
+## 目录结构
+
+```
+.
+├── .gitignore          # Git 忽略规则
+├── README.md           # 本文件
+└── kimiclaw/           # 核心工具与备份内容
+    ├── README.md       # 详细使用文档
+    ├── bin/            # CLI 工具
+    ├── lib/            # 脚本库
+    ├── config/         # 配置文件
+    ├── workspace/      # OpenClaw 工作区文件
+    ├── skills/         # 自定义 Skills
+    ├── memory/         # 记忆文件
+    └── snapshot/       # 历史快照
 ```
 
-## 手动配置
+## 快速开始
 
-恢复后需要填入以下敏感信息：
-1. Kimi API Key
-2. 飞书 App Secret
-3. 其他 channel 的凭证
+```bash
+cd kimiclaw
+./bin/kimiclaw --help
+```
 
-参考 `secrets-template.json`
+## 详细文档
 
-## Channel 配置
+见 [kimiclaw/README.md](kimiclaw/README.md)
 
-- Feishu: 已配置，App ID: cli_a9225fcd57bb5cd3
-- DingTalk: 已启用但未配置
+## License
 
-## Skills
-
-查看 `skills-list.txt` 了解已安装的技能
-
-## 备注
-
-此快照由 Kimi Claw 自动生成，用于系统恢复和迁移。
+MIT
