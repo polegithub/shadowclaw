@@ -1,0 +1,4 @@
+{
+  "error": "No data yet",
+  "message": "ENOENT: no such file or directory, open '/root/.openclaw/token-tracker/token-summary.json'"
+}

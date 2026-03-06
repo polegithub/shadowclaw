@@ -1,0 +1,207 @@
+#!/bin/bash
+# cron-executor: Cron 任务执行器主入口
+
+set -e
+
+VERSION="1.0.0"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CRON_EXECUTOR_DIR="${HOME}/.openclaw/cron-executor"
+
+# 加载辅助函数
+source "$SCRIPT_DIR/cron-helper.sh"
+
+# 显示帮助
+show_help() {
+    cat << EOF
+Cron Executor v${VERSION}
+
+用法: cron-executor <命令> [选项]
+
+命令:
+  status [--job name]          查看任务状态
+  reset --job name             重置任务状态
+  unlock --job name            强制解锁任务
+  logs [--job name]            查看任务日志
+  
+  help                         显示帮助
+
+示例:
+  cron-executor status
+  cron-executor status --job daily-news
+  cron-executor reset --job daily-news
+  cron-executor unlock --job daily-news
+
+EOF
+}
+
+# 显示状态
+show_status() {
+    local specific_job=""
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --job) specific_job="$2"; shift 2 ;;
+            *) shift ;;
+        esac
+    done
+    
+    echo "📊 Cron Executor Status"
+    echo "======================="
+    
+    if [ -n "$specific_job" ]; then
+        # 显示特定任务状态
+        local status_file="$CRON_EXECUTOR_DIR/status/${specific_job}.json"
+        local lock_file="$CRON_EXECUTOR_DIR/locks/${specific_job}.lock"
+        
+        echo ""
+        echo "任务: $specific_job"
+        
+        if [ -f "$status_file" ]; then
+            echo "状态文件:"
+            cat "$status_file" | jq '.' 2>/dev/null || cat "$status_file"
+        else
+            echo "状态: 无记录"
+        fi
+        
+        if [ -f "$lock_file" ]; then
+            local lock_time=$(cat "$lock_file")
+            local age=$(($(date +%s) - lock_time))
+            echo "🔒 已锁定 (${age}秒前)"
+        else
+            echo "🔓 未锁定"
+        fi
+    else
+        # 显示所有任务概览
+        echo ""
+        
+        # 活跃锁
+        if [ -d "$CRON_EXECUTOR_DIR/locks" ]; then
+            local locks=$(find "$CRON_EXECUTOR_DIR/locks" -name "*.lock" 2>/dev/null | wc -l)
+            echo "活跃锁: $locks"
+            
+            if [ $locks -gt 0 ]; then
+                echo ""
+                echo "锁定中的任务:"
+                for lock in "$CRON_EXECUTOR_DIR/locks"/*.lock; do
+                    if [ -f "$lock" ]; then
+                        local job=$(basename "$lock" .lock)
+                        local time=$(cat "$lock")
+                        local age=$(($(date +%s) - time))
+                        echo "  🔒 $job (${age}秒)"
+                    fi
+                done
+            fi
+        fi
+        
+        # 状态记录
+        echo ""
+        if [ -d "$CRON_EXECUTOR_DIR/status" ]; then
+            local statuses=$(find "$CRON_EXECUTOR_DIR/status" -name "*.json" 2>/dev/null | wc -l)
+            echo "状态记录: $statuses"
+            
+            if [ $statuses -gt 0 ]; then
+                echo ""
+                echo "最近任务:"
+                for status in "$CRON_EXECUTOR_DIR/status"/*.json; do
+                    if [ -f "$status" ]; then
+                        local job=$(basename "$status" .json)
+                        local last_status=$(jq -r '.last_status // "unknown"' "$status" 2>/dev/null)
+                        local last_run=$(jq -r '.last_run // "unknown"' "$status" 2>/dev/null)
+                        local fail_count=$(jq -r '.fail_count // 0' "$status" 2>/dev/null)
+                        
+                        local icon="✅"
+                        [ "$last_status" == "failed" ] && icon="❌"
+                        [ "$fail_count" -gt 0 ] && icon="⚠️"
+                        
+                        echo "  $icon $job - $last_status (失败: $fail_count次)"
+                    fi
+                done
+            fi
+        fi
+    fi
+}
+
+# 重置状态
+reset_status() {
+    local job_name=""
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --job) job_name="$2"; shift 2 ;;
+            *) shift ;;
+        esac
+    done
+    
+    if [ -z "$job_name" ]; then
+        echo "❌ 缺少 --job 参数"
+        exit 1
+    fi
+    
+    local status_file="$CRON_EXECUTOR_DIR/status/${job_name}.json"
+    
+    if [ -f "$status_file" ]; then
+        rm -f "$status_file"
+        echo "✅ 任务 '$job_name' 状态已重置"
+    else
+        echo "ℹ️  任务 '$job_name' 无状态记录"
+    fi
+}
+
+# 强制解锁
+force_unlock() {
+    local job_name=""
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --job) job_name="$2"; shift 2 ;;
+            *) shift ;;
+        esac
+    done
+    
+    if [ -z "$job_name" ]; then
+        echo "❌ 缺少 --job 参数"
+        exit 1
+    fi
+    
+    local lock_file="$CRON_EXECUTOR_DIR/locks/${job_name}.lock"
+    
+    if [ -f "$lock_file" ]; then
+        rm -f "$lock_file"
+        echo "✅ 任务 '$job_name' 已强制解锁"
+    else
+        echo "ℹ️  任务 '$job_name' 未锁定"
+    fi
+}
+
+# 主逻辑
+COMMAND="${1:-help}"
+shift || true
+
+case "$COMMAND" in
+    status)
+        show_status "$@"
+        ;;
+    
+    reset)
+        reset_status "$@"
+        ;;
+    
+    unlock)
+        force_unlock "$@"
+        ;;
+    
+    logs)
+        if [ -f "$CRON_EXECUTOR_DIR/logs/cron-executor.log" ]; then
+            tail -n 50 "$CRON_EXECUTOR_DIR/logs/cron-executor.log"
+        else
+            echo "暂无日志"
+        fi
+        ;;
+    
+    help|--help|-h)
+        show_help
+        ;;
+    
+    *)
+        echo "❌ 未知命令: $COMMAND"
+        show_help
+        exit 1
+        ;;
+esac
