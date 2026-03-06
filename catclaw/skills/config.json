@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "github": {
+    "repo": "",
+    "branch": "main",
+    "token": "{{SECRET:github_token}}"
+  },
+  "filters": {
+    "max_file_size_mb": 10,
+    "exclude_patterns": [
+      "*.log",
+      "node_modules/**",
+      ".git/**",
+      "__pycache__/**",
+      "*.tmp",
+      "*.cache",
+      "*.bin",
+      "*.exe",
+      "*.dll",
+      "*.so"
+    ],
+    "exclude_extensions": [".bin", ".exe", ".dll", ".so", ".dylib"]
+  },
+  "sensitive_fields": [
+    "token",
+    "api_key",
+    "secret",
+    "password",
+    "private_key",
+    "access_token",
+    "refresh_token"
+  ],
+  "auto_backup": {
+    "enabled": false,
+    "cron": "0 2 * * *",
+    "keep_count": 7
+  },
+  "_comment": "首次使用请填写 github.repo 和 github.token，然后删除 _comment 字段"
+}
