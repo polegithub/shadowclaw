@@ -1,0 +1,57 @@
+{
+  "version": "3.0.0",
+  "name": "kimiclaw",
+  "state_dir": "~/.openclaw",
+  "github": {
+    "repo": "github.com/polegithub/shadowclaw",
+    "branch": "kimiclaw",
+    "token_env": "GITHUB_TOKEN"
+  },
+  "snapshot": {
+    "max_file_size_mb": 10,
+    "exclude_patterns": [
+      "*.log",
+      "node_modules/**",
+      ".git/**",
+      "__pycache__/**",
+      "*.tmp",
+      "*.cache",
+      "*.bin",
+      "*.exe",
+      "*.dll",
+      "*.so"
+    ],
+    "exclude_large_extensions": [
+      ".bin",
+      ".exe",
+      ".dll",
+      ".so",
+      ".pth",
+      ".ckpt",
+      ".safetensors"
+    ]
+  },
+  "sensitive_fields": [
+    "token",
+    "api_key",
+    "apikey",
+    "api-key",
+    "secret",
+    "password",
+    "private_key",
+    "client_secret",
+    "access_token",
+    "refresh_token",
+    "openai_api_key",
+    "anthropic_api_key",
+    "kimi_api_key",
+    "feishu_app_secret",
+    "github_token",
+    "whatsapp_session"
+  ],
+  "auto_backup": {
+    "enabled": false,
+    "cron": "0 2 * * *",
+    "keep_count": 7
+  }
+}

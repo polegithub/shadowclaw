@@ -1,0 +1,321 @@
+#!/bin/bash
+#
+# KimiClaw Snapshot Manager
+# 主入口脚本
+#
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+KIMICLAW_HOME="${HOME}/.openclaw"
+VERSION="3.0.0"
+
+# 颜色定义
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# 帮助信息
+show_help() {
+    cat << EOF
+KimiClaw Snapshot Manager v${VERSION}
+
+Usage: kimiclaw <command> [options]
+
+Commands:
+    generate, g     生成快照
+    push, p         推送到远程仓库
+    pull, pl        从远程拉取快照
+    restore, r      恢复环境
+    list, ls        列出本地快照
+    clean           清理旧快照
+    config          查看/编辑配置
+    help            显示帮助
+
+Options:
+    -o, --output    指定输出目录
+    -r, --repo      指定远程仓库
+    -b, --branch    指定分支
+    -f, --force     强制覆盖
+    -v, --verbose   详细输出
+    --dry-run       模拟运行，不实际执行
+
+Examples:
+    kimiclaw generate                    # 生成快照到默认目录
+    kimiclaw generate -o ./my-snapshot   # 生成到指定目录
+    kimiclaw push -r github.com/user/repo # 推送到指定仓库
+    kimiclaw restore -f                  # 强制恢复，覆盖现有
+
+EOF
+}
+
+# 日志函数
+log_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+log_success() {
+    echo -e "${GREEN}[OK]${NC} $1"
+}
+
+log_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# 检查依赖
+check_deps() {
+    local deps=("git" "tar" "jq")
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            log_error "缺少依赖: $dep"
+            exit 1
+        fi
+    done
+}
+
+# 生成快照
+cmd_generate() {
+    local output_dir=""
+    local dry_run=false
+    
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -o|--output)
+                output_dir="$2"
+                shift 2
+                ;;
+            --dry-run)
+                dry_run=true
+                shift
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+    
+    if [ -z "$output_dir" ]; then
+        output_dir="${KIMICLAW_HOME}/snapshots/kimiclaw-$(date +%Y%m%d-%H%M%S)"
+    fi
+    
+    log_info "生成 KimiClaw 快照..."
+    log_info "目标目录: $output_dir"
+    
+    if [ "$dry_run" = true ]; then
+        log_warn "模拟运行模式，不实际执行"
+        bash "${SCRIPT_DIR}/../lib/snapshot.sh" --dry-run "$output_dir"
+    else
+        bash "${SCRIPT_DIR}/../lib/snapshot.sh" "$output_dir"
+        log_success "快照已生成: $output_dir"
+    fi
+}
+
+# 推送到远程
+cmd_push() {
+    local repo=""
+    local branch="main"
+    
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -r|--repo)
+                repo="$2"
+                shift 2
+                ;;
+            -b|--branch)
+                branch="$2"
+                shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+    
+    if [ -z "$repo" ]; then
+        repo=$(jq -r '.github.repo // empty' "${SCRIPT_DIR}/../config/default.json" 2>/dev/null)
+        if [ -z "$repo" ]; then
+            log_error "未指定仓库，且配置文件中没有默认仓库"
+            exit 1
+        fi
+    fi
+    
+    log_info "推送到: $repo (分支: $branch)"
+    bash "${SCRIPT_DIR}/../lib/push.sh" "$repo" "$branch"
+}
+
+# 从远程拉取
+cmd_pull() {
+    local repo=""
+    local branch="main"
+    
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -r|--repo)
+                repo="$2"
+                shift 2
+                ;;
+            -b|--branch)
+                branch="$2"
+                shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+    
+    log_info "从远程拉取快照..."
+    bash "${SCRIPT_DIR}/../lib/pull.sh" "$repo" "$branch"
+}
+
+# 恢复环境
+cmd_restore() {
+    local snapshot_path=""
+    local force=false
+    
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -f|--force)
+                force=true
+                shift
+                ;;
+            *)
+                snapshot_path="$1"
+                shift
+                ;;
+        esac
+    done
+    
+    if [ -z "$snapshot_path" ]; then
+        # 使用最新的快照
+        snapshot_path=$(ls -td "${KIMICLAW_HOME}/snapshots"/kimiclaw-* 2>/dev/null | head -1)
+        if [ -z "$snapshot_path" ]; then
+            log_error "未找到本地快照"
+            exit 1
+        fi
+        log_info "使用最新快照: $snapshot_path"
+    fi
+    
+    log_info "恢复环境..."
+    if [ "$force" = true ]; then
+        bash "${SCRIPT_DIR}/../lib/restore.sh" --force "$snapshot_path"
+    else
+        bash "${SCRIPT_DIR}/../lib/restore.sh" "$snapshot_path"
+    fi
+}
+
+# 列出快照
+cmd_list() {
+    log_info "本地快照列表:"
+    
+    if [ ! -d "${KIMICLAW_HOME}/snapshots" ]; then
+        log_warn "快照目录不存在"
+        return
+    fi
+    
+    ls -lt "${KIMICLAW_HOME}/snapshots" | grep kimiclaw- | awk '{print $6, $7, $8, $9}' | while read line; do
+        echo "  • $line"
+    done
+}
+
+# 清理旧快照
+cmd_clean() {
+    local keep_count=7
+    
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -k|--keep)
+                keep_count="$2"
+                shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+    
+    log_info "清理旧快照，保留最近 $keep_count 个..."
+    
+    local snapshots=($(ls -td "${KIMICLAW_HOME}/snapshots"/kimiclaw-* 2>/dev/null))
+    local total=${#snapshots[@]}
+    
+    if [ "$total" -le "$keep_count" ]; then
+        log_info "快照数量 ($total) 未超过保留数量 ($keep_count)，无需清理"
+        return
+    fi
+    
+    local to_delete=$(($total - $keep_count))
+    log_warn "将删除 $to_delete 个旧快照"
+    
+    for ((i=$keep_count; i<$total; i++)); do
+        log_info "删除: ${snapshots[$i]}"
+        rm -rf "${snapshots[$i]}"
+    done
+    
+    log_success "清理完成"
+}
+
+# 配置管理
+cmd_config() {
+    local config_file="${SCRIPT_DIR}/../config/default.json"
+    
+    if [ ! -f "$config_file" ]; then
+        log_error "配置文件不存在: $config_file"
+        exit 1
+    fi
+    
+    cat "$config_file"
+}
+
+# 主函数
+main() {
+    check_deps
+    
+    if [ $# -eq 0 ]; then
+        show_help
+        exit 0
+    fi
+    
+    local command="$1"
+    shift
+    
+    case "$command" in
+        generate|g)
+            cmd_generate "$@"
+            ;;
+        push|p)
+            cmd_push "$@"
+            ;;
+        pull|pl)
+            cmd_pull "$@"
+            ;;
+        restore|r)
+            cmd_restore "$@"
+            ;;
+        list|ls)
+            cmd_list
+            ;;
+        clean)
+            cmd_clean "$@"
+            ;;
+        config)
+            cmd_config
+            ;;
+        help|--help|-h)
+            show_help
+            ;;
+        *)
+            log_error "未知命令: $command"
+            show_help
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"
