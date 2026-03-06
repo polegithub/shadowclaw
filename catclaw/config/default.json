@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "name": "catclaw",
+  "state_dir": "~/.openclaw",
+  "github": {
+    "repo": "github.com/polegithub/shadowclaw",
+    "branch": "catclaw",
+    "token_env": "GH_TOKEN"
+  },
+  "snapshot": {
+    "max_file_size_mb": 10,
+    "exclude_patterns": [
+      "*.log",
+      "node_modules/**",
+      ".git/**",
+      "__pycache__/**",
+      "*.tmp",
+      "*.cache",
+      "*.bin",
+      "*.exe",
+      "*.dll",
+      "*.so",
+      "extensions/**",
+      "snapshots/*.tar.gz",
+      "delivery-queue/**",
+      "completions/**",
+      "canvas/**"
+    ],
+    "always_backup": [
+      "openclaw.json",
+      "agents/*/agent/auth-profiles.json",
+      "agents/*/sessions/sessions.json",
+      "credentials/*.json",
+      "memory/main.sqlite",
+      "workspace/MEMORY.md",
+      "workspace/memory/*.md"
+    ]
+  },
+  "sensitive_fields": [
+    "token",
+    "api_key",
+    "apiKey",
+    "secret",
+    "appSecret",
+    "password",
+    "private_key",
+    "client_secret",
+    "access_token",
+    "refresh_token",
+    "github_token",
+    "whatsapp_session"
+  ],
+  "auto_backup": {
+    "enabled": false,
+    "cron": "0 2 * * *",
+    "keep_count": 7
+  }
+}
