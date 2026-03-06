@@ -1,0 +1,26 @@
+{
+  "fingerprint": {
+    "max_memory_cache": 100,
+    "max_disk_cache": 1000,
+    "ttl_seconds": 86400,
+    "timestamp_tolerance": 60
+  },
+  "cooldown": {
+    "default_seconds": 60,
+    "topics": {
+      "heartbeat_response": 30,
+      "cron_failure_notice": 300
+    }
+  },
+  "backoff": {
+    "strategy": "exponential",
+    "base_seconds": 10,
+    "max_seconds": 300,
+    "max_retries": 3
+  },
+  "cron": {
+    "lock_timeout_seconds": 600,
+    "cleanup_interval_seconds": 3600
+  },
+  "_comment": "消息去重与重试控制配置"
+}
