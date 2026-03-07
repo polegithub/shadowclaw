@@ -371,18 +371,30 @@ restore() {
     SNAPSHOT_TYPE=$(jq -r '.name' "$MANIFEST" 2>/dev/null || echo "unknown")
     echo "✅ 识别到快照类型: $SNAPSHOT_TYPE"
 
-    # 5. 完整性校验
+    # 5. 完整性校验（跳过 manifest 自身，避免自校验死循环）
     echo "✅ 5/6 完整性校验..."
+    local verify_failed=false
     if [[ -f "$MANIFEST" ]]; then
-        jq -r '.checksums | to_entries[] | "\(.key) \(.value)"' "$MANIFEST" 2>/dev/null | while read -r path expected_hash; do
+        while IFS=' ' read -r path expected_hash; do
+            # Skip manifest itself and compatibility copies
+            [[ "$path" == "manifest.json" || "$path" == *"_manifest.json" ]] && continue
+            local actual_hash
             actual_hash=$(sha256sum "$SNAPSHOT_CONTENT/$path" 2>/dev/null | cut -d' ' -f1)
-            if [[ "$actual_hash" != "$expected_hash" && "$FORCE" != "true" ]]; then
-                echo "❌ 错误：文件 $path 校验失败，自动回滚..."
-                cp -r "$BACKUP_DIR"/* "$OPENCLAW_DIR/"
-                rm -rf "$TEMP_DIR" "$BACKUP_DIR"
-                exit 1
+            if [[ "$actual_hash" != "$expected_hash" ]]; then
+                if [[ "$FORCE" == "true" ]]; then
+                    echo "⚠️  校验不一致（--force 跳过）: $path"
+                else
+                    echo "❌ 错误：文件 $path 校验失败，自动回滚..."
+                    cp -r "$BACKUP_DIR"/* "$OPENCLAW_DIR/" 2>/dev/null || true
+                    rm -rf "$TEMP_DIR"
+                    verify_failed=true
+                    break
+                fi
             fi
-        done
+        done < <(jq -r '.checksums | to_entries[] | "\(.key) \(.value)"' "$MANIFEST" 2>/dev/null)
+    fi
+    if [[ "$verify_failed" == "true" ]]; then
+        exit 1
     fi
 
     # 6. 恢复文件
@@ -474,12 +486,12 @@ verify() {
 # 功能4：快照对比
 # ==============================================
 diff_snapshots() {
-    if [[ $# -lt 2 ]]; then
-        echo "用法: $0 diff <快照1/目录> <快照2/目录>"
+    if [[ $# -lt 1 ]]; then
+        echo "用法: $0 diff <快照目录> [快照2/目录]"
         exit 1
     fi
     snap1="$1"
-    snap2="$2"
+    snap2="${2:-$OPENCLAW_DIR}"
     
     # 解压快照
     temp1=$(mktemp -d)
@@ -535,13 +547,13 @@ case "$1" in
     help|--help|-h)
         echo "huoshanclaw 超级版快照工具 v$VERSION"
         echo ""
-        echo "用法:"
-        echo "  $0 backup [--incremental] [-o <输出目录>]  # 生成快照，--incremental为增量备份"
-        echo "  $0 restore [--force] <快照文件/目录> [密码]  # 恢复快照，支持所有格式和目录直接恢复"
-        echo "  $0 verify <快照文件/目录>                   # 校验快照完整性"
-        echo "  $0 diff <快照1> <快照2>                      # 对比两个快照差异"
-        echo "  $0 cron [调度规则]                          # 设置定时备份，默认每天凌晨2点"
-        echo "  $0 schedule [调度规则]                      # 别名：同cron命令，设置定时备份"
+        echo "命令:"
+        echo "  backup    [--incremental] [-o <输出目录>]      生成快照"
+        echo "  restore   [--force] <快照文件/目录> [密码]      恢复快照"
+        echo "  verify    <快照文件/目录>                       校验快照完整性"
+        echo "  diff      <快照目录> [快照2/目录]               对比快照差异"
+        echo "  cron      [调度规则]                           设置定时备份"
+        echo "  schedule  [调度规则]                           同cron"
         echo ""
         echo "增量备份说明: 仅备份最近24小时内变更的文件，大幅提升备份速度"
         echo ""

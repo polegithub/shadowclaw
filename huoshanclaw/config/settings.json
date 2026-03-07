@@ -1,13 +1,30 @@
 {
-  "default_compression": "zstd",
-  "compression_level": 19,
-  "incremental_time_window": 86400,
-  "auto_backup": true,
-  "encryption_algorithm": "aes-256-cbc",
-  "sensitive_fields": [
-    "api_key",
-    "token",
-    "secret",
-    "password"
+  "version": "2.0",
+  "default_schedule": "0 2 * * *",
+  "encryption": {
+    "algorithm": "AES-256-CBC",
+    "enabled": false
+  },
+  "compression": {
+    "format": "zstd",
+    "level": 19,
+    "fallback": "gzip"
+  },
+  "sensitive_patterns": [
+    "api_key", "apikey", "token", "secret", "password",
+    "private_key", "client_secret", "access_token", "refresh_token",
+    "github_token", "telegram_bot_token", "discord_bot_token"
+  ],
+  "core_files": [
+    "openclaw.json",
+    "workspace/SOUL.md",
+    "workspace/MEMORY.md",
+    "workspace/USER.md",
+    "workspace/AGENTS.md",
+    "workspace/IDENTITY.md",
+    "agents/main/sessions/sessions.json",
+    "cron/jobs.json",
+    "identity/device.json",
+    "workspace/TOOLS.md"
   ]
 }
