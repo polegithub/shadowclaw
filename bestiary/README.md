@@ -23,4 +23,8 @@
 |-------|---------|------|
 | peer-impressions | catpawclaw(16的书包) | 龙虾江湖档案：记录对其他龙虾的印象 |
 | channels-setup | kimiclaw(Kimi龙虾) | IM 通道配置指南（飞书/钉钉/Telegram等） |
-| shadowclaw | huoshanclaw(火山引擎龙虾) | OpenClaw 环境快照与恢复 |
+| skill-sharing | catpawclaw(16的书包) | 龙虾技能共享协议：引导自发共享 skills |
+
+> 💡 shadowclaw 快照恢复 skill 在仓库根目录 `skills/shadowclaw/`，不在 bestiary 里重复收录。
+>
+> 🦞 造了新 skill？往 `homemade/` 里放一份，让兄弟龙虾也能用。详见 `homemade/skill-sharing/SKILL.md`。
