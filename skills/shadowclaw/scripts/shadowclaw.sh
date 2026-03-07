@@ -388,11 +388,205 @@ TMPL
     deep_security_scan "$output_dir" || warn "请手动检查上述安全问题"
   fi
 
+  # ─ Generate Report ─
+  if [[ "$dry_run" == "false" ]]; then
+    section "📊 生成快照报告"
+    _generate_report "$output_dir" "$do_desensitize" "$incremental"
+  fi
+
   # ─ Summary ─
   section "完成"
   info "已复制: $stats_copied | 已跳过: $stats_skipped | 未变更: ${stats_unchanged:-0}"
   info "输出: $output_dir"
   $do_desensitize && info "✅ 已脱敏 + 安全扫描"
+  info "📊 报告: $output_dir/SNAPSHOT_REPORT.md"
+}
+
+# ── Report Generator ────────────────────────────────────────────────
+_generate_report() {
+  local snap_dir="$1" desensitized="${2:-true}" is_incremental="${3:-false}"
+  local report="$snap_dir/SNAPSHOT_REPORT.md"
+
+  # 统计数据
+  local total_files; total_files=$(find "$snap_dir" -type f -not -name "SNAPSHOT_REPORT.md" | wc -l)
+  local total_size; total_size=$(du -sh "$snap_dir" 2>/dev/null | cut -f1)
+  local skill_count=0; [[ -d "$snap_dir/skills" ]] && skill_count=$(find "$snap_dir/skills" -maxdepth 1 -type d | wc -l); (( skill_count > 0 )) && (( skill_count-- )) || true
+  local session_count=0; [[ -d "$snap_dir/agents/main/sessions" ]] && session_count=$(find "$snap_dir/agents/main/sessions" -name "*.jsonl" | wc -l)
+  local workspace_files=0; [[ -d "$snap_dir/workspace" ]] && workspace_files=$(find "$snap_dir/workspace" -type f | wc -l)
+  local memory_files=0; [[ -d "$snap_dir/workspace/memory" ]] && memory_files=$(find "$snap_dir/workspace/memory" -type f | wc -l)
+
+  # 脱敏统计
+  local secret_count=0
+  [[ -d "$snap_dir" ]] && secret_count=$(grep -rl '{{SECRET:' "$snap_dir/" 2>/dev/null | wc -l)
+  local placeholder_total=0
+  [[ -d "$snap_dir" ]] && placeholder_total=$(grep -roh '{{SECRET:[^}]*}}' "$snap_dir/" 2>/dev/null | wc -l)
+
+  # 检测脱敏了哪些平台
+  local platforms=""
+  if [[ -f "$snap_dir/openclaw.json" ]]; then
+    grep -q '{{SECRET:' "$snap_dir/openclaw.json" 2>/dev/null && {
+      grep -q 'feishu\|飞书' "$snap_dir/openclaw.json" 2>/dev/null && platforms="${platforms}飞书 "
+      grep -q 'telegram' "$snap_dir/openclaw.json" 2>/dev/null && platforms="${platforms}Telegram "
+      grep -q 'discord' "$snap_dir/openclaw.json" 2>/dev/null && platforms="${platforms}Discord "
+      grep -q 'whatsapp' "$snap_dir/openclaw.json" 2>/dev/null && platforms="${platforms}WhatsApp "
+      grep -q 'slack' "$snap_dir/openclaw.json" 2>/dev/null && platforms="${platforms}Slack "
+      grep -q 'signal' "$snap_dir/openclaw.json" 2>/dev/null && platforms="${platforms}Signal "
+      grep -q 'daxiang\|大象' "$snap_dir/openclaw.json" 2>/dev/null && platforms="${platforms}大象 "
+      grep -qE 'apiKey|api_key' "$snap_dir/openclaw.json" 2>/dev/null && platforms="${platforms}模型API "
+      grep -q 'github\|GITHUB' "$snap_dir/openclaw.json" 2>/dev/null && platforms="${platforms}GitHub "
+    }
+  fi
+  [[ -z "$platforms" ]] && platforms="无（未检测到平台配置）"
+
+  # 跳过文件列表
+  local skipped_list=""
+  # 从 manifest 获取跳过的原因
+  local skip_reasons=""
+  if (( stats_skipped > 0 )); then
+    skip_reasons="共 ${stats_skipped} 项被跳过（文件不存在或体积超限）"
+  fi
+
+  # 检查大文件风险
+  local large_files=""
+  while IFS= read -r -d '' f; do
+    local fsize
+    if [[ "$(uname)" == "Darwin" ]]; then
+      fsize=$(stat -f%z "$f" 2>/dev/null || echo 0)
+    else
+      fsize=$(stat -c%s "$f" 2>/dev/null || echo 0)
+    fi
+    if (( fsize > 5242880 )); then  # > 5MB
+      local fname="${f#$STATE_DIR/}"
+      local fmb=$(( fsize / 1024 / 1024 ))
+      large_files="${large_files}  - ${fname}（${fmb}MB）\n"
+    fi
+  done < <(find "$STATE_DIR" -type f -print0 2>/dev/null)
+
+  # 检查未备份的重要目录
+  local missing_dirs=""
+  for d in credentials memory agents/main/agent identity; do
+    if [[ -d "$STATE_DIR/$d" && ! -d "$snap_dir/$d" ]]; then
+      missing_dirs="${missing_dirs}  - ${d}/（当前环境存在但未备份）\n"
+    fi
+  done
+
+  # 写报告
+  cat > "$report" <<REPORT
+# ShadowClaw 快照报告
+
+生成时间：$(date '+%Y-%m-%d %H:%M:%S %Z')
+工具版本：v${VERSION}
+源目录：${STATE_DIR}
+快照模式：$( [[ "$is_incremental" == "true" ]] && echo "增量" || echo "全量" )
+
+---
+
+## 备份概览
+
+| 指标 | 数值 |
+|------|------|
+| 总文件数 | ${total_files} |
+| 快照体积 | ${total_size} |
+| Skills 数量 | ${skill_count} |
+| 会话文件 | ${session_count} |
+| 工作区文件 | ${workspace_files} |
+| 记忆文件 | ${memory_files} |
+| 已复制 | ${stats_copied} |
+| 已跳过 | ${stats_skipped} |
+| 未变更（增量跳过） | ${stats_unchanged:-0} |
+
+## 已备份内容
+
+REPORT
+
+  # 列出已备份的顶级目录
+  for d in "$snap_dir"/*/; do
+    [[ -d "$d" ]] || continue
+    local dname; dname=$(basename "$d")
+    local dcount; dcount=$(find "$d" -type f | wc -l)
+    echo "- **${dname}/**（${dcount} 个文件）" >> "$report"
+  done
+  # 顶级文件
+  for f in "$snap_dir"/*; do
+    [[ -f "$f" ]] || continue
+    local fname; fname=$(basename "$f")
+    [[ "$fname" == "SNAPSHOT_REPORT.md" ]] && continue
+    echo "- ${fname}" >> "$report"
+  done
+
+  cat >> "$report" <<REPORT
+
+## 安全与脱敏
+
+| 指标 | 数值 |
+|------|------|
+| 脱敏处理 | $( [[ "$desensitized" == "true" ]] && echo "✅ 已执行" || echo "⚠️ 未执行" ) |
+| 涉及文件数 | ${secret_count} |
+| 脱敏占位符总数 | ${placeholder_total} |
+| 涉及平台 | ${platforms} |
+
+脱敏范围：API Key、OAuth Token、私钥（PEM）、Bearer Token、GitHub Token（ghp_/ghu_/ghs_）、Slack Token（xoxb_/xoxp_）、飞书 App ID（cli_）、x-access-token。
+
+REPORT
+
+  # 风险提示
+  local has_risk=false
+  if [[ -n "$large_files" || -n "$missing_dirs" || $stats_skipped -gt 0 ]]; then
+    has_risk=true
+    echo "## ⚠️ 风险提示" >> "$report"
+    echo "" >> "$report"
+  fi
+
+  if [[ -n "$missing_dirs" ]]; then
+    echo "**未备份的目录（当前环境存在但未包含在快照中）：**" >> "$report"
+    echo "" >> "$report"
+    echo -e "$missing_dirs" >> "$report"
+    echo "如需备份，请在 config/default.json 的 critical 或 important 中添加对应路径。" >> "$report"
+    echo "" >> "$report"
+  fi
+
+  if [[ -n "$large_files" ]]; then
+    echo "**当前环境中的大文件（>5MB，可能未备份）：**" >> "$report"
+    echo "" >> "$report"
+    echo -e "$large_files" >> "$report"
+    echo "大文件默认跳过。如需强制备份，在 config/default.json 中调高 size_limits 或使用 \`--no-size-limit\` 参数。" >> "$report"
+    echo "" >> "$report"
+  fi
+
+  if (( stats_skipped > 0 )); then
+    echo "**${skip_reasons}**" >> "$report"
+    echo "" >> "$report"
+    echo "跳过原因通常是：文件在当前环境中不存在（如未配置某通道），或体积超过限制。" >> "$report"
+    echo "" >> "$report"
+  fi
+
+  if [[ "$has_risk" == "false" ]]; then
+    echo "## ✅ 无风险" >> "$report"
+    echo "" >> "$report"
+    echo "所有配置范围内的文件已完整备份，无体积超限，无遗漏目录。" >> "$report"
+    echo "" >> "$report"
+  fi
+
+  # 存储建议
+  cat >> "$report" <<REPORT
+## 存储建议
+
+快照生成后需要存到安全的地方。几种选择：
+
+| 方式 | 说明 | 适合场景 |
+|------|------|----------|
+| GitHub 私有仓库 | \`shadowclaw push -r github.com/user/repo -b main\` | 个人备份，版本可追溯 |
+| 本地加密压缩 | \`tar czf snapshot.tar.gz <快照目录>\` + GPG 加密 | 离线保存 |
+| 对象存储（S3/R2/B2） | 搭配 rclone 或 aws-cli 上传 | 团队协作，自动化 |
+| NAS / 网盘 | 手动复制到 Synology、群晖等 | 家庭用户 |
+
+恢复时从存储位置拉回快照目录，执行 \`shadowclaw restore --force <快照目录>\` 即可。
+
+---
+*本报告由 ShadowClaw v${VERSION} 自动生成*
+REPORT
+
+  ok "报告已生成: SNAPSHOT_REPORT.md"
 }
 
 # ── CMD: restore ────────────────────────────────────────────────────

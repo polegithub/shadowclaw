@@ -144,6 +144,45 @@ bash skills/shadowclaw/scripts/shadowclaw.sh cron --interval 6h
 bash skills/shadowclaw/scripts/shadowclaw.sh help
 ```
 
+## 快照报告
+
+每次快照完成后自动生成 `SNAPSHOT_REPORT.md`，内容包括：
+
+- 备份概览：总文件数、体积、skills 数量、会话数、记忆文件数
+- 安全与脱敏：脱敏了哪些平台（飞书/Telegram/Discord/大象/GitHub 等）、占位符总数
+- 风险提示：哪些目录未备份、哪些文件体积过大被跳过、跳过原因
+- 存储建议：GitHub 私有仓库 / 加密压缩 / 对象存储 / NAS
+
+## 快照存到哪里
+
+快照是你龙虾的"硬盘记忆"，需要存到安全的地方。
+
+**推荐方案（按安全性排序）：**
+
+| 方案 | 命令 | 特点 |
+|------|------|------|
+| GitHub 私有仓库 | `shadowclaw push -r github.com/你/repo` | 版本可追溯，恢复时 git clone 就行 |
+| Backblaze B2 | 搭配 rclone：`rclone sync ./snapshot b2:bucket` | 便宜（$0.005/GB），社区有 openclaw-b2-backup 方案 |
+| Cloudflare R2 | 搭配 rclone：`rclone sync ./snapshot r2:bucket` | 免出站流量费 |
+| AWS S3 / 阿里云 OSS | 搭配 aws-cli 或 ossutil | 企业级，配合 IAM 权限 |
+| 本地加密压缩 | `tar czf snap.tar.gz <目录>` + `gpg -c snap.tar.gz` | 离线保存，U盘/NAS |
+
+**恢复时怎么拿回快照：**
+
+```bash
+# 从 GitHub 私有仓库
+git clone git@github.com:你/repo.git my-snapshot
+shadowclaw restore --force my-snapshot
+
+# 从对象存储
+rclone copy b2:bucket/latest-snapshot ./my-snapshot
+shadowclaw restore --force ./my-snapshot
+
+# 从本地加密备份
+gpg -d snap.tar.gz.gpg | tar xzf -
+shadowclaw restore --force ./snap
+```
+
 ## 安全
 
 快照自动脱敏。API Key、Token、私钥等敏感字段会被替换为 `{{SECRET:field_name}}`。恢复后参考 `secrets-template.json` 填入真实值。
