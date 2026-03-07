@@ -40,7 +40,6 @@
     "directories": [
       "workspace/skills",
       "skills",
-      "workspace/history",
       "workspace/diary"
     ],
     "glob": [
