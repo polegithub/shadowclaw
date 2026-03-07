@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # ShadowClaw — OpenClaw Snapshot & Restore
-# CatClaw v2.0
+# CatPawClaw v2.2
 #
 # Usage:
 #   shadowclaw snapshot [-o dir] [--dry-run] [--no-desensitize] [--incremental]
@@ -14,7 +14,7 @@
 #
 set -euo pipefail
 
-VERSION="2.1.0"
+VERSION="2.2.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_FILE="${SCRIPT_DIR}/../config/paths.json"
 STATE_DIR="${OPENCLAW_DIR:-$HOME/.openclaw}"
@@ -38,9 +38,17 @@ need() {
 
 file_size_mb() {
   local s
-  s=$(stat -c%s "$1" 2>/dev/null || stat -f%z "$1" 2>/dev/null || echo 0)
+  if [[ "$(uname)" == "Darwin" ]]; then
+    s=$(stat -f%z "$1" 2>/dev/null || echo 0)
+  else
+    s=$(stat -c%s "$1" 2>/dev/null || echo 0)
+  fi
   echo $(( s / 1024 / 1024 ))
 }
+
+# Detect OS for portability
+IS_MACOS=false
+[[ "$(uname)" == "Darwin" ]] && IS_MACOS=true
 
 # Read JSON arrays via jq
 cfg_arr() { jq -r "$1 // [] | .[]" "$CONFIG_FILE" 2>/dev/null; }
@@ -143,6 +151,7 @@ build_hash_map() {
 
 # ── Copy with size check ───────────────────────────────────────────
 # $1=src $2=dst $3=max_mb $4=label $5=dry_run
+# Uses global: incremental, BASE_HASHES, stats_unchanged
 copy_checked() {
   local src="$1" dst="$2" max_mb="${3:-10}" label="${4:-}" dry="${5:-false}"
 
@@ -158,6 +167,17 @@ copy_checked() {
       warn "跳过（${mb}MB > ${max_mb}MB）: ${label:-$src}"
       (( stats_skipped++ )) || true
       return
+    fi
+
+    # Incremental: skip if file hash matches base snapshot
+    if [[ "${incremental:-false}" == "true" && -f "$src" ]]; then
+      local rel="${src#$STATE_DIR/}"
+      local current_hash; current_hash=$(sha256sum "$src" 2>/dev/null | cut -d' ' -f1)
+      local base_hash="${BASE_HASHES[$rel]:-}"
+      if [[ -n "$base_hash" && "$current_hash" == "$base_hash" ]]; then
+        (( stats_unchanged++ )) || true
+        return  # Skip unchanged file
+      fi
     fi
   fi
 
@@ -200,9 +220,13 @@ cmd_snapshot() {
   # Load base manifest for incremental
   declare -A BASE_HASHES
   if [[ "$incremental" == "true" ]]; then
-    # Find latest manifest
+    # Auto-discover latest manifest: check common snapshot locations
     if [[ -z "$base_manifest" ]]; then
-      base_manifest=$(find "$(dirname "$output_dir")" -name "manifest.json" -path "*/shadowclaw-snapshot-*" -type f 2>/dev/null | sort -r | head -1)
+      local search_dirs=("$(dirname "$output_dir")" "${STATE_DIR}/snapshots" "." "/tmp")
+      for sdir in "${search_dirs[@]}"; do
+        base_manifest=$(find "$sdir" -maxdepth 3 -name "manifest.json" -path "*shadowclaw*" -type f 2>/dev/null | sort -r | head -1)
+        [[ -n "$base_manifest" ]] && break
+      done
     fi
     if [[ -n "$base_manifest" && -f "$base_manifest" ]]; then
       info "增量基准: $base_manifest"
@@ -564,12 +588,13 @@ cmd_verify() {
 
 # ── CMD: cron ────────────────────────────────────────────────────────
 cmd_cron() {
-  local interval="6h" remove=false
+  local interval="6h" remove=false push_after=false
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --interval|-i) interval="$2"; shift 2 ;;
       --remove)       remove=true; shift ;;
+      --push)         push_after=true; shift ;;
       *)              shift ;;
     esac
   done
@@ -604,11 +629,17 @@ cmd_cron() {
       *)   cron_expr="0 */6 * * *"; warn "不识别的间隔 $interval，使用默认 6h" ;;
     esac
 
+    local cron_cmd="$script_path snapshot --incremental -o ${STATE_DIR}/snapshots/auto"
+    if [[ "$push_after" == "true" ]]; then
+      cron_cmd="$script_path snapshot --incremental -o ${STATE_DIR}/snapshots/auto && $script_path push -s ${STATE_DIR}/snapshots/auto"
+    fi
+
     info "配置 OpenClaw cron: $cron_expr"
+    $push_after && info "快照后自动推送到 GitHub"
     openclaw cron add \
       --name "shadowclaw-auto-snapshot" \
       --schedule "$cron_expr" \
-      --command "$script_path snapshot --incremental -o ${STATE_DIR}/snapshots/auto" \
+      --command "$cron_cmd" \
       2>/dev/null && ok "OpenClaw cron 已配置 (每 $interval)" || {
         warn "OpenClaw cron 配置失败，回退到系统 crontab"
         _setup_system_cron "$script_path" "$interval"
@@ -663,6 +694,86 @@ cmd_diff() {
   info "新增: $added | 变更: $modified"
 }
 
+# ── CMD: test ─────────────────────────────────────────────────────────
+cmd_test() {
+  set +e  # Disable exit-on-error for test suite
+  section "ShadowClaw Self-Test v${VERSION}"
+
+  local pass=0 fail=0 total=0
+
+  _assert() {
+    (( total++ )) || true
+    local desc="$1"; shift
+    local rc=0
+    "$@" >/dev/null 2>&1 || rc=$?
+    if (( rc == 0 )); then
+      ok "PASS: $desc"
+      (( pass++ )) || true
+    else
+      err "FAIL: $desc"
+      (( fail++ )) || true
+    fi
+  }
+
+  # Test 1: help runs
+  _assert "help 命令可用" bash "${BASH_SOURCE[0]}" help
+
+  # Test 2: dry-run snapshot
+  _assert "snapshot --dry-run 可执行" bash "${BASH_SOURCE[0]}" snapshot --dry-run
+
+  # Test 3: actual snapshot
+  local snap; snap=$(mktemp -d)
+  _assert "snapshot 生成成功" bash "${BASH_SOURCE[0]}" snapshot -o "$snap"
+
+  # Test 4: manifest exists
+  _assert "manifest.json 存在" test -f "$snap/manifest.json"
+
+  # Test 5: manifest has file_hashes
+  _assert "manifest 包含文件哈希" jq -e '.file_hashes | length > 0' "$snap/manifest.json"
+
+  # Test 6: critical files present
+  _assert "workspace/MEMORY.md 已备份" test -f "$snap/workspace/MEMORY.md"
+
+  # Test 7: desensitization worked
+  if [[ -f "$snap/openclaw.json" ]]; then
+    _assert "openclaw.json 已脱敏" grep -q '{{SECRET:' "$snap/openclaw.json"
+  else
+    warn "跳过脱敏检查（openclaw.json 不存在）"
+  fi
+
+  # Test 8: no plaintext GitHub tokens
+  local ghp_count; ghp_count=$(grep -rlE 'ghp_[a-zA-Z0-9]{10,}' "$snap/" 2>/dev/null | wc -l)
+  _assert "无明文 GitHub token 泄漏" test "$ghp_count" -eq 0
+
+  # Test 9: verify command
+  _assert "verify 命令可用" bash "${BASH_SOURCE[0]}" verify "$snap"
+
+  # Test 10: diff command
+  _assert "diff 命令可用" bash "${BASH_SOURCE[0]}" diff "$snap"
+
+  # Test 11: restore (to temp dir)
+  local restore_target; restore_target=$(mktemp -d)
+  _assert "restore --force 可执行" env OPENCLAW_DIR="$restore_target" bash "${BASH_SOURCE[0]}" restore --force "$snap"
+
+  # Test 12: backup created during restore
+  _assert "恢复前自动备份存在" test -d "$restore_target/backup"
+
+  # Cleanup
+  rm -rf "$snap" "$restore_target"
+
+  # Summary
+  section "测试结果"
+  info "通过: $pass / $total | 失败: $fail"
+  set -e  # Re-enable exit-on-error
+  if (( fail == 0 )); then
+    ok "🎉 所有测试通过!"
+    return 0
+  else
+    err "存在 $fail 个失败"
+    return 1
+  fi
+}
+
 # ── CMD: help ───────────────────────────────────────────────────────
 cmd_help() {
   cat <<EOF
@@ -673,8 +784,9 @@ ShadowClaw v${VERSION} — OpenClaw Snapshot & Restore
   restore   [--force] <snapshot-dir>                   恢复环境
   push      [-r repo] [-b branch] [-s snapshot-dir]    推送到 GitHub
   verify    <snapshot-dir>                             验证快照完整性
-  cron      [--interval 6h] [--remove]                 配置定时自动快照
+  cron      [--interval 6h] [--push] [--remove]        配置定时快照(+推送)
   diff      <snapshot-dir>                             对比快照与当前差异
+  test                                                 运行自测（12项）
   help                                                 显示帮助
 
 示例:
@@ -684,8 +796,10 @@ ShadowClaw v${VERSION} — OpenClaw Snapshot & Restore
   shadowclaw restore ./my-snapshot        # 恢复
   shadowclaw push -b catclaw              # 推送到 catclaw 分支
   shadowclaw cron --interval 6h           # 每6小时自动快照
+  shadowclaw cron --interval 6h --push    # 每6小时快照+推送
   shadowclaw cron --remove                # 移除定时任务
   shadowclaw diff ./my-snapshot           # 查看差异
+  shadowclaw test                         # 运行12项自测
 
 环境变量:
   GH_TOKEN / GITHUB_TOKEN   GitHub 访问令牌
@@ -709,6 +823,7 @@ main() {
     verify|v)    cmd_verify "$@" ;;
     cron|c)      cmd_cron "$@" ;;
     diff|d)      cmd_diff "$@" ;;
+    test|t)      cmd_test "$@" ;;
     help|--help|-h) cmd_help ;;
     version|--version|-V) echo "ShadowClaw v${VERSION}" ;;
     *) err "未知命令: $cmd"; cmd_help; exit 1 ;;
