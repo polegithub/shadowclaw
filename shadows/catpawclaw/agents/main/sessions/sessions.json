@@ -2265,7 +2265,7 @@
   },
   "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97": {
     "sessionId": "5fe72f1c-94a9-4b89-a274-61774506ecd6",
-    "updatedAt": 1772912044137,
+    "updatedAt": 1772912863318,
     "systemSent": true,
     "abortedLastRun": false,
     "displayName": "feishu:g-oc_40efcf271da2a542291ab9b83d2eea97",
@@ -2634,14 +2634,14 @@
       "version": 0
     },
     "modelProvider": "kubeplex-maas",
-    "model": "claude-opus-4.5",
+    "model": "MiniMax-M2.5",
     "systemPromptReport": {
       "source": "run",
-      "generatedAt": 1772911375079,
+      "generatedAt": 1772912644250,
       "sessionId": "5fe72f1c-94a9-4b89-a274-61774506ecd6",
       "sessionKey": "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97",
       "provider": "kubeplex-maas",
-      "model": "claude-opus-4.5",
+      "model": "MiniMax-M2.5",
       "workspaceDir": "/root/.openclaw/workspace",
       "bootstrapMaxChars": 20000,
       "bootstrapTotalMaxChars": 150000,
@@ -2650,9 +2650,9 @@
         "sandboxed": false
       },
       "systemPrompt": {
-        "chars": 38784,
+        "chars": 38781,
         "projectContextChars": 16814,
-        "nonProjectContextChars": 21970
+        "nonProjectContextChars": 21967
       },
       "injectedWorkspaceFiles": [
         {
@@ -3053,12 +3053,15 @@
     "cacheRead": 0,
     "cacheWrite": 0,
     "totalTokensFresh": true,
-    "contextTokens": 200000,
+    "contextTokens": 128000,
     "inputTokens": 11,
-    "outputTokens": 1567,
+    "outputTokens": 7419,
     "memoryFlushAt": 1772900667655,
     "memoryFlushCompactionCount": 0,
-    "totalTokens": 1
+    "totalTokens": 1,
+    "fallbackNoticeSelectedModel": "kubeplex-maas/claude-opus-4.5",
+    "fallbackNoticeActiveModel": "kubeplex-maas/MiniMax-M2.5",
+    "fallbackNoticeReason": "unknown"
   },
   "agent:main:daxiang:direct:chenglong16": {
     "sessionId": "cccc3bf5-9c12-47d9-b127-9f76c9c48c73",
