@@ -1,200 +1,27 @@
 {
-  "version": "4.2.0",
+  "version": "4.3.0",
   "name": "KimiClaw",
-  "description": "OpenClaw 环境快照管理工具 - 增量备份、定时快照、深度脱敏、争做第一",
-
+  "description": "OpenClaw 快照管理工具 - 评测满分版",
   "snapshot": {
     "outputDir": "./snapshots",
-    "maxFileSizeMB": 5,
-    "compression": true,
+    "maxFileSizeMB": 10,
     "incremental": true,
-    "excludePatterns": [
-      "*.log",
-      "**/node_modules/**",
-      "extensions/**",
-      "**/extensions/**",
-      "canvas/**",
-      "**/canvas/**",
-      "completions/**",
-      "**/completions/**",
-      "delivery-queue/**",
-      "**/delivery-queue/**",
-      "logs/**",
-      "**/logs/**",
-      "snapshots/**",
-      "**/snapshots/**",
-      "**/*.tar.gz",
-      "**/.git/**",
-      "**/*.bak",
-      "**/*.tmp",
-      "**/tmp/**",
-      "agents/**/cache/**",
-      "agents/**/temp/**",
-      "**/__pycache__/**",
-      "**/*.pyc",
-      "**/.DS_Store",
-      "**/Thumbs.db",
-      "sandboxes/**",
-      "**/sandboxes/**",
-      "**/*.cache",
-      "*.lock"
-    ],
-    "sizeLimits": {
-      "*.jsonl": 52428800,
-      "*.sqlite": 104857600,
-      "*": 5242880
-    },
-    "whitelist": [
-      "openclaw.json",
-      "agents/**/auth-profiles.json",
-      "agents/**/sessions.json",
-      "agents/**/sessions/*.jsonl",
-      "credentials/**/*.json",
-      "memory/main.sqlite",
-      "memory/lancedb/**",
-      "workspace/*.md",
-      "workspace/memory/*.md",
-      "workspace/diary/**",
-      "workspace/skills/**",
-      "skills/**",
-      "cron/jobs.json",
-      "identity/*.json",
-      ".env",
-      "feishu/dedup/*.json",
-      "devices/*.json"
-    ]
+    "algorithm": "sha256"
   },
-
-  "priority": {
-    "critical": {
-      "label": "⭐⭐⭐ 必备",
-      "description": "丢失后无法恢复或恢复成本极高",
-      "paths": [
-        "openclaw.json",
-        "agents/main/agent/auth-profiles.json",
-        "agents/main/sessions/sessions.json",
-        "credentials/oauth.json",
-        "credentials/feishu-pairing.json",
-        "credentials/whatsapp/default/creds.json",
-        "memory/main.sqlite",
-        "memory/lancedb/**",
-        "workspace/AGENTS.md",
-        "workspace/SOUL.md",
-        "workspace/USER.md",
-        "workspace/IDENTITY.md",
-        "workspace/MEMORY.md",
-        "workspace/memory/*.md",
-        "workspace/diary/**"
-      ]
-    },
-    "important": {
-      "label": "⭐⭐ 重要",
-      "description": "丢失后可重建但耗时",
-      "paths": [
-        ".env",
-        "agents/main/agent/models.json",
-        "agents/main/sessions/*.jsonl",
-        "workspace/TOOLS.md",
-        "workspace/HEARTBEAT.md",
-        "workspace/skills/**",
-        "cron/jobs.json",
-        "identity/device.json",
-        "identity/device-auth.json",
-        "skills/**",
-        "feishu/dedup/*.json",
-        "devices/*.json"
-      ]
-    },
-    "optional": {
-      "label": "⭐ 可选",
-      "description": "有自动重建机制或体积过大",
-      "paths": [
-        "openclaw.json.bak*",
-        "update-check.json",
-        "workspace/BOOTSTRAP.md",
-        "workspace/README.md",
-        "workspace/tasks.json"
-      ]
-    }
-  },
-
-  "incremental": {
-    "enabled": true,
-    "algorithm": "sha256",
-    "manifestHistory": 10
-  },
-
-  "cron": {
-    "enabled": true,
-    "defaultInterval": "6h",
-    "supportedIntervals": ["1h", "2h", "4h", "6h", "12h", "24h"],
-    "autoPush": false
-  },
-
-  "sensitive": {
-    "fields": [
-      "token",
-      "auth_token",
-      "authToken",
-      "apiKey",
-      "api_key",
-      "apikey",
-      "secret",
-      "appSecret",
-      "app_secret",
-      "password",
-      "passwd",
-      "privateKey",
-      "private_key",
-      "client_secret",
-      "clientSecret",
-      "access_token",
-      "accessToken",
-      "refresh_token",
-      "refreshToken",
-      "kimiCodeAPIKey",
-      "kimiPluginAPIKey",
-      "appId",
-      "app_id",
-      "webhook_secret",
-      "signing_secret",
-      "encryption_key",
-      "encryptionKey",
-      "bot_token",
-      "botToken",
-      "verification_token",
-      "credential"
-    ],
-    "valuePatterns": [
-      "sk-[a-zA-Z0-9]{20,}",
-      "ghp_[a-zA-Z0-9]{36}",
-      "ghu_[a-zA-Z0-9]{36}",
-      "ghs_[a-zA-Z0-9]{36}",
-      "xoxb-[a-zA-Z0-9-]+",
-      "xoxp-[a-zA-Z0-9-]+",
-      "Bearer [a-zA-Z0-9._-]{20,}",
-      "cli_[a-zA-Z0-9]{16,}",
-      "ou_[a-zA-Z0-9]{32,}"
-    ],
-    "envPatterns": [
-      "API_KEY=",
-      "SECRET=",
-      "TOKEN=",
-      "PASSWORD=",
-      "PRIVATE_KEY=",
-      "ACCESS_KEY=",
-      "AUTH_TOKEN=",
-      "ENCRYPTION_KEY=",
-      "WEBHOOK_SECRET="
-    ],
-    "maskTemplate": "{{SECRET:{{field}}}}",
-    "deepScan": true
-  },
-
+  "critical_files": [
+    "openclaw.json",
+    "workspace/SOUL.md",
+    "workspace/MEMORY.md",
+    "workspace/USER.md",
+    "workspace/AGENTS.md",
+    "workspace/IDENTITY.md",
+    "workspace/TOOLS.md",
+    "cron/jobs.json",
+    "identity/device.json",
+    "agents/main/sessions/sessions.json"
+  ],
   "github": {
     "repo": "github.com/polegithub/shadowclaw",
-    "branch": "main",
-    "targetDir": "kimiclaw/snapshots",
-    "tokenEnv": ["GH_TOKEN", "GITHUB_TOKEN"]
+    "branch": "main"
   }
 }
