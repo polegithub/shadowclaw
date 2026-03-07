@@ -1474,7 +1474,7 @@
   },
   "agent:main:feishu:direct:ou_85efae4d2eca2271215fa481f5463fb5": {
     "sessionId": "7a7f6af1-5807-43d4-9b1b-c7e39b4337d6",
-    "updatedAt": 1772900058753,
+    "updatedAt": 1772910696866,
     "systemSent": true,
     "abortedLastRun": false,
     "chatType": "direct",
@@ -1501,7 +1501,7 @@
     "model": "claude-opus-4.5",
     "systemPromptReport": {
       "source": "run",
-      "generatedAt": 1772900054030,
+      "generatedAt": 1772910684974,
       "sessionId": "7a7f6af1-5807-43d4-9b1b-c7e39b4337d6",
       "sessionKey": "agent:main:feishu:direct:ou_85efae4d2eca2271215fa481f5463fb5",
       "provider": "kubeplex-maas",
@@ -2259,13 +2259,13 @@
       "version": 0
     },
     "contextTokens": 200000,
-    "inputTokens": 33890,
-    "outputTokens": 16,
-    "totalTokens": 33890
+    "inputTokens": 62144,
+    "outputTokens": 257,
+    "totalTokens": 1
   },
   "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97": {
     "sessionId": "5fe72f1c-94a9-4b89-a274-61774506ecd6",
-    "updatedAt": 1772908676965,
+    "updatedAt": 1772911375038,
     "systemSent": true,
     "abortedLastRun": false,
     "displayName": "feishu:g-oc_40efcf271da2a542291ab9b83d2eea97",
@@ -2637,7 +2637,7 @@
     "model": "claude-opus-4.5",
     "systemPromptReport": {
       "source": "run",
-      "generatedAt": 1772908324117,
+      "generatedAt": 1772908945874,
       "sessionId": "5fe72f1c-94a9-4b89-a274-61774506ecd6",
       "sessionKey": "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97",
       "provider": "kubeplex-maas",
@@ -3054,11 +3054,11 @@
     "cacheWrite": 0,
     "totalTokensFresh": true,
     "contextTokens": 200000,
-    "inputTokens": 16,
-    "outputTokens": 2735,
+    "inputTokens": 3,
+    "outputTokens": 460,
     "memoryFlushAt": 1772900667655,
     "memoryFlushCompactionCount": 0,
-    "totalTokens": 1
+    "totalTokens": 3
   },
   "agent:main:daxiang:direct:chenglong16": {
     "sessionId": "cccc3bf5-9c12-47d9-b127-9f76c9c48c73",

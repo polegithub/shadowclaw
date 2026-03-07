@@ -46,7 +46,8 @@
     "glob": [
       "agents/main/sessions/*.jsonl",
       "feishu/dedup/*.json",
-      "devices/*.json"
+      "devices/*.json",
+      "workspace/*.md"
     ]
   },
   "optional": {
