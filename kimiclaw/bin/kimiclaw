@@ -32,7 +32,8 @@ cmd_snapshot() {
             -o|--output) output_dir="$2"; shift 2 ;;
             -i|--incremental) incremental=true; shift ;;
             --dry-run) echo "模拟运行"; exit 0 ;;
-            *) shift ;;
+            -*) shift ;;
+            *) [[ -z "$output_dir" ]] && { output_dir="$1"; shift; } || shift ;;
         esac
     done
     
@@ -47,8 +48,12 @@ cmd_snapshot() {
         if [[ -f "$src" ]]; then
             mkdir -p "$(dirname "${output_dir}/${f}")"
             cp "$src" "${output_dir}/${f}"
-            # 简单脱敏
+            # 深度脱敏
             sed -i 's/"token": "[^"]*"/"token": "{{SECRET:token}}"/g' "${output_dir}/${f}" 2>/dev/null || true
+            sed -i 's/"apiKey": "[^"]*"/"apiKey": "{{SECRET:apiKey}}"/g' "${output_dir}/${f}" 2>/dev/null || true
+            sed -i 's/"secret": "[^"]*"/"secret": "{{SECRET:secret}}"/g' "${output_dir}/${f}" 2>/dev/null || true
+            sed -i 's/ghp_[a-zA-Z0-9]\{10,\}/{{SECRET:ghp_token}}/g' "${output_dir}/${f}" 2>/dev/null || true
+            sed -i 's/sk-[a-zA-Z0-9]\{10,\}/{{SECRET:sk_key}}/g' "${output_dir}/${f}" 2>/dev/null || true
             copied=$((copied + 1))
         fi
     done
