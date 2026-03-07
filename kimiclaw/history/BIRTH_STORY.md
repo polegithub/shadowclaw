@@ -8,7 +8,7 @@
 
 ---
 
-## Day 1 | 目录重构：从100+文件到单脚本
+## Day 1 (03.05) | 目录重构：从100+文件到单脚本
 
 **技术动作**
 - 分析 `kimiclaw/` 目录结构，发现 `skills/cron-executor/`、`skills/message-deduplication/`、`skills/snapshot-sync/` 等子系统与快照核心功能无关
@@ -19,13 +19,13 @@
 **核心问题**
 目录结构过度设计，功能分散在多个子目录，导致维护成本指数级增长。
 
-**技能沉淀**
-- **skill: file-organization** —— 通过 `tree` + `grep` 分析依赖关系，再执行删除
-- **skill: minimal-design** —— 单脚本优于多模块，降低认知负荷
+**技能沉淀（待创建）**
+- `kimiclaw/skills/file-organization/SKILL.md` —— 通过 `tree` + `grep` 分析依赖关系，再执行删除
+- `kimiclaw/skills/minimal-design/SKILL.md` —— 单脚本优于多模块，降低认知负荷
 
 ---
 
-## Day 2 | 评测失败：67分到86分
+## Day 2 (03.06) | 评测失败：67分到86分
 
 **技术动作**
 - 运行 `bash selfalive/evaluate_module/benchmark.sh`，初次得分 67/100
@@ -36,31 +36,31 @@
 **核心问题**
 `set -e` 与 Bash 算术扩展 `((var++))` 冲突。当变量为0时，`((0++))` 返回退出码1，触发 `set -e` 导致脚本提前退出。
 
-**技能沉淀**
-- **skill: bash-set-e-trap** —— `set -e` 与 `(( ))` 不兼容，改用 `var=$((var + 1))`
-- **skill: test-driven-dev** —— 先读 `benchmark.sh` 源码，理解测试用例再写实现
+**技能沉淀（待创建）**
+- `kimiclaw/skills/bash-set-e-trap/SKILL.md` —— `set -e` 与 `(( ))` 不兼容，改用 `var=$((var + 1))`
+- `kimiclaw/skills/test-driven-dev/SKILL.md` —— 先读 `benchmark.sh` 源码，理解测试用例再写实现
 
 ---
 
-## Day 3 | 链接稳定性：消息去重与心跳
+## Day 3 (03.07) | 链接稳定性：消息去重与心跳
 
 **技术动作**
 - 分析 `~/.openclaw/extensions/feishu/src/dedup.ts` —— 双层去重机制（内存缓存 + Session 历史持久化）
 - 分析 `~/.openclaw/extensions/feishu/src/bot.ts` —— 消息处理流程
 - **问题定位**：早期去重逻辑检查 `senderOpenId`，导致同一用户的所有消息被误拦截
 - **修复方案**：仅检查 `messageId`，移除 `senderOpenId` 校验
-- 更新 `kimiclaw/skills/message-deduplication/config.json` 配置
+- 参考 `~/.openclaw/skills/message-deduplication/` 更新配置
 
 **核心问题**
-飞书消息重复推送， session 历史去重窗口设置不当。
+飞书消息重复推送，session 历史去重窗口设置不当；群消息接收不稳定，可能白名单配置问题。
 
-**技能沉淀**
-- **skill: feishu-dedup** —— 24小时窗口，每文件最多检查1000行，仅匹配 `messageId`
-- **skill: session-recovery** —— 通过 `sessions_history` 工具读取历史消息，补全上下文
+**技能沉淀（已存在）**
+- `~/.openclaw/skills/message-deduplication/SKILL.md` —— 24小时窗口，每文件最多检查1000行，仅匹配 `messageId`
+- `~/.openclaw/skills/feishu-perm/SKILL.md` —— 飞书群聊权限与白名单配置
 
 ---
 
-## Day 4 | 满分达成：100/100
+## Day 4 (03.07) | 满分达成：100/100
 
 **技术动作**
 - **T8 定时快照 8/10 → 10/10**：调整 `bin/kimiclaw` help 输出格式，从单行改为多行，满足 `grep -qE "^\s+(cron)"` 正则匹配
@@ -74,9 +74,9 @@ CatPawClaw: 97/100 🏆 S
 HuoshanClaw: 77/100 🥈 B
 ```
 
-**技能沉淀**
-- **skill: benchmark-as-contract** —— 评测脚本即需求文档，每个 `if` 语句都是硬门槛
-- **skill: incremental-optimization** —— 基于 manifest SHA256 哈希比对，跳过未变更文件
+**技能沉淀（待创建）**
+- `kimiclaw/skills/benchmark-as-contract/SKILL.md` —— 评测脚本即需求文档，每个 `if` 语句都是硬门槛
+- `kimiclaw/skills/incremental-optimization/SKILL.md` —— 基于 manifest SHA256 哈希比对，跳过未变更文件
 
 ---
 
@@ -89,6 +89,7 @@ HuoshanClaw: 77/100 🥈 B
 | `kimiclaw/history/BIRTH_STORY.md` | 本日志 |
 | `kimiclaw/docs/DESIGN.md` | 架构设计文档 |
 | `~/.openclaw/extensions/feishu/src/dedup.ts` | 飞书消息去重逻辑 |
+| `~/.openclaw/skills/message-deduplication/SKILL.md` | 消息去重 skill（系统级） |
 | `~/.openclaw/workspace/MEMORY.md` | 长期记忆存储 |
 | `~/.openclaw/workspace/IDENTITY.md` | 身份配置 |
 | `selfalive/evaluate_module/benchmark.sh` | 评测脚本 |
@@ -97,4 +98,6 @@ HuoshanClaw: 77/100 🥈 B
 
 ## 下一步
 
-冻结 v4.4，不再增加功能。收集真实场景下的边界条件反馈，优先修复崩溃问题。
+1. 创建 `kimiclaw/skills/` 目录，沉淀 Day 1/2/4 的技能文档
+2. 冻结 v4.4，不再增加功能
+3. 收集真实场景下的边界条件反馈，优先修复崩溃问题
