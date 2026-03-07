@@ -184,7 +184,7 @@ case "${1:-help}" in
     cron) shift; cmd_cron "$@" ;;
     help|--help|-h)
         echo "KimiClaw v${VERSION}"
-        echo "Commands: snapshot, restore, verify, diff, cron"
+        echo "Commands: snapshot [-i incremental], restore, verify, diff, cron"
         ;;
     *) echo "Unknown command: $1"; exit 1 ;;
 esac
