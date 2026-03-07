@@ -1,0 +1,394 @@
+#!/bin/bash
+# snapshot-generate: 生成 OpenClaw 环境快照
+
+set -e
+
+WORKSPACE="${HOME}/.openclaw/workspace"
+SNAPSHOT_DIR="${1:-${HOME}/.openclaw/snapshots/snapshot-$(date +%Y%m%d-%H%M%S)}"
+MAX_SIZE_MB="${2:-10}"
+EXCLUDE_PATTERNS="${3:-*.log,node_modules,.git,__pycache__,*.tmp,*.cache}"
+
+echo "📸 OpenClaw 快照生成"
+echo "===================="
+echo "输出目录: $SNAPSHOT_DIR"
+echo "大小限制: ${MAX_SIZE_MB}MB"
+echo ""
+
+# 创建快照目录
+mkdir -p "$SNAPSHOT_DIR"/{skills,memory,workspace,extensions}
+
+# 转换 MB 到 bytes
+MAX_SIZE_BYTES=$((MAX_SIZE_MB * 1024 * 1024))
+
+# 记录排除的文件
+declare -a EXCLUDED_FILES=()
+TOTAL_SIZE=0
+
+# 检查文件大小的函数
+check_file_size() {
+    local file="$1"
+    local size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null || echo 0)
+    echo "$size"
+}
+
+# 格式化字节为可读格式
+format_size() {
+    local bytes=$1
+    if [ $bytes -ge 1048576 ]; then
+        echo "$(echo "scale=2; $bytes/1048576" | bc) MB"
+    elif [ $bytes -ge 1024 ]; then
+        echo "$(echo "scale=1; $bytes/1024" | bc) KB"
+    else
+        echo "${bytes} B"
+    fi
+}
+
+# 检查是否需要排除
+should_exclude() {
+    local file="$1"
+    local size=$(check_file_size "$file")
+    
+    # 检查大小限制
+    if [ "$size" -gt "$MAX_SIZE_BYTES" ]; then
+        return 0
+    fi
+    
+    # 检查排除模式
+    IFS=',' read -ra PATTERNS <<< "$EXCLUDE_PATTERNS"
+    for pattern in "${PATTERNS[@]}"; do
+        if [[ "$file" == *"$pattern"* ]]; then
+            return 0
+        fi
+    done
+    
+    return 1
+}
+
+echo "🔍 扫描文件..."
+
+# 1. 复制 skills
+if [ -d "$WORKSPACE/skills" ]; then
+    echo ""
+    echo "📦 复制 Skills..."
+    SKILL_INDEX='{"skills":[]}'
+    
+    for skill_dir in "$WORKSPACE"/skills/*/; do
+        if [ -d "$skill_dir" ]; then
+            skill_name=$(basename "$skill_dir")
+            target_dir="$SNAPSHOT_DIR/skills/$skill_name"
+            mkdir -p "$target_dir"
+            
+            # 计算 skill 总大小
+            skill_size=0
+            while IFS= read -r -d '' file; do
+                size=$(check_file_size "$file")
+                skill_size=$((skill_size + size))
+                
+                if should_exclude "$file"; then
+                    rel_path="${file#$WORKSPACE/}"
+                    EXCLUDED_FILES+=("{\"path\":\"$rel_path\",\"size_bytes\":$size,\"reason\":\"exceeds_max_size\"")
+                    echo "  ⚠ $skill_name/$(basename "$file") ($(format_size $size)) - 已排除"
+                else
+                    rel_path="${file#$skill_dir}"
+                    target_file="$target_dir/$rel_path"
+                    mkdir -p "$(dirname "$target_file")"
+                    cp "$file" "$target_file" 2>/dev/null || true
+                fi
+            done < <(find "$skill_dir" -type f -print0 2>/dev/null)
+            
+            echo "  ✓ $skill_name ($(format_size $skill_size))"
+            
+            # 添加到技能索引
+            if [ -f "$skill_dir/SKILL.md" ]; then
+                SKILL_INDEX=$(echo "$SKILL_INDEX" | jq ".skills += [{\"name\":\"$skill_name\",\"source\":\"local\",\"path\":\"skills/$skill_name\",\"install_cmd\":\"cp -r ./skills/$skill_name ~/.openclaw/workspace/skills/\"}]")
+            fi
+        fi
+    done
+    
+    echo "$SKILL_INDEX" | jq '.' > "$SNAPSHOT_DIR/skills/SKILL_INDEX.json"
+fi
+
+# 2. 复制 memory
+if [ -d "$WORKSPACE/memory" ]; then
+    echo ""
+    echo "🧠 复制记忆文件..."
+    for file in "$WORKSPACE"/memory/*.md; do
+        if [ -f "$file" ]; then
+            size=$(check_file_size "$file")
+            if [ "$size" -gt "$MAX_SIZE_BYTES" ]; then
+                rel_path="memory/$(basename "$file")"
+                EXCLUDED_FILES+=("{\"path\":\"$rel_path\",\"size_bytes\":$size,\"reason\":\"exceeds_max_size\"}")
+                echo "  ⚠ memory/$(basename "$file") ($(format_size $size)) - 已排除"
+            else
+                cp "$file" "$SNAPSHOT_DIR/memory/"
+                TOTAL_SIZE=$((TOTAL_SIZE + size))
+                echo "  ✓ memory/$(basename "$file") ($(format_size $size))"
+            fi
+        fi
+    done
+fi
+
+# 3. 复制 workspace 核心文件
+echo ""
+echo "📁 复制工作区文件..."
+CORE_FILES=("AGENTS.md" "SOUL.md" "USER.md" "TOOLS.md" "IDENTITY.md" "BOOTSTRAP.md" "MEMORY.md")
+for filename in "${CORE_FILES[@]}"; do
+    if [ -f "$WORKSPACE/$filename" ]; then
+        size=$(check_file_size "$WORKSPACE/$filename")
+        cp "$WORKSPACE/$filename" "$SNAPSHOT_DIR/workspace/"
+        TOTAL_SIZE=$((TOTAL_SIZE + size))
+        echo "  ✓ $filename ($(format_size $size))"
+    fi
+done
+
+# 4. 处理配置文件
+echo ""
+echo "⚙️  处理配置文件..."
+
+# 脱敏函数
+sanitize_config() {
+    local input_file="$1"
+    local output_file="$2"
+    
+    if [ -f "$input_file" ]; then
+        # 复制原文件
+        cp "$input_file" "$output_file"
+        
+        # 脱敏处理 (简单实现，实际可能需要更复杂的逻辑)
+        sed -i 's/"token": *"[^"]*"/"token": "{{SECRET:token}}"/g' "$output_file" 2>/dev/null || true
+        sed -i 's/"api_key": *"[^"]*"/"api_key": "{{SECRET:api_key}}"/g' "$output_file" 2>/dev/null || true
+        sed -i 's/"secret": *"[^"]*"/"secret": "{{SECRET:secret}}"/g' "$output_file" 2>/dev/null || true
+        sed -i 's/"password": *"[^"]*"/"password": "{{SECRET:password}}"/g' "$output_file" 2>/dev/null || true
+        
+        echo "  ✓ $(basename "$output_file") (已脱敏)"
+    fi
+}
+
+# 处理 openclaw.json (如果存在)
+if [ -f "$HOME/.openclaw/openclaw.json" ]; then
+    sanitize_config "$HOME/.openclaw/openclaw.json" "$SNAPSHOT_DIR/openclaw.json"
+    
+    # 创建 secrets 模板
+    cat > "$SNAPSHOT_DIR/secrets-template.json" << 'EOF'
+{
+  "_comment": "填入真实凭证后重命名为 secrets.json",
+  "github_token": "your_github_token_here",
+  "api_keys": {
+    "openai": "sk-...",
+    "anthropic": "sk-ant-..."
+  }
+}
+EOF
+    echo "  ✓ secrets-template.json"
+fi
+
+# 5. 创建 manifest.json
+echo ""
+echo "📝 生成清单文件..."
+
+SKILL_COUNT=$(find "$SNAPSHOT_DIR/skills" -name "SKILL.md" 2>/dev/null | wc -l)
+MEMORY_COUNT=$(find "$SNAPSHOT_DIR/memory" -name "*.md" 2>/dev/null | wc -l)
+WORKSPACE_COUNT=$(find "$SNAPSHOT_DIR/workspace" -type f 2>/dev/null | wc -l)
+
+# 构建排除文件 JSON
+EXCLUDED_JSON="["
+for i in "${!EXCLUDED_FILES[@]}"; do
+    if [ $i -gt 0 ]; then
+        EXCLUDED_JSON+=","
+    fi
+    EXCLUDED_JSON+="${EXCLUDED_FILES[$i]}"
+done
+EXCLUDED_JSON+="]"
+
+# 计算总大小 MB
+TOTAL_SIZE_MB=$(echo "scale=2; $TOTAL_SIZE / 1048576" | bc)
+
+cat > "$SNAPSHOT_DIR/manifest.json" << EOF
+{
+  "version": "2.0.0",
+  "generated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "generated_by": "snapshot-sync",
+  "hostname": "$(hostname)",
+  "stats": {
+    "skills_count": $SKILL_COUNT,
+    "memory_files": $MEMORY_COUNT,
+    "workspace_files": $WORKSPACE_COUNT,
+    "total_size_mb": $TOTAL_SIZE_MB,
+    "excluded_files_count": ${#EXCLUDED_FILES[@]}
+  },
+  "excluded_large_files": $EXCLUDED_JSON,
+  "filters": {
+    "max_file_size_mb": $MAX_SIZE_MB,
+    "exclude_patterns": "$EXCLUDE_PATTERNS"
+  }
+}
+EOF
+
+# 6. 创建 README.md (自举指南)
+cat > "$SNAPSHOT_DIR/README.md" << 'EOF'
+# OpenClaw 环境快照
+
+这是 OpenClaw 的完整环境快照，包含 skills、记忆、配置和工作区文件。
+
+## 快速开始 (新 OpenClaw 实例)
+
+```bash
+# 1. 安装 snapshot-sync skill
+clawhub install snapshot-sync
+
+# 2. 查看当前快照
+snapshot-sync preview ./snapshot-*/
+
+# 3. 恢复环境
+snapshot-sync restore ./snapshot-*/
+
+# 4. 填入凭证
+# 编辑 secrets-template.json，填入真实值后保存为 secrets.json
+
+# 5. 重启 gateway
+openclaw gateway restart
+```
+
+## 快照结构
+
+- `skills/` - 所有已安装的 skills
+- `memory/` - 记忆文件 (MEMORY.md, 每日记录)
+- `workspace/` - 工作区核心文件 (SOUL.md, USER.md, 等)
+- `openclaw.json` - 主配置 (已脱敏)
+- `secrets-template.json` - 敏感信息模板
+- `manifest.json` - 快照元数据
+
+## 手动恢复
+
+如果不使用 snapshot-sync skill，可以手动复制：
+
+```bash
+# 备份当前环境
+cp -r ~/.openclaw/workspace ~/.openclaw/workspace.backup.$(date +%s)
+
+# 恢复文件
+cp -r skills/* ~/.openclaw/workspace/skills/
+cp -r memory/* ~/.openclaw/workspace/memory/
+cp workspace/* ~/.openclaw/workspace/
+cp openclaw.json ~/.openclaw/
+
+# 填入 secrets
+# 然后重启
+```
+
+## 排除的文件
+
+大文件已被排除，详见 `manifest.json` 中的 `excluded_large_files`。
+EOF
+
+# 7. 创建 restore.sh
+cat > "$SNAPSHOT_DIR/restore.sh" << 'EOF'
+#!/bin/bash
+# OpenClaw 快照恢复脚本
+
+set -e
+
+SNAPSHOT_DIR="$(cd "$(dirname "$0")" && pwd)"
+WORKSPACE="${HOME}/.openclaw/workspace"
+
+echo "🔄 OpenClaw 环境恢复"
+echo "===================="
+echo "快照目录: $SNAPSHOT_DIR"
+echo ""
+
+# 1. 备份当前环境
+BACKUP_DIR="${HOME}/.openclaw/backup/$(date +%Y%m%d-%H%M%S)"
+if [ -d "$WORKSPACE" ]; then
+    mkdir -p "$BACKUP_DIR"
+    cp -r "$WORKSPACE" "$BACKUP_DIR/" 2>/dev/null || true
+    echo "✓ 当前环境已备份到: $BACKUP_DIR"
+fi
+
+# 2. 确保目标目录存在
+mkdir -p "$WORKSPACE"/{skills,memory}
+
+# 3. 恢复 skills
+echo ""
+echo "📦 恢复 Skills..."
+if [ -d "$SNAPSHOT_DIR/skills" ]; then
+    for skill_dir in "$SNAPSHOT_DIR"/skills/*/; do
+        if [ -d "$skill_dir" ]; then
+            skill_name=$(basename "$skill_dir")
+            rm -rf "$WORKSPACE/skills/$skill_name" 2>/dev/null || true
+            cp -r "$skill_dir" "$WORKSPACE/skills/"
+            echo "  ✓ $skill_name"
+        fi
+    done
+fi
+
+# 4. 恢复记忆文件
+echo ""
+echo "🧠 恢复记忆文件..."
+if [ -d "$SNAPSHOT_DIR/memory" ]; then
+    for file in "$SNAPSHOT_DIR"/memory/*.md; do
+        if [ -f "$file" ]; then
+            cp "$file" "$WORKSPACE/memory/"
+            echo "  ✓ $(basename "$file")"
+        fi
+    done
+fi
+
+# 5. 恢复工作区文件
+echo ""
+echo "📁 恢复工作区文件..."
+if [ -d "$SNAPSHOT_DIR/workspace" ]; then
+    for file in "$SNAPSHOT_DIR"/workspace/*; do
+        if [ -f "$file" ]; then
+            cp "$file" "$WORKSPACE/"
+            echo "  ✓ $(basename "$file")"
+        fi
+    done
+fi
+
+# 6. 恢复配置
+echo ""
+echo "⚙️  恢复配置..."
+if [ -f "$SNAPSHOT_DIR/openclaw.json" ]; then
+    cp "$SNAPSHOT_DIR/openclaw.json" "${HOME}/.openclaw/"
+    echo "  ✓ openclaw.json"
+fi
+
+echo ""
+echo "✅ 恢复完成！"
+echo ""
+echo "⚠️  请手动执行："
+echo "   1. 检查 secrets-template.json，填入真实凭证"
+echo "   2. 如有需要，创建 ~/.openclaw/secrets.json"
+echo "   3. 重启 OpenClaw: openclaw gateway restart"
+echo "   4. 验证配置: openclaw status"
+echo ""
+echo "备份位置: $BACKUP_DIR"
+EOF
+
+chmod +x "$SNAPSHOT_DIR/restore.sh"
+
+# 输出摘要
+echo ""
+echo "===================="
+echo "✅ 快照生成完成！"
+echo "===================="
+echo ""
+echo "📂 位置: $SNAPSHOT_DIR"
+echo "📊 统计:"
+echo "   • Skills: $SKILL_COUNT"
+echo "   • 记忆文件: $MEMORY_COUNT"
+echo "   • 工作区文件: $WORKSPACE_COUNT"
+echo "   • 总大小: $(format_size $TOTAL_SIZE)"
+echo "   • 排除文件: ${#EXCLUDED_FILES[@]} 个"
+echo ""
+
+if [ ${#EXCLUDED_FILES[@]} -gt 0 ]; then
+    echo "⚠️  以下文件因超过 ${MAX_SIZE_MB}MB 限制而被排除："
+    echo "$EXCLUDED_JSON" | jq -r '.[] | "   • \(.path) (\(.size_bytes / 1048576 | floor) MB)"' 2>/dev/null || true
+    echo ""
+fi
+
+echo "下一步:"
+echo "   • 推送到仓库: snapshot-sync push $SNAPSHOT_DIR"
+echo "   • 查看详情: cat $SNAPSHOT_DIR/manifest.json"
+echo "   • 恢复此快照: $SNAPSHOT_DIR/restore.sh"

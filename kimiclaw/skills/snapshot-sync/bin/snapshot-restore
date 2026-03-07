@@ -1,0 +1,220 @@
+#!/bin/bash
+# snapshot-restore: 恢复快照到当前 OpenClaw 环境
+
+set -e
+
+SNAPSHOT_DIR="$1"
+MERGE_MODE="${2:-false}"
+ONLY_COMPONENTS="${3:-all}"
+
+WORKSPACE="${HOME}/.openclaw/workspace"
+
+# 如果没有指定快照目录，尝试使用最新的
+if [ -z "$SNAPSHOT_DIR" ] || [ ! -d "$SNAPSHOT_DIR" ]; then
+    SNAPSHOT_DIR=$(find "${HOME}/.openclaw/snapshots" -type d -name "snapshot-*" -o -name "pull-*" | sort | tail -1)
+    if [ -z "$SNAPSHOT_DIR" ]; then
+        echo "❌ 错误: 未找到快照目录"
+        echo ""
+        echo "用法: snapshot-restore [快照目录] [--merge] [--only skills,memory]"
+        exit 1
+    fi
+fi
+
+# 检查是否是快照目录
+if [ ! -f "$SNAPSHOT_DIR/manifest.json" ] && [ ! -f "$SNAPSHOT_DIR/README.md" ]; then
+    echo "❌ 错误: $SNAPSHOT_DIR 看起来不是一个有效的快照目录"
+    exit 1
+fi
+
+echo "🔄 恢复 OpenClaw 环境"
+echo "===================="
+echo "快照目录: $SNAPSHOT_DIR"
+echo "工作区: $WORKSPACE"
+echo ""
+
+# 显示快照信息
+if [ -f "$SNAPSHOT_DIR/manifest.json" ]; then
+    echo "📊 快照信息:"
+    jq -r '
+        "   生成时间: \(.generated_at // "unknown")",
+        "   版本: \(.version // "1.0.0")",
+        "   Skills: \(.stats.skills_count // 0)",
+        "   记忆文件: \(.stats.memory_files // 0)",
+        "   工作区文件: \(.stats.workspace_files // 0)"
+    ' "$SNAPSHOT_DIR/manifest.json" 2>/dev/null || echo "   (无法解析)"
+    echo ""
+fi
+
+# 确认恢复
+echo "⚠️  这将覆盖当前环境的对应文件"
+echo ""
+read -p "确认恢复? (y/N): " confirm
+if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+    echo "已取消"
+    exit 0
+fi
+
+# 1. 备份当前环境
+echo ""
+echo "📦 备份当前环境..."
+BACKUP_DIR="${HOME}/.openclaw/backup/$(date +%Y%m%d-%H%M%S)"
+if [ -d "$WORKSPACE" ]; then
+    mkdir -p "$BACKUP_DIR"
+    cp -r "$WORKSPACE" "$BACKUP_DIR/" 2>/dev/null || true
+    echo "✓ 已备份到: $BACKUP_DIR"
+else
+    echo "✓ 工作区不存在，无需备份"
+fi
+
+# 确保目标目录存在
+mkdir -p "$WORKSPACE"/{skills,memory}
+
+# 2. 恢复 skills
+if [[ "$ONLY_COMPONENTS" == "all" ]] || [[ "$ONLY_COMPONENTS" == *"skills"* ]]; then
+    echo ""
+    echo "📚 恢复 Skills..."
+    
+    if [ -d "$SNAPSHOT_DIR/skills" ]; then
+        # 统计 skill 数量
+        skill_count=0
+        
+        for skill_dir in "$SNAPSHOT_DIR"/skills/*/; do
+            if [ -d "$skill_dir" ]; then
+                skill_name=$(basename "$skill_dir")
+                target_skill="$WORKSPACE/skills/$skill_name"
+                
+                if [ "$MERGE_MODE" == "true" ] && [ -d "$target_skill" ]; then
+                    # 合并模式：备份旧版本
+                    mv "$target_skill" "${target_skill}.backup.$(date +%s)"
+                    echo "  ↻ $skill_name (已备份旧版本)"
+                fi
+                
+                rm -rf "$target_skill" 2>/dev/null || true
+                cp -r "$skill_dir" "$target_skill"
+                ((skill_count++)) || true
+                echo "  ✓ $skill_name"
+            fi
+        done
+        
+        echo "   共恢复 $skill_count 个 skills"
+    else
+        echo "  ℹ️  快照中没有 skills 目录"
+    fi
+fi
+
+# 3. 恢复记忆文件
+if [[ "$ONLY_COMPONENTS" == "all" ]] || [[ "$ONLY_COMPONENTS" == *"memory"* ]]; then
+    echo ""
+    echo "🧠 恢复记忆文件..."
+    
+    if [ -d "$SNAPSHOT_DIR/memory" ]; then
+        memory_count=0
+        
+        for file in "$SNAPSHOT_DIR"/memory/*.md; do
+            if [ -f "$file" ]; then
+                filename=$(basename "$file")
+                target_file="$WORKSPACE/memory/$filename"
+                
+                if [ "$MERGE_MODE" == "true" ] && [ -f "$target_file" ]; then
+                    # 合并模式：保留两个文件
+                    cp "$target_file" "${target_file}.local.backup"
+                    echo "  ↻ $filename (本地版本已备份)"
+                fi
+                
+                cp "$file" "$target_file"
+                ((memory_count++)) || true
+                echo "  ✓ $filename"
+            fi
+        done
+        
+        echo "   共恢复 $memory_count 个记忆文件"
+    else
+        echo "  ℹ️  快照中没有记忆文件"
+    fi
+fi
+
+# 4. 恢复工作区文件
+if [[ "$ONLY_COMPONENTS" == "all" ]] || [[ "$ONLY_COMPONENTS" == *"workspace"* ]]; then
+    echo ""
+    echo "📁 恢复工作区文件..."
+    
+    if [ -d "$SNAPSHOT_DIR/workspace" ]; then
+        for file in "$SNAPSHOT_DIR"/workspace/*; do
+            if [ -f "$file" ]; then
+                filename=$(basename "$file")
+                target_file="$WORKSPACE/$filename"
+                
+                if [ "$MERGE_MODE" == "true" ] && [ -f "$target_file" ]; then
+                    cp "$target_file" "${target_file}.local.backup"
+                    echo "  ↻ $filename (本地版本已备份)"
+                else
+                    echo "  ✓ $filename"
+                fi
+                
+                cp "$file" "$target_file"
+            fi
+        done
+    fi
+fi
+
+# 5. 恢复配置
+if [[ "$ONLY_COMPONENTS" == "all" ]] || [[ "$ONLY_COMPONENTS" == *"config"* ]]; then
+    echo ""
+    echo "⚙️  恢复配置..."
+    
+    if [ -f "$SNAPSHOT_DIR/openclaw.json" ]; then
+        cp "$SNAPSHOT_DIR/openclaw.json" "${HOME}/.openclaw/"
+        echo "  ✓ openclaw.json"
+    fi
+    
+    if [ -f "$SNAPSHOT_DIR/secrets-template.json" ]; then
+        # 不要覆盖现有的 secrets
+        if [ ! -f "${HOME}/.openclaw/secrets.json" ]; then
+            cp "$SNAPSHOT_DIR/secrets-template.json" "${HOME}/.openclaw/secrets-template.json"
+            echo "  ✓ secrets-template.json (请填入真实值后重命名为 secrets.json)"
+        else
+            echo "  ℹ️  secrets.json 已存在，跳过"
+        fi
+    fi
+fi
+
+# 6. 显示完成信息和待办事项
+echo ""
+echo "===================="
+echo "✅ 恢复完成！"
+echo "===================="
+echo ""
+
+if [ -n "$BACKUP_DIR" ]; then
+    echo "📦 当前环境已备份: $BACKUP_DIR"
+    echo ""
+fi
+
+echo "⚠️  请手动执行："
+echo ""
+echo "   1. 检查配置文件"
+echo "      cat ~/.openclaw/openclaw.json"
+echo ""
+
+if [ -f "${HOME}/.openclaw/secrets-template.json" ]; then
+    echo "   2. 填入凭证信息"
+    echo "      编辑 ~/.openclaw/secrets-template.json"
+    echo "      填入真实值后保存为 ~/.openclaw/secrets.json"
+    echo ""
+    echo "   3. 重启 OpenClaw"
+    echo "      openclaw gateway restart"
+else
+    echo "   2. 重启 OpenClaw"
+    echo "      openclaw gateway restart"
+fi
+
+echo ""
+echo "   4. 验证配置"
+echo "      openclaw status"
+echo ""
+
+if [ "$MERGE_MODE" == "true" ]; then
+    echo "📝 合并模式已启用，本地备份文件："
+    find "$WORKSPACE" -name "*.local.backup" -o -name "*.backup.*" 2>/dev/null | head -10 || echo "   (无)"
+    echo ""
+fi

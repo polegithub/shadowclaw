@@ -1,0 +1,7 @@
+total 24
+drwxr-xr-x  6 root root 4096 Mar  5 10:16 .
+drwx------ 19 root root 4096 Mar  5 22:02 ..
+drwxr-xr-x  3 root root 4096 Feb 15 00:41 dingtalk-connector
+drwxr-xr-x  5 root root 4096 Mar  5 20:51 feishu
+drwxr-xr-x  4 root root 4096 Mar  2 16:27 kimi-claw
+drwxr-xr-x  4 root root 4096 Mar  2 16:28 kimi-search
