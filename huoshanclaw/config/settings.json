@@ -1,0 +1,13 @@
+{
+  "default_compression": "zstd",
+  "compression_level": 19,
+  "incremental_time_window": 86400,
+  "auto_backup": true,
+  "encryption_algorithm": "aes-256-cbc",
+  "sensitive_fields": [
+    "api_key",
+    "token",
+    "secret",
+    "password"
+  ]
+}
