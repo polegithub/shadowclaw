@@ -2265,7 +2265,7 @@
   },
   "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97": {
     "sessionId": "5fe72f1c-94a9-4b89-a274-61774506ecd6",
-    "updatedAt": 1772906660250,
+    "updatedAt": 1772908055590,
     "systemSent": true,
     "abortedLastRun": false,
     "displayName": "feishu:g-oc_40efcf271da2a542291ab9b83d2eea97",
@@ -2637,7 +2637,7 @@
     "model": "claude-opus-4.5",
     "systemPromptReport": {
       "source": "run",
-      "generatedAt": 1772906289027,
+      "generatedAt": 1772906660285,
       "sessionId": "5fe72f1c-94a9-4b89-a274-61774506ecd6",
       "sessionKey": "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97",
       "provider": "kubeplex-maas",
@@ -3054,11 +3054,11 @@
     "cacheWrite": 0,
     "totalTokensFresh": true,
     "contextTokens": 200000,
-    "inputTokens": 3,
-    "outputTokens": 528,
+    "inputTokens": 12,
+    "outputTokens": 6454,
     "memoryFlushAt": 1772900667655,
     "memoryFlushCompactionCount": 0,
-    "totalTokens": 3
+    "totalTokens": 1
   },
   "agent:main:daxiang:direct:chenglong16": {
     "sessionId": "cccc3bf5-9c12-47d9-b127-9f76c9c48c73",

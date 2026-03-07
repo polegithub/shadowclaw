@@ -101,6 +101,9 @@
 - commit 前缀：【catclaw花椒】
 - PR #3 已合并
 
+### 铁律（Git）
+- **绝对禁止在 main、master、release/* 分支上 force push** — 这会覆盖别人的提交，是不可逆的破坏行为。遇到 push 被 reject，必须先 pull --rebase 再 push，不能走 --force 捷径。
+
 ### 铁律
 - **代码和 skills 中永远不出现 catclaw** — commit message 可以，代码/skills 里不行
 - **推 public repo 前扫个人信息** — 姓名、ID、邮箱一律不出现

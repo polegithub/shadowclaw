@@ -1,6 +1,6 @@
 # ShadowClaw 快照报告
 
-生成时间：2026-03-08 02:05:49 CST
+生成时间：2026-03-08 02:28:09 CST
 工具版本：v2.2.0
 源目录：/root/.openclaw
 快照模式：全量
@@ -41,7 +41,7 @@
 |------|------|
 | 脱敏处理 | ✅ 已执行 |
 | 涉及文件数 | 10 |
-| 脱敏占位符总数 | 266 |
+| 脱敏占位符总数 | 269 |
 | 涉及平台 | 飞书 大象 模型API  |
 
 脱敏范围：API Key、OAuth Token、私钥（PEM）、Bearer Token、GitHub Token（ghp_/ghu_/ghs_）、Slack Token（xoxb_/xoxp_）、飞书 App ID（cli_）、x-access-token。
