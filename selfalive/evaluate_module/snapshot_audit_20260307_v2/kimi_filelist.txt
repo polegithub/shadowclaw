@@ -1,0 +1,13 @@
+agents/main/sessions/sessions.json
+cron/jobs.json
+identity/device.json
+manifest.json
+openclaw.json
+workspace/AGENTS.md
+workspace/IDENTITY.md
+workspace/memory/2026-03-06.md
+workspace/memory/2026-03-07.md
+workspace/MEMORY.md
+workspace/SOUL.md
+workspace/TOOLS.md
+workspace/USER.md
