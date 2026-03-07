@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "organization": "基于 Vercel Engineering 改编",
+  "date": "2026年1月",
+  "abstract": "针对客户端 React 应用的性能优化指南，专为 AI 助手和 LLM 设计。包含多个类别的规则，从关键优化（减少包体积、优化重渲染）到增量改进（高级模式）。每条规则都包含详细说明、对比错误与正确实现的实际示例，以及具体的影响指标，用于指导自动化重构和代码生成。",
+  "references": [
+    "https://react.dev",
+    "https://swr.vercel.app",
+    "https://github.com/isaacs/node-lru-cache"
+  ]
+}
