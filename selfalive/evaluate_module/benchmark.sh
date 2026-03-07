@@ -11,6 +11,15 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 VERBOSE="${1:-}"
 
+# ── 环境依赖检查 ──
+for dep in bash jq git rsync; do
+  if ! command -v "$dep" >/dev/null 2>&1; then
+    echo "⚠️  缺少依赖: $dep — 请先安装 (apt install $dep / brew install $dep)"
+    echo "   评测需要: bash, jq, git, rsync"
+    exit 1
+  fi
+done
+
 # ── Colors ──
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 BLUE='\033[0;34m'; CYAN='\033[0;36m'; BOLD='\033[1m'; NC='\033[0m'
