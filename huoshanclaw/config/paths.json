@@ -1,0 +1,19 @@
+{
+  "include": [
+    "openclaw.json",
+    ".env",
+    "agents/**/auth-profiles.json",
+    "agents/**/sessions.json",
+    "credentials/**/*.json",
+    "memory/**/*",
+    "workspace/*.md",
+    "cron/jobs.json",
+    "identity/device.json"
+  ],
+  "exclude": [
+    "*.tmp",
+    "*.cache",
+    "node_modules/**",
+    ".git/**"
+  ]
+}
