@@ -1,0 +1,35 @@
+{
+  "providers": {
+    "kimi-coding": {
+      "baseUrl": "https://api.kimi.com/coding",
+      "apiKey": "sk-kimi-raOJcflbclzY73MAR7yZCKlVMAP4di9c9PckqWRi8Cw7KWccwaknavkZdY0KL0L9",
+      "api": "anthropic-messages",
+      "headers": {
+        "User-Agent": "Kimi Claw Plugin",
+        "X-Kimi-Claw-ID": "19cb8831-02d2-86a1-8000-0000337ebf33"
+      },
+      "models": [
+        {
+          "id": "k2p5",
+          "name": "k2p5",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 262144,
+          "maxTokens": 32768,
+          "headers": {
+            "User-Agent": "Kimi Claw Plugin",
+            "X-Kimi-Claw-ID": "19cb8831-02d2-86a1-8000-0000337ebf33"
+          }
+        }
+      ]
+    }
+  }
+}

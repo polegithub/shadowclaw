@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "jobs": [
+    {
+      "id": "8b9c9f42-a638-44f8-84d2-4dcc03ea00e0",
+      "agentId": "main",
+      "name": "OpenClaw 每日资讯收集",
+      "enabled": true,
+      "createdAtMs": 1772622554007,
+      "updatedAtMs": 1772845309111,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 9 * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "执行 OpenClaw 每日资讯收集任务（V2 格式）。\n\n**筛选标准**：\n- 总数量：3-5条精选内容\n- 排除：基础安装教程、Docker部署指南、VPS安装等入门内容\n- 保留：有深度的技术分析、影响力报道、商业化案例、架构拆解\n\n**分类**（每类1-3条）：\n1. **影响力类**：大家怎么用、怎么评价、商业化案例、行业观点、安全风险等\n2. **技术类**：原理拆解、架构分析、进阶使用、核心机制、性能优化等\n\n**输出格式**：\n```\n# 📰 OpenClaw 每日资讯 - YYYY-MM-DD\n\n## 一、影响力类（用户怎么用、行业评价、商业化）\n\n### 1. [标题](URL)\n**来源**: xxx | **日期**: YYYY-MM-DD | **质量**: 🟢高/🟡中\n**摘要**: （100-300字，详细摘抄核心观点，说明这篇文章在讲什么、有什么价值、对谁有用）\n\n## 二、技术类（原理、架构、进阶）\n\n### 1. [标题](URL)\n**来源**: xxx | **日期**: YYYY-MM-DD | **质量**: 🟢高/🟡中\n**摘要**: （100-300字，详细技术内容摘抄）\n\n---\n💡 今日洞察：（1-2句话总结今天资讯的核心趋势或值得关注的点）\n```\n\n**执行步骤**：\n1. kimi_search 搜索 \"OpenClaw\" 新闻（limit=15，获取足够素材）\n2. 严格筛选，排除安装教程类内容\n3. 按影响力/技术分类，每类精选1-3条\n4. 撰写100-300字详细摘要\n5. 生成Markdown，保存到 memory/daily-news/YYYY-MM-DD.md\n6. message 发送给用户\n\n只返回按格式整理好的内容。",
+        "thinking": "medium",
+        "timeoutSeconds": 300
+      },
+      "delivery": {
+        "mode": "announce",
+        "to": "user"
+      },
+      "state": {
+        "nextRunAtMs": 1772931600000,
+        "lastRunAtMs": 1772845200001,
+        "lastStatus": "error",
+        "lastDurationMs": 109110,
+        "consecutiveErrors": 1,
+        "lastError": "cron announce delivery failed"
+      }
+    },
+    {
+      "id": "7e53ba18-d61b-455a-a9bf-21a85971c85d",
+      "agentId": "main",
+      "name": "OpenClaw每日早报",
+      "enabled": true,
+      "createdAtMs": 1772730146467,
+      "updatedAtMs": 1772845368984,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 9 * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "搜索 OpenClaw 的最新新闻和技术文档（各1-3条），要求：\n1. 高质量、不重复\n2. 用人类话术/大白话总结，不要机器人语言\n3. 附带网页链接\n4. 将结果发送到飞书用户 ou_196dc9353a11da18b0cec3c11213f173\n\n搜索关键词：\n- \"OpenClaw news\" \"OpenClaw updates\" \"OpenClaw release\"\n- \"OpenClaw tutorial\" \"OpenClaw docs\" \"OpenClaw guide\"\n\n用飞书消息发送最终结果。"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "feishu"
+      },
+      "state": {
+        "nextRunAtMs": 1772931600000,
+        "lastRunAtMs": 1772845309111,
+        "lastStatus": "ok",
+        "lastDurationMs": 59873,
+        "consecutiveErrors": 0
+      }
+    }
+  ]
+}

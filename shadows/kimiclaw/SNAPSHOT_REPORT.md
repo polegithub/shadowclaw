@@ -1,0 +1,97 @@
+# ShadowClaw 快照报告
+
+生成时间：2026-03-08 02:08:41 CST
+工具版本：v2.2.0
+源目录：/root/.openclaw
+快照模式：全量
+
+---
+
+## 备份概览
+
+| 指标 | 数值 |
+|------|------|
+| 总文件数 | 32 |
+| 快照体积 | 15M |
+| Skills 数量 | 1 |
+| 会话文件 | 11 |
+| 工作区文件 | 7 |
+| 记忆文件 | 0 |
+| 已复制 | 30 |
+| 已跳过 | 10 |
+| 未变更（增量跳过） | 0 |
+
+## 已备份内容
+
+- **agents/**（13 个文件）
+- **canvas/**（1 个文件）
+- **credentials/**（1 个文件）
+- **cron/**（1 个文件）
+- **devices/**（2 个文件）
+- **identity/**（2 个文件）
+- **skills/**（1 个文件）
+- **workspace/**（7 个文件）
+- manifest.json
+- openclaw.json
+- secrets-template.json
+
+## 安全与脱敏
+
+| 指标 | 数值 |
+|------|------|
+| 脱敏处理 | ✅ 已执行 |
+| 涉及文件数 | 9 |
+| 脱敏占位符总数 | 372 |
+| 涉及平台 | 飞书 模型API GitHub  |
+
+脱敏范围：API Key、OAuth Token、私钥（PEM）、Bearer Token、GitHub Token（ghp_/ghu_/ghs_）、Slack Token（xoxb_/xoxp_）、飞书 App ID（cli_）、x-access-token。
+
+## ⚠️ 风险提示
+
+**当前环境中的大文件（>5MB，可能未备份）：**
+
+  - extensions/dingtalk-connector/node_modules/@ffmpeg-installer/linux-x64/ffmpeg（65MB）
+  - extensions/feishu/node_modules/@larksuiteoapi/node-sdk/types/index.d.ts（10MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217204641.10952/node_modules/node-pty/prebuilds/win32-arm64/pty.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217204641.10952/node_modules/node-pty/prebuilds/win32-arm64/winpty-agent.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217204641.10952/node_modules/node-pty/prebuilds/win32-arm64/conpty.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217204641.10952/node_modules/node-pty/prebuilds/win32-x64/pty.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217204641.10952/node_modules/node-pty/prebuilds/win32-x64/winpty-agent.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217204641.10952/node_modules/node-pty/prebuilds/win32-x64/conpty.pdb（6MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217204641.10952/node_modules/node-pty/prebuilds/win32-x64/winpty.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217142927.107028/node_modules/node-pty/prebuilds/win32-arm64/pty.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217142927.107028/node_modules/node-pty/prebuilds/win32-arm64/winpty-agent.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217142927.107028/node_modules/node-pty/prebuilds/win32-arm64/conpty.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217142927.107028/node_modules/node-pty/prebuilds/win32-x64/pty.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217142927.107028/node_modules/node-pty/prebuilds/win32-x64/winpty-agent.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217142927.107028/node_modules/node-pty/prebuilds/win32-x64/conpty.pdb（6MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260217142927.107028/node_modules/node-pty/prebuilds/win32-x64/winpty.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260215013921.8614/node_modules/node-pty/prebuilds/win32-arm64/pty.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260215013921.8614/node_modules/node-pty/prebuilds/win32-arm64/winpty-agent.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260215013921.8614/node_modules/node-pty/prebuilds/win32-arm64/conpty.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260215013921.8614/node_modules/node-pty/prebuilds/win32-x64/pty.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260215013921.8614/node_modules/node-pty/prebuilds/win32-x64/winpty-agent.pdb（5MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260215013921.8614/node_modules/node-pty/prebuilds/win32-x64/conpty.pdb（6MB）
+  - extensions-backups/kimi-claw/kimi-claw.bak.20260215013921.8614/node_modules/node-pty/prebuilds/win32-x64/winpty.pdb（5MB）
+
+大文件默认跳过。如需强制备份，在 config/default.json 中调高 size_limits 或使用 `--no-size-limit` 参数。
+
+**共 10 项被跳过（文件不存在或体积超限）**
+
+跳过原因通常是：文件在当前环境中不存在（如未配置某通道），或体积超过限制。
+
+## 存储建议
+
+快照生成后需要存到安全的地方。几种选择：
+
+| 方式 | 说明 | 适合场景 |
+|------|------|----------|
+| GitHub 私有仓库 | `shadowclaw push -r github.com/user/repo -b main` | 个人备份，版本可追溯 |
+| 本地加密压缩 | `tar czf snapshot.tar.gz <快照目录>` + GPG 加密 | 离线保存 |
+| 对象存储（S3/R2/B2） | 搭配 rclone 或 aws-cli 上传 | 团队协作，自动化 |
+| NAS / 网盘 | 手动复制到 Synology、群晖等 | 家庭用户 |
+
+恢复时从存储位置拉回快照目录，执行 `shadowclaw restore --force <快照目录>` 即可。
+
+---
+*本报告由 ShadowClaw v2.2.0 自动生成*

@@ -1,0 +1,60 @@
+{
+  "2b1e9a495e7dbe9c31c0db7741a6a309ba2ef155442a666663ce3704d6ac2834": {
+    "deviceId": "2b1e9a495e7dbe9c31c0db7741a6a309ba2ef155442a666663ce3704d6ac2834",
+    "publicKey": "zpLmuc4xV9YVgbZ7zL29xND1_OLiJl0nSuMk0SyKwSw",
+    "platform": "linux",
+    "clientId": "cli",
+    "clientMode": "cli",
+    "role": "operator",
+    "roles": [
+      "operator"
+    ],
+    "scopes": [
+      "operator.admin",
+      "operator.approvals",
+      "operator.pairing"
+    ],
+    "tokens": {
+      "operator": {
+        "token": "954dae6ba79948a88b58e0b62dca16d9",
+        "role": "operator",
+        "scopes": [
+          "operator.admin",
+          "operator.approvals",
+          "operator.pairing"
+        ],
+        "createdAtMs": 1771087587882,
+        "lastUsedAtMs": 1772903384425
+      }
+    },
+    "createdAtMs": 1771087587882,
+    "approvedAtMs": 1771087587882
+  },
+  "9fb278336528a5d1c02b06f0f1cd6246f37b032de56210d4e122d7b03a3a6e7e": {
+    "deviceId": "9fb278336528a5d1c02b06f0f1cd6246f37b032de56210d4e122d7b03a3a6e7e",
+    "publicKey": "xEZqV5CuVEspAGEUEl4W5kER65Ec8kAgQ38b7KrWPio",
+    "displayName": "kimi-bridge-connector",
+    "platform": "linux",
+    "clientId": "gateway-client",
+    "clientMode": "backend",
+    "role": "operator",
+    "roles": [
+      "operator"
+    ],
+    "scopes": [
+      "operator.admin"
+    ],
+    "tokens": {
+      "operator": {
+        "token": "e8ceb9ab52fb4b22a2940da635305dc7",
+        "role": "operator",
+        "scopes": [
+          "operator.admin"
+        ],
+        "createdAtMs": 1771309799321
+      }
+    },
+    "createdAtMs": 1771309799321,
+    "approvedAtMs": 1771309799321
+  }
+}
