@@ -10,7 +10,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 KIMICLAW_DIR="$(dirname "$SCRIPT_DIR")"
 CONFIG_FILE="${KIMICLAW_DIR}/config/default.json"
 OPENCLAW_DIR="${OPENCLAW_DIR:-$HOME/.openclaw}"
-VERSION="4.0.0"
+VERSION="4.1.0"
 
 # 颜色定义
 RED='\033[0;31m'
@@ -30,11 +30,14 @@ KimiClaw v${VERSION} - OpenClaw 环境快照管理工具
 命令:
     generate, g     生成快照
     restore, r      恢复快照
+    auto-restore    一键恢复（自动填入凭证）
+    setup           交互式配置凭证
     push, p         推送到远程仓库
     pull, pl        从远程拉取
     list, ls        列出本地快照
     clean           清理旧快照
     verify          验证快照完整性
+    test            运行恢复测试
     config          显示配置
     help            显示帮助
 
@@ -578,6 +581,139 @@ cmd_config() {
     fi
 }
 
+# 一键恢复（自动填入凭证）
+cmd_auto_restore() {
+    local snapshot_dir="$1"
+    local force=false
+    
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -f|--force) force=true; shift ;;
+            -*) shift ;;
+            *) snapshot_dir="$1"; shift ;;
+        esac
+    done
+    
+    if [[ -z "$snapshot_dir" ]] || [[ ! -d "$snapshot_dir" ]]; then
+        log_error "请指定有效的快照目录"
+        exit 1
+    fi
+    
+    log_info "开始一键恢复..."
+    
+    # 先执行普通恢复（不提示）
+    cmd_restore "$snapshot_dir" --no-backup
+    
+    # 检查是否有本地凭证备份
+    local creds_backup="${OPENCLAW_DIR}/.credentials_backup.json"
+    if [[ -f "$creds_backup" ]]; then
+        log_info "发现本地凭证备份，自动恢复凭证..."
+        restore_credentials_from_backup "$creds_backup"
+    else
+        log_warn "未找到本地凭证备份"
+        log_info "请运行: kimiclaw setup 配置凭证"
+    fi
+    
+    log_success "一键恢复完成!"
+    log_info "建议重启 OpenClaw: openclaw gateway restart"
+}
+
+# 从备份恢复凭证
+restore_credentials_from_backup() {
+    local backup_file="$1"
+    
+    # 读取备份的凭证并填入
+    local openai_key=$(jq -r '.agents.authProfiles.openai // empty' "$backup_file" 2>/dev/null)
+    if [[ -n "$openai_key" ]] && [[ "$openai_key" != "null" ]]; then
+        sed -i "s/{{SECRET:apiKey}}/$openai_key/g" "${OPENCLAW_DIR}/agents/main/agent/auth-profiles.json" 2>/dev/null || true
+        log_success "  ✓ 恢复 OpenAI API Key"
+    fi
+}
+
+# 交互式配置凭证
+cmd_setup() {
+    log_info "KimiClaw 交互式配置"
+    echo
+    
+    local creds_file="${OPENCLAW_DIR}/.credentials_backup.json"
+    
+    read -p "OpenAI API Key: " openai_key
+    read -p "Anthropic API Key: " anthropic_key
+    read -p "Feishu App ID: " feishu_appid
+    read -p "Feishu App Secret: " feishu_secret
+    
+    # 保存到备份文件
+    cat > "$creds_file" << EOF
+{
+  "agents": {
+    "authProfiles": {
+      "openai": "$openai_key",
+      "anthropic": "$anthropic_key"
+    }
+  },
+  "credentials": {
+    "feishu": {
+      "appId": "$feishu_appid",
+      "appSecret": "$feishu_secret"
+    }
+  },
+  "updatedAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+}
+EOF
+    
+    chmod 600 "$creds_file"
+    log_success "凭证已保存到: $creds_file"
+    log_info "下次恢复时会自动填入这些凭证"
+}
+
+# 运行恢复测试
+cmd_test() {
+    log_info "运行 KimiClaw 恢复测试..."
+    echo
+    
+    local test_dir="${KIMICLAW_DIR}/test_snapshot"
+    local errors=0
+    
+    # 测试1: 生成快照
+    log_info "测试1: 生成快照..."
+    local snapshot_path=$(cmd_generate -o "$test_dir" 2>/dev/null)
+    if [[ -d "$snapshot_path" ]]; then
+        log_success "✓ 快照生成成功"
+    else
+        log_error "✗ 快照生成失败"
+        ((errors++))
+    fi
+    
+    # 测试2: 验证快照
+    log_info "测试2: 验证快照..."
+    if cmd_verify "$snapshot_path" >/dev/null 2>&1; then
+        log_success "✓ 快照验证通过"
+    else
+        log_warn "  快照验证有警告"
+    fi
+    
+    # 测试3: 检查体积
+    log_info "测试3: 检查快照体积..."
+    local size=$(du -sm "$snapshot_path" 2>/dev/null | cut -f1)
+    if [[ $size -lt 100 ]]; then
+        log_success "✓ 快照体积: ${size}MB (< 100MB)"
+    else
+        log_warn "  快照体积较大: ${size}MB"
+    fi
+    
+    # 清理测试快照
+    rm -rf "$test_dir"
+    
+    echo
+    if [[ $errors -eq 0 ]]; then
+        log_success "所有测试通过!"
+        return 0
+    else
+        log_error "测试失败: $errors 个错误"
+        return 1
+    fi
+}
+
 # 主入口
 main() {
     # 检查依赖
@@ -590,11 +726,14 @@ main() {
     case "$cmd" in
         generate|g) cmd_generate "$@" ;;
         restore|r) cmd_restore "$@" ;;
+        auto-restore) cmd_auto_restore "$@" ;;
+        setup) cmd_setup "$@" ;;
         push|p) cmd_push "$@" ;;
         pull|pl) cmd_pull "$@" ;;
         list|ls) cmd_list "$@" ;;
         clean) cmd_clean "$@" ;;
         verify) cmd_verify "$@" ;;
+        test) cmd_test "$@" ;;
         config) cmd_config "$@" ;;
         help|--help|-h) show_help ;;
         *) 

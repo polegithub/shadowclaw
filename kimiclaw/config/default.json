@@ -1,24 +1,44 @@
 {
-  "version": "4.0.0",
+  "version": "4.1.0",
   "name": "KimiClaw",
-  "description": "OpenClaw 环境快照管理工具 - 配置驱动版",
-  
+  "description": "OpenClaw 环境快照管理工具 - 极致体积、一键恢复",
+
   "snapshot": {
     "outputDir": "./snapshots",
-    "maxFileSizeMB": 10,
+    "maxFileSizeMB": 5,
+    "compression": true,
     "excludePatterns": [
       "*.log",
-      "node_modules/**",
       "**/node_modules/**",
       "extensions/**",
+      "**/extensions/**",
       "canvas/**",
+      "**/canvas/**",
       "completions/**",
+      "**/completions/**",
       "delivery-queue/**",
+      "**/delivery-queue/**",
       "logs/**",
+      "**/logs/**",
       "snapshots/**",
-      "*.tar.gz",
-      ".git/**"
+      "**/snapshots/**",
+      "**/*.tar.gz",
+      "**/.git/**",
+      "**/*.bak",
+      "**/*.tmp",
+      "**/tmp/**",
+      "agents/**/cache/**",
+      "agents/**/temp/**",
+      "**/__pycache__/**",
+      "**/*.pyc",
+      "**/.DS_Store",
+      "**/Thumbs.db"
     ],
+    "sizeLimits": {
+      "*.jsonl": 52428800,
+      "*.sqlite": 104857600,
+      "*": 5242880
+    },
     "whitelist": [
       "openclaw.json",
       "agents/**/auth-profiles.json",
