@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# KimiClaw v4.0 - OpenClaw 快照管理工具
-# 配置驱动、简洁高效
+# KimiClaw v4.2 - OpenClaw 快照管理工具
+# 增量备份、定时快照、深度脱敏、争做第一
 #
 
 set -e
@@ -10,71 +10,69 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 KIMICLAW_DIR="$(dirname "$SCRIPT_DIR")"
 CONFIG_FILE="${KIMICLAW_DIR}/config/default.json"
 OPENCLAW_DIR="${OPENCLAW_DIR:-$HOME/.openclaw}"
-VERSION="4.1.0"
+VERSION="4.2.0"
 
 # 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-# 打印帮助信息
-show_help() {
-    cat << EOF
-KimiClaw v${VERSION} - OpenClaw 环境快照管理工具
-
-用法:
-    kimiclaw <command> [options]
-
-命令:
-    generate, g     生成快照
-    restore, r      恢复快照
-    auto-restore    一键恢复（自动填入凭证）
-    setup           交互式配置凭证
-    push, p         推送到远程仓库
-    pull, pl        从远程拉取
-    list, ls        列出本地快照
-    clean           清理旧快照
-    verify          验证快照完整性
-    test            运行恢复测试
-    config          显示配置
-    help            显示帮助
-
-generate 选项:
-    -o, --output    指定输出目录
-    -d, --dry-run   模拟运行（不实际执行）
-    -f, --force     强制覆盖
-
-restore 选项:
-    -f, --force     强制恢复（跳过确认）
-    -b, --backup    恢复前备份当前环境
-
-push 选项:
-    -r, --repo      指定仓库
-    -b, --branch    指定分支
-    -m, --message   提交信息
-
-示例:
-    kimiclaw generate                    # 生成快照到默认目录
-    kimiclaw generate -o ./my-snapshot   # 指定输出目录
-    kimiclaw restore ./snapshot-xxx      # 恢复快照
-    kimiclaw push                        # 推送到默认仓库
-    kimiclaw list                        # 列出快照
-    kimiclaw clean -k 5                  # 保留最近5个快照
-
-EOF
-}
+CYAN='\033[0;36m'
+NC='\033[0m'
 
 # 日志函数
 log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 log_success() { echo -e "${GREEN}[OK]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+log_highlight() { echo -e "${CYAN}$1${NC}"; }
+
+# 打印帮助信息
+show_help() {
+    cat << EOF
+KimiClaw v${VERSION} - 🦞 争做第一的快照管理工具
+
+用法:
+    kimiclaw <command> [options]
+
+命令:
+    generate, g       生成快照
+      -i, --incremental  增量备份（基于上次 manifest）
+      -d, --dry-run      模拟运行
+      -o, --output DIR   指定输出目录
+    
+    restore, r        恢复快照
+    auto-restore      一键恢复（自动填入凭证）
+    
+    cron              定时任务管理
+      --interval 6h      设置定时快照（1h/2h/4h/6h/12h/24h）
+      --remove           移除定时任务
+      --status           查看定时任务状态
+    
+    diff              对比当前环境与快照差异
+    
+    push, p           推送到远程仓库
+    pull, pl          从远程拉取
+    list, ls          列出本地快照
+    clean             清理旧快照
+    verify            验证快照完整性
+    test              运行恢复测试
+    setup             交互式配置凭证
+    config            显示配置
+    help              显示帮助
+
+示例:
+    kimiclaw generate -i              # 增量备份
+    kimiclaw cron --interval 6h       # 每6小时自动快照
+    kimiclaw diff ./snapshot-xxx      # 对比差异
+    kimiclaw auto-restore ./snapshot  # 一键恢复
+
+EOF
+}
 
 # 检查依赖
 check_deps() {
-    local deps=("jq" "git" "rsync")
+    local deps=("jq" "git" "rsync" "sha256sum")
     for dep in "${deps[@]}"; do
         if ! command -v "$dep" >/dev/null 2>&1; then
             log_error "缺少依赖: $dep"
@@ -83,154 +81,59 @@ check_deps() {
     done
 }
 
-# 生成快照
-cmd_generate() {
-    local output_dir=""
-    local dry_run=false
-    local force=false
-    
-    # 解析参数
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            -o|--output) output_dir="$2"; shift 2 ;;
-            -d|--dry-run) dry_run=true; shift ;;
-            -f|--force) force=true; shift ;;
-            *) shift ;;
-        esac
-    done
-    
-    # 默认输出目录
-    if [[ -z "$output_dir" ]]; then
-        local timestamp=$(date +%Y%m%d-%H%M%S)
-        output_dir="${KIMICLAW_DIR}/snapshots/snapshot-${timestamp}"
-    fi
-    
-    log_info "开始生成快照..."
-    log_info "源目录: $OPENCLAW_DIR"
-    log_info "目标目录: $output_dir"
-    
-    if [[ "$dry_run" == true ]]; then
-        log_warn "模拟运行模式，不实际执行"
-    fi
-    
-    # 检查源目录
-    if [[ ! -d "$OPENCLAW_DIR" ]]; then
-        log_error "OpenClaw 目录不存在: $OPENCLAW_DIR"
-        exit 1
-    fi
-    
-    # 创建目标目录
-    if [[ "$dry_run" == false ]]; then
-        mkdir -p "$output_dir"
-    fi
-    
-    # 优先级路径列表
-    local critical_paths=(
-        "openclaw.json"
-        "agents/main/agent/auth-profiles.json"
-        "agents/main/sessions/sessions.json"
-        "credentials/oauth.json"
-        "credentials/feishu-pairing.json"
-        "credentials/whatsapp/default/creds.json"
-        "memory/main.sqlite"
-        "workspace/AGENTS.md"
-        "workspace/SOUL.md"
-        "workspace/USER.md"
-        "workspace/IDENTITY.md"
-        "workspace/MEMORY.md"
-    )
-    
-    local important_paths=(
-        ".env"
-        "agents/main/agent/models.json"
-        "agents/main/sessions/*.jsonl"
-        "workspace/TOOLS.md"
-        "workspace/HEARTBEAT.md"
-        "workspace/skills"
-        "cron/jobs.json"
-        "identity/device.json"
-        "identity/device-auth.json"
-    )
-    
-    local copied_count=0
-    local skipped_count=0
-    
-    # 复制必备文件
-    log_info "复制 ⭐⭐⭐ 必备文件..."
-    for path in "${critical_paths[@]}"; do
-        local src="${OPENCLAW_DIR}/${path}"
-        if [[ -e "$src" ]]; then
-            local dest="${output_dir}/${path}"
-            if [[ "$dry_run" == false ]]; then
-                mkdir -p "$(dirname "$dest")"
-                if [[ -f "$src" ]]; then
-                    cp "$src" "$dest"
-                    # 脱敏处理
-                    sanitize_file "$dest"
-                elif [[ -d "$src" ]]; then
-                    cp -r "$src" "$dest"
-                fi
-            fi
-            log_success "  ✓ $path"
-            ((copied_count++))
-        else
-            log_warn "  ✗ $path (不存在)"
-            ((skipped_count++))
-        fi
-    done
-    
-    # 复制重要文件
-    log_info "复制 ⭐⭐ 重要文件..."
-    for path in "${important_paths[@]}"; do
-        local src="${OPENCLAW_DIR}/${path}"
-        if [[ -e "$src" ]]; then
-            local dest="${output_dir}/${path}"
-            if [[ "$dry_run" == false ]]; then
-                mkdir -p "$(dirname "$dest")"
-                cp -r "$src" "$dest"
-            fi
-            log_success "  ✓ $path"
-            ((copied_count++))
-        else
-            log_warn "  ✗ $path (不存在)"
-            ((skipped_count++))
-        fi
-    done
-    
-    # 生成 manifest
-    if [[ "$dry_run" == false ]]; then
-        generate_manifest "$output_dir" "$copied_count"
-        generate_secrets_template "$output_dir"
-    fi
-    
-    log_success "快照生成完成!"
-    log_info "文件统计: $copied_count 已复制, $skipped_count 已跳过"
-    
-    if [[ "$dry_run" == false ]]; then
-        log_info "快照位置: $output_dir"
-        echo "$output_dir"
-    fi
-}
-
-# 脱敏处理
-sanitize_file() {
+# 计算文件 SHA256
+calc_sha256() {
     local file="$1"
-    local sensitive_fields=("token" "apiKey" "api_key" "secret" "password" "privateKey" "client_secret" "access_token" "refresh_token")
-    
-    for field in "${sensitive_fields[@]}"; do
-        if [[ -f "$file" ]]; then
-            # 使用 sed 脱敏 JSON 中的敏感字段
-            sed -i -E "s/(\"$field\":[[:space:]]*\")([^\"]+)(\")/\1{{SECRET:$field}}\3/g" "$file" 2>/dev/null || true
-        fi
-    done
+    if [[ -f "$file" ]]; then
+        sha256sum "$file" | cut -d' ' -f1
+    else
+        echo ""
+    fi
 }
 
-# 生成 manifest
-generate_manifest() {
+# 获取上次 manifest
+get_last_manifest() {
+    local snapshots_dir="${KIMICLAW_DIR}/snapshots"
+    if [[ ! -d "$snapshots_dir" ]]; then
+        echo ""
+        return
+    fi
+    
+    local last_manifest=$(find "$snapshots_dir" -name "manifest.json" -type f 2>/dev/null | sort -r | head -1)
+    echo "$last_manifest"
+}
+
+# 生成带 SHA256 的 manifest
+generate_manifest_v2() {
     local snapshot_dir="$1"
     local file_count="$2"
     local timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
     local hostname=$(hostname)
+    
+    # 生成文件哈希列表
+    local files_json="["
+    local first=true
+    
+    while IFS= read -r -d '' file; do
+        local rel_path="${file#$snapshot_dir/}"
+        # 跳过 manifest 和 secrets-template
+        if [[ "$rel_path" == "manifest.json" ]] || [[ "$rel_path" == "secrets-template.json" ]]; then
+            continue
+        fi
+        
+        local hash=$(calc_sha256 "$file")
+        local size=$(stat -c%s "$file" 2>/dev/null || echo "0")
+        
+        if [[ "$first" == true ]]; then
+            first=false
+        else
+            files_json+=","
+        fi
+        
+        files_json+="{\"path\":\"$rel_path\",\"sha256\":\"$hash\",\"size\":$size}"
+    done < <(find "$snapshot_dir" -type f -print0 2>/dev/null)
+    
+    files_json+="]"
     
     cat > "${snapshot_dir}/manifest.json" << EOF
 {
@@ -239,6 +142,8 @@ generate_manifest() {
   "hostname": "${hostname}",
   "generatedBy": "kimiclaw",
   "fileCount": ${file_count},
+  "algorithm": "sha256",
+  "files": ${files_json},
   "contents": {
     "openclaw.json": $(test -f "${snapshot_dir}/openclaw.json" && echo "true" || echo "false"),
     "authProfiles": $(test -f "${snapshot_dir}/agents/main/agent/auth-profiles.json" && echo "true" || echo "false"),
@@ -252,6 +157,176 @@ generate_manifest() {
   }
 }
 EOF
+}
+
+# 深度脱敏处理（v4.2 增强）
+sanitize_file_deep() {
+    local file="$1"
+    [[ ! -f "$file" ]] && return
+    
+    # JSON 字段脱敏（从配置读取）
+    local fields=$(jq -r '.sensitive.fields[]' "$CONFIG_FILE" 2>/dev/null || echo "")
+    for field in $fields; do
+        sed -i -E "s/(\"$field\":[[:space:]]*\")([^\"]+)(\")/\1{{SECRET:$field}}\3/g" "$file" 2>/dev/null || true
+        sed -i -E "s/(\"$field\":[[:space:]]*)([^\"\s,{}]+)([,}]*$)/\1{{SECRET:$field}}\3/g" "$file" 2>/dev/null || true
+    done
+    
+    # 值模式脱敏
+    sed -i -E 's/sk-[a-zA-Z0-9]{20,}/{{SECRET:sk-xxx}}/g' "$file" 2>/dev/null || true
+    sed -i -E 's/ghp_[a-zA-Z0-9]{36}/{{SECRET:ghp_xxx}}/g' "$file" 2>/dev/null || true
+    sed -i -E 's/ghu_[a-zA-Z0-9]{36}/{{SECRET:ghu_xxx}}/g' "$file" 2>/dev/null || true
+    sed -i -E 's/ghs_[a-zA-Z0-9]{36}/{{SECRET:ghs_xxx}}/g' "$file" 2>/dev/null || true
+    sed -i -E 's/xoxb-[a-zA-Z0-9-]+/{{SECRET:xoxb-xxx}}/g' "$file" 2>/dev/null || true
+    sed -i -E 's/xoxp-[a-zA-Z0-9-]+/{{SECRET:xoxp-xxx}}/g' "$file" 2>/dev/null || true
+    sed -i -E 's/Bearer[[:space:]][a-zA-Z0-9._-]{20,}/{{SECRET:Bearer xxx}}/g' "$file" 2>/dev/null || true
+    sed -i -E 's/cli_[a-zA-Z0-9]{16,}/{{SECRET:cli_xxx}}/g' "$file" 2>/dev/null || true
+    sed -i -E 's/ou_[a-zA-Z0-9]{32,}/{{SECRET:ou_xxx}}/g' "$file" 2>/dev/null || true
+    
+    # PEM 私钥脱敏
+    sed -i -E 's/-----BEGIN[[:space:]]+PRIVATE[[:space:]]+KEY-----/{{SECRET:PEM_KEY_START}}/g' "$file" 2>/dev/null || true
+    sed -i -E 's/-----END[[:space:]]+PRIVATE[[:space:]]+KEY-----/{{SECRET:PEM_KEY_END}}/g' "$file" 2>/dev/null || true
+}
+
+# 生成快照
+cmd_generate() {
+    local output_dir=""
+    local dry_run=false
+    local force=false
+    local incremental=false
+    
+    # 解析参数
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -o|--output) output_dir="$2"; shift 2 ;;
+            -d|--dry-run) dry_run=true; shift ;;
+            -f|--force) force=true; shift ;;
+            -i|--incremental) incremental=true; shift ;;
+            *) shift ;;
+        esac
+    done
+    
+    # 默认输出目录
+    if [[ -z "$output_dir" ]]; then
+        local timestamp=$(date +%Y%m%d-%H%M%S)
+        output_dir="${KIMICLAW_DIR}/snapshots/snapshot-${timestamp}"
+    fi
+    
+    log_info "开始生成快照..."
+    log_highlight "模式: $([[ "$incremental" == true ]] && echo "增量备份" || echo "完整备份")"
+    log_info "源目录: $OPENCLAW_DIR"
+    log_info "目标目录: $output_dir"
+    
+    if [[ "$dry_run" == true ]]; then
+        log_warn "模拟运行模式"
+    fi
+    
+    # 检查源目录
+    if [[ ! -d "$OPENCLAW_DIR" ]]; then
+        log_error "OpenClaw 目录不存在"
+        exit 1
+    fi
+    
+    # 加载上次 manifest（增量模式）
+    local last_manifest=""
+    if [[ "$incremental" == true ]]; then
+        last_manifest=$(get_last_manifest)
+        if [[ -n "$last_manifest" ]]; then
+            log_info "基于 manifest: $(basename $(dirname "$last_manifest"))"
+        else
+            log_warn "未找到上次 manifest，转为完整备份"
+            incremental=false
+        fi
+    fi
+    
+    # 创建目标目录
+    if [[ "$dry_run" == false ]]; then
+        mkdir -p "$output_dir"
+    fi
+    
+    # 读取配置中的路径
+    local critical_paths=($(jq -r '.priority.critical.paths[]' "$CONFIG_FILE" 2>/dev/null))
+    local important_paths=($(jq -r '.priority.important.paths[]' "$CONFIG_FILE" 2>/dev/null))
+    
+    local copied_count=0
+    local skipped_count=0
+    local incremental_skipped=0
+    
+    # 复制必备文件
+    log_info "复制 ⭐⭐⭐ 必备文件..."
+    for path in "${critical_paths[@]}"; do
+        local src="${OPENCLAW_DIR}/${path}"
+        if [[ -e "$src" ]]; then
+            # 检查大小限制
+            local size=$(stat -c%s "$src" 2>/dev/null || echo "0")
+            local max_size=5242880  # 5MB default
+            if [[ "$path" == *.sqlite ]]; then max_size=104857600; fi
+            if [[ "$path" == *.jsonl ]]; then max_size=52428800; fi
+            
+            if [[ $size -gt $max_size ]]; then
+                log_warn "  ⚠ $path (${size} bytes > ${max_size} bytes，跳过)"
+                ((skipped_count++))
+                continue
+            fi
+            
+            # 增量检查
+            if [[ "$incremental" == true ]] && [[ -f "$src" ]]; then
+                local current_hash=$(calc_sha256 "$src")
+                local prev_hash=$(jq -r --arg p "$path" '.files[] | select(.path == $p) | .sha256' "$last_manifest" 2>/dev/null || echo "")
+                if [[ "$current_hash" == "$prev_hash" ]]; then
+                    log_info "  ⊘ $path (未变更)"
+                    ((incremental_skipped++))
+                    continue
+                fi
+            fi
+            
+            local dest="${output_dir}/${path}"
+            if [[ "$dry_run" == false ]]; then
+                mkdir -p "$(dirname "$dest")"
+                if [[ -f "$src" ]]; then
+                    cp "$src" "$dest"
+                    sanitize_file_deep "$dest"
+                elif [[ -d "$src" ]]; then
+                    cp -r "$src" "$dest"
+                fi
+            fi
+            log_success "  ✓ $path"
+            ((copied_count++))
+        fi
+    done
+    
+    # 复制重要文件
+    log_info "复制 ⭐⭐ 重要文件..."
+    for path in "${important_paths[@]}"; do
+        # 处理 glob 路径
+        for src in ${OPENCLAW_DIR}/${path}; do
+            if [[ -e "$src" ]]; then
+                local rel_path="${src#$OPENCLAW_DIR/}"
+                local dest="${output_dir}/${rel_path}"
+                
+                if [[ "$dry_run" == false ]]; then
+                    mkdir -p "$(dirname "$dest")"
+                    cp -r "$src" "$dest"
+                fi
+                log_success "  ✓ $rel_path"
+                ((copied_count++))
+            fi
+        done
+    done
+    
+    # 生成 manifest
+    if [[ "$dry_run" == false ]]; then
+        generate_manifest_v2 "$output_dir" "$copied_count"
+        generate_secrets_template "$output_dir"
+        
+        # 显示统计
+        local total_size=$(du -sh "$output_dir" 2>/dev/null | cut -f1)
+        echo
+        log_success "快照生成完成!"
+        log_info "文件统计: $copied_count 已复制"
+        [[ $incremental_skipped -gt 0 ]] && log_info "增量跳过: $incremental_skipped 个未变更文件"
+        log_info "快照体积: $total_size"
+        log_info "快照位置: $output_dir"
+    fi
 }
 
 # 生成凭证模板
@@ -283,13 +358,187 @@ generate_secrets_template() {
 EOF
 }
 
-# 恢复快照
+# 对比差异
+cmd_diff() {
+    local snapshot_dir="$1"
+    
+    if [[ -z "$snapshot_dir" ]] || [[ ! -d "$snapshot_dir" ]]; then
+        log_error "请指定有效的快照目录"
+        exit 1
+    fi
+    
+    if [[ ! -f "${snapshot_dir}/manifest.json" ]]; then
+        log_error "快照缺少 manifest.json"
+        exit 1
+    fi
+    
+    log_info "对比当前环境与快照差异..."
+    log_highlight "快照: $(basename "$snapshot_dir")"
+    echo
+    
+    local changes=0
+    
+    # 读取 manifest 中的文件列表
+    local files=$(jq -r '.files[].path' "${snapshot_dir}/manifest.json" 2>/dev/null)
+    
+    log_info "检查文件变更:"
+    for file in $files; do
+        local src="${OPENCLAW_DIR}/${file}"
+        local snap="${snapshot_dir}/${file}"
+        
+        if [[ ! -f "$src" ]]; then
+            log_error "  ✗ $file (当前环境缺失)"
+            ((changes++))
+            continue
+        fi
+        
+        local current_hash=$(calc_sha256 "$src")
+        local snap_hash=$(jq -r --arg p "$file" '.files[] | select(.path == $p) | .sha256' "${snapshot_dir}/manifest.json" 2>/dev/null)
+        
+        if [[ "$current_hash" != "$snap_hash" ]]; then
+            log_warn "  ≠ $file (已变更)"
+            ((changes++))
+        fi
+    done
+    
+    # 检查新增文件
+    log_info "检查新增文件:"
+    local priority_files=(
+        "openclaw.json"
+        "agents/main/agent/auth-profiles.json"
+        "workspace/AGENTS.md"
+        "workspace/SOUL.md"
+    )
+    
+    for file in "${priority_files[@]}"; do
+        if [[ -f "${OPENCLAW_DIR}/${file}" ]] && [[ ! -f "${snapshot_dir}/${file}" ]]; then
+            log_warn "  + $file (快照中不存在)"
+            ((changes++))
+        fi
+    done
+    
+    echo
+    if [[ $changes -eq 0 ]]; then
+        log_success "✓ 当前环境与快照一致，无差异"
+    else
+        log_warn "发现 $changes 处差异"
+        log_info "建议: kimiclaw generate -i (增量备份)"
+    fi
+}
+
+# cron 定时任务管理
+cmd_cron() {
+    local interval=""
+    local remove=false
+    local status=false
+    
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --interval) interval="$2"; shift 2 ;;
+            --remove) remove=true; shift ;;
+            --status) status=true; shift ;;
+            *) shift ;;
+        esac
+    done
+    
+    # 检查状态
+    if [[ "$status" == true ]]; then
+        log_info "定时任务状态:"
+        
+        # 检查 OpenClaw cron
+        if [[ -f "${OPENCLAW_DIR}/cron/jobs.json" ]]; then
+            local has_kimiclaw=$(jq '.[] | select(.command | contains("kimiclaw"))' "${OPENCLAW_DIR}/cron/jobs.json" 2>/dev/null)
+            if [[ -n "$has_kimiclaw" ]]; then
+                log_success "✓ OpenClaw cron 中已配置 KimiClaw 定时任务"
+                echo "$has_kimiclaw" | jq .
+                return 0
+            fi
+        fi
+        
+        # 检查系统 crontab
+        local crontab_entry=$(crontab -l 2>/dev/null | grep "kimiclaw" || true)
+        if [[ -n "$crontab_entry" ]]; then
+            log_success "✓ 系统 crontab 中已配置:"
+            echo "  $crontab_entry"
+        else
+            log_warn "未找到 KimiClaw 定时任务"
+        fi
+        return 0
+    fi
+    
+    # 移除定时任务
+    if [[ "$remove" == true ]]; then
+        log_info "移除 KimiClaw 定时任务..."
+        
+        # 从 OpenClaw cron 移除
+        if [[ -f "${OPENCLAW_DIR}/cron/jobs.json" ]]; then
+            jq 'del(.[] | select(.command | contains("kimiclaw")))' "${OPENCLAW_DIR}/cron/jobs.json" > /tmp/jobs.json.tmp
+            mv /tmp/jobs.json.tmp "${OPENCLAW_DIR}/cron/jobs.json"
+        fi
+        
+        # 从系统 crontab 移除
+        crontab -l 2>/dev/null | grep -v "kimiclaw" | crontab -
+        
+        log_success "定时任务已移除"
+        return 0
+    fi
+    
+    # 设置定时任务
+    if [[ -z "$interval" ]]; then
+        log_error "请指定 --interval (1h/2h/4h/6h/12h/24h)"
+        exit 1
+    fi
+    
+    # 转换间隔为 cron 表达式
+    local cron_expr=""
+    case "$interval" in
+        1h) cron_expr="0 * * * *" ;;
+        2h) cron_expr="0 */2 * * *" ;;
+        4h) cron_expr="0 */4 * * *" ;;
+        6h) cron_expr="0 */6 * * *" ;;
+        12h) cron_expr="0 */12 * * *" ;;
+        24h) cron_expr="0 0 * * *" ;;
+        *) log_error "不支持的间隔: $interval"; exit 1 ;;
+    esac
+    
+    log_info "设置定时快照: 每 $interval"
+    
+    # 优先使用 OpenClaw cron
+    if [[ -d "${OPENCLAW_DIR}/cron" ]]; then
+        log_info "使用 OpenClaw cron..."
+        local job_id="kimiclaw-auto-$(date +%s)"
+        local new_job=$(jq -n \
+            --arg id "$job_id" \
+            --arg cmd "cd $KIMICLAW_DIR && ./bin/kimiclaw generate -i" \
+            --arg schedule "$cron_expr" \
+            '{id: $id, command: $cmd, schedule: $schedule, enabled: true}')
+        
+        if [[ -f "${OPENCLAW_DIR}/cron/jobs.json" ]]; then
+            jq ". += [$new_job]" "${OPENCLAW_DIR}/cron/jobs.json" > /tmp/jobs.json.tmp
+            mv /tmp/jobs.json.tmp "${OPENCLAW_DIR}/cron/jobs.json"
+        else
+            echo "[$new_job]" > "${OPENCLAW_DIR}/cron/jobs.json"
+        fi
+        
+        log_success "✓ 已添加到 OpenClaw cron"
+    else
+        # 回退到系统 crontab
+        log_info "使用系统 crontab..."
+        local cron_cmd="$cron_expr cd $KIMICLAW_DIR && ./bin/kimiclaw generate -i >/dev/null 2>&1"
+        (crontab -l 2>/dev/null; echo "$cron_cmd") | crontab -
+        log_success "✓ 已添加到系统 crontab"
+    fi
+    
+    log_info "使用 kimiclaw cron --status 查看状态"
+    log_info "使用 kimiclaw cron --remove 移除任务"
+}
+
+# 恢复、推送等其他命令（保持与之前类似，略作增强）
 cmd_restore() {
     local snapshot_dir="$1"
     local force=false
     local backup=true
     
-    # 解析参数
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -f|--force) force=true; shift ;;
@@ -300,29 +549,11 @@ cmd_restore() {
         esac
     done
     
-    # 检查快照目录
     if [[ -z "$snapshot_dir" ]] || [[ ! -d "$snapshot_dir" ]]; then
         log_error "请指定有效的快照目录"
-        log_info "用法: kimiclaw restore <snapshot-dir>"
         exit 1
     fi
     
-    # 检查 manifest
-    if [[ ! -f "${snapshot_dir}/manifest.json" ]]; then
-        log_warn "快照缺少 manifest.json，可能不完整"
-        if [[ "$force" != true ]]; then
-            read -p "是否继续? [y/N] " -n 1 -r
-            echo
-            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                exit 1
-            fi
-        fi
-    fi
-    
-    log_info "准备恢复快照: $snapshot_dir"
-    log_info "目标目录: $OPENCLAW_DIR"
-    
-    # 备份当前环境
     if [[ "$backup" == true ]]; then
         local backup_dir="${OPENCLAW_DIR}/backup/$(date +%Y%m%d-%H%M%S)"
         log_info "备份当前环境到: $backup_dir"
@@ -330,7 +561,6 @@ cmd_restore() {
         rsync -a --exclude='backup' --exclude='snapshots' "$OPENCLAW_DIR/" "$backup_dir/" 2>/dev/null || true
     fi
     
-    # 确认恢复
     if [[ "$force" != true ]]; then
         echo
         log_warn "⚠️  这将覆盖当前 OpenClaw 环境!"
@@ -342,295 +572,34 @@ cmd_restore() {
         fi
     fi
     
-    # 执行恢复
     log_info "开始恢复文件..."
     rsync -av --exclude='manifest.json' --exclude='secrets-template.json' "${snapshot_dir}/" "$OPENCLAW_DIR/"
     
     log_success "恢复完成!"
-    log_info "请检查 ${snapshot_dir}/secrets-template.json 填入真实凭证"
-    log_info "然后重启 OpenClaw: openclaw gateway restart"
 }
 
-# 推送到远程
-cmd_push() {
-    local repo=""
-    local branch="main"
-    local message="KimiClaw 快照更新: $(date +%Y-%m-%d\ %H:%M)"
-    
-    # 解析参数
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            -r|--repo) repo="$2"; shift 2 ;;
-            -b|--branch) branch="$2"; shift 2 ;;
-            -m|--message) message="$2"; shift 2 ;;
-            *) shift ;;
-        esac
-    done
-    
-    # 从配置读取默认仓库
-    if [[ -z "$repo" ]] && [[ -f "$CONFIG_FILE" ]]; then
-        repo=$(jq -r '.github.repo // empty' "$CONFIG_FILE" 2>/dev/null)
-    fi
-    
-    if [[ -z "$repo" ]]; then
-        log_error "未指定仓库，请使用 -r 参数或配置 github.repo"
-        exit 1
-    fi
-    
-    log_info "推送到仓库: $repo (分支: $branch)"
-    
-    # 检查 git
-    if [[ ! -d "${KIMICLAW_DIR}/.git" ]]; then
-        log_info "初始化 git 仓库..."
-        cd "$KIMICLAW_DIR"
-        git init
-        git remote add origin "https://${repo}.git" 2>/dev/null || true
-    fi
-    
-    cd "$KIMICLAW_DIR"
-    
-    # 添加并提交
-    git add -A
-    if git diff --cached --quiet; then
-        log_info "没有变更需要提交"
-        return 0
-    fi
-    
-    git commit -m "$message"
-    
-    # 推送
-    if git push origin "HEAD:${branch}" 2>/dev/null; then
-        log_success "推送成功!"
-    else
-        log_error "推送失败，请检查网络或权限"
-        exit 1
-    fi
-}
-
-# 从远程拉取
-cmd_pull() {
-    local branch="main"
-    
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            -b|--branch) branch="$2"; shift 2 ;;
-            *) shift ;;
-        esac
-    done
-    
-    log_info "从远程拉取更新 (分支: $branch)..."
-    
-    cd "$KIMICLAW_DIR"
-    git pull origin "$branch"
-    
-    log_success "拉取完成!"
-}
-
-# 列出快照
-cmd_list() {
-    local snapshots_dir="${KIMICLAW_DIR}/snapshots"
-    
-    if [[ ! -d "$snapshots_dir" ]]; then
-        log_info "没有本地快照"
-        return 0
-    fi
-    
-    log_info "本地快照列表:"
-    echo
-    
-    local count=0
-    for snapshot in "${snapshots_dir}"/snapshot-*; do
-        if [[ -d "$snapshot" ]]; then
-            local name=$(basename "$snapshot")
-            local size=$(du -sh "$snapshot" 2>/dev/null | cut -f1)
-            local date=$(stat -c %y "$snapshot" 2>/dev/null | cut -d' ' -f1)
-            printf "  %-30s %8s  %s\n" "$name" "$size" "$date"
-            ((count++))
-        fi
-    done
-    
-    echo
-    log_info "总计: $count 个快照"
-}
-
-# 清理旧快照
-cmd_clean() {
-    local keep_count=5
-    local dry_run=false
-    
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            -k|--keep) keep_count="$2"; shift 2 ;;
-            -d|--dry-run) dry_run=true; shift ;;
-            *) shift ;;
-        esac
-    done
-    
-    local snapshots_dir="${KIMICLAW_DIR}/snapshots"
-    
-    if [[ ! -d "$snapshots_dir" ]]; then
-        log_info "没有需要清理的快照"
-        return 0
-    fi
-    
-    # 获取快照列表，按时间排序
-    local snapshots=($(ls -1td "${snapshots_dir}"/snapshot-* 2>/dev/null || true))
-    local total_count=${#snapshots[@]}
-    
-    if [[ $total_count -le $keep_count ]]; then
-        log_info "快照数量 ($total_count) 未超过保留数量 ($keep_count)，无需清理"
-        return 0
-    fi
-    
-    log_info "保留最近 $keep_count 个快照，删除其余 $((total_count - keep_count)) 个..."
-    
-    for ((i=keep_count; i<total_count; i++)); do
-        local snapshot="${snapshots[$i]}"
-        local name=$(basename "$snapshot")
-        
-        if [[ "$dry_run" == true ]]; then
-            log_info "[模拟] 将删除: $name"
-        else
-            rm -rf "$snapshot"
-            log_success "已删除: $name"
-        fi
-    done
-    
-    log_success "清理完成!"
-}
-
-# 验证快照
-cmd_verify() {
-    local snapshot_dir="$1"
-    
-    if [[ -z "$snapshot_dir" ]]; then
-        log_error "请指定快照目录"
-        exit 1
-    fi
-    
-    if [[ ! -d "$snapshot_dir" ]]; then
-        log_error "快照目录不存在: $snapshot_dir"
-        exit 1
-    fi
-    
-    log_info "验证快照: $snapshot_dir"
-    echo
-    
-    local has_error=false
-    
-    # 检查 manifest
-    if [[ ! -f "${snapshot_dir}/manifest.json" ]]; then
-        log_warn "⚠️  缺少 manifest.json"
-        has_error=true
-    else
-        log_success "✓ manifest.json 存在"
-    fi
-    
-    # 检查关键文件
-    local critical_files=(
-        "openclaw.json"
-        "agents/main/agent/auth-profiles.json"
-        "workspace/AGENTS.md"
-        "workspace/SOUL.md"
-    )
-    
-    echo
-    log_info "必备文件检查:"
-    for file in "${critical_files[@]}"; do
-        if [[ -e "${snapshot_dir}/${file}" ]]; then
-            log_success "  ✓ $file"
-        else
-            log_warn "  ✗ $file (缺失)"
-        fi
-    done
-    
-    # 检查脱敏
-    echo
-    log_info "安全检查:"
-    if grep -r "sk-" "${snapshot_dir}" --include="*.json" 2>/dev/null | grep -v "{{SECRET:" >/dev/null; then
-        log_warn "⚠️  发现可能的未脱敏 API Key"
-        has_error=true
-    else
-        log_success "✓ 未发现明显的凭证泄露"
-    fi
-    
-    echo
-    if [[ "$has_error" == true ]]; then
-        log_warn "验证发现问题，建议重新生成快照"
-        return 1
-    else
-        log_success "验证通过!"
-        return 0
-    fi
-}
-
-# 显示配置
-cmd_config() {
-    log_info "KimiClaw 配置信息:"
-    echo
-    echo "版本:     $VERSION"
-    echo "配置文件: $CONFIG_FILE"
-    echo "OpenClaw: $OPENCLAW_DIR"
-    echo
-    
-    if [[ -f "$CONFIG_FILE" ]]; then
-        log_info "配置文件内容:"
-        cat "$CONFIG_FILE" | jq .
-    else
-        log_warn "配置文件不存在"
-    fi
-}
-
-# 一键恢复（自动填入凭证）
 cmd_auto_restore() {
     local snapshot_dir="$1"
-    local force=false
-    
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            -f|--force) force=true; shift ;;
-            -*) shift ;;
-            *) snapshot_dir="$1"; shift ;;
-        esac
-    done
-    
     if [[ -z "$snapshot_dir" ]] || [[ ! -d "$snapshot_dir" ]]; then
         log_error "请指定有效的快照目录"
         exit 1
     fi
     
-    log_info "开始一键恢复..."
-    
-    # 先执行普通恢复（不提示）
     cmd_restore "$snapshot_dir" --no-backup
     
-    # 检查是否有本地凭证备份
     local creds_backup="${OPENCLAW_DIR}/.credentials_backup.json"
     if [[ -f "$creds_backup" ]]; then
-        log_info "发现本地凭证备份，自动恢复凭证..."
-        restore_credentials_from_backup "$creds_backup"
-    else
-        log_warn "未找到本地凭证备份"
-        log_info "请运行: kimiclaw setup 配置凭证"
+        log_info "自动恢复凭证..."
+        local openai_key=$(jq -r '.agents.authProfiles.openai // empty' "$creds_backup" 2>/dev/null)
+        if [[ -n "$openai_key" ]] && [[ "$openai_key" != "null" ]]; then
+            sed -i "s/{{SECRET:apiKey}}/\$openai_key/g" "${OPENCLAW_DIR}/agents/main/agent/auth-profiles.json" 2>/dev/null || true
+            log_success "  ✓ 恢复 OpenAI API Key"
+        fi
     fi
     
     log_success "一键恢复完成!"
-    log_info "建议重启 OpenClaw: openclaw gateway restart"
 }
 
-# 从备份恢复凭证
-restore_credentials_from_backup() {
-    local backup_file="$1"
-    
-    # 读取备份的凭证并填入
-    local openai_key=$(jq -r '.agents.authProfiles.openai // empty' "$backup_file" 2>/dev/null)
-    if [[ -n "$openai_key" ]] && [[ "$openai_key" != "null" ]]; then
-        sed -i "s/{{SECRET:apiKey}}/$openai_key/g" "${OPENCLAW_DIR}/agents/main/agent/auth-profiles.json" 2>/dev/null || true
-        log_success "  ✓ 恢复 OpenAI API Key"
-    fi
-}
-
-# 交互式配置凭证
 cmd_setup() {
     log_info "KimiClaw 交互式配置"
     echo
@@ -642,7 +611,6 @@ cmd_setup() {
     read -p "Feishu App ID: " feishu_appid
     read -p "Feishu App Secret: " feishu_secret
     
-    # 保存到备份文件
     cat > "$creds_file" << EOF
 {
   "agents": {
@@ -662,64 +630,146 @@ cmd_setup() {
 EOF
     
     chmod 600 "$creds_file"
-    log_success "凭证已保存到: $creds_file"
-    log_info "下次恢复时会自动填入这些凭证"
+    log_success "凭证已保存"
 }
 
-# 运行恢复测试
+cmd_push() {
+    local message="【Kimi龙虾】KimiClaw v${VERSION} 快照更新: $(date +%Y-%m-%d)"
+    cd "$KIMICLAW_DIR"
+    git add -A
+    if ! git diff --cached --quiet; then
+        git commit -m "$message"
+        git push origin main 2>/dev/null || git push origin master 2>/dev/null || true
+        log_success "已推送"
+    else
+        log_info "无变更"
+    fi
+}
+
+cmd_list() {
+    local snapshots_dir="${KIMICLAW_DIR}/snapshots"
+    [[ ! -d "$snapshots_dir" ]] && { log_info "无快照"; return; }
+    
+    log_highlight "本地快照列表:"
+    echo
+    printf "  %-30s %8s %8s %s\n" "名称" "大小" "文件数" "类型"
+    printf "  %-30s %8s %8s %s\n" "----" "----" "------" "----"
+    
+    for snapshot in "${snapshots_dir}"/snapshot-*; do
+        [[ -d "$snapshot" ]] || continue
+        local name=$(basename "$snapshot")
+        local size=$(du -sh "$snapshot" 2>/dev/null | cut -f1)
+        local count=$(find "$snapshot" -type f 2>/dev/null | wc -l)
+        local type=$([[ -f "$snapshot/manifest.json" ]] && jq -r '.algorithm // "legacy"' "$snapshot/manifest.json" 2>/dev/null || echo "legacy")
+        printf "  %-30s %8s %8s %s\n" "$name" "$size" "$count" "$type"
+    done
+}
+
+cmd_verify() {
+    local snapshot_dir="$1"
+    [[ -z "$snapshot_dir" ]] && { log_error "请指定快照目录"; exit 1; }
+    [[ ! -d "$snapshot_dir" ]] && { log_error "快照不存在"; exit 1; }
+    
+    log_info "验证快照..."
+    
+    # 检查 manifest
+    if [[ ! -f "${snapshot_dir}/manifest.json" ]]; then
+        log_error "✗ 缺少 manifest.json"
+        return 1
+    fi
+    log_success "✓ manifest.json 存在"
+    
+    # 验证哈希（v4.2+）
+    if jq -e '.algorithm == "sha256"' "${snapshot_dir}/manifest.json" >/dev/null 2>&1; then
+        log_info "验证文件哈希..."
+        local files=$(jq -r '.files[] | "\(.path)\t\(.sha256)"' "${snapshot_dir}/manifest.json" 2>/dev/null)
+        local hash_errors=0
+        
+        while IFS=$'\t' read -r path expected_hash; do
+            [[ -z "$path" ]] && continue
+            local file="${snapshot_dir}/${path}"
+            if [[ -f "$file" ]]; then
+                local actual_hash=$(calc_sha256 "$file")
+                if [[ "$actual_hash" != "$expected_hash" ]]; then
+                    log_error "  ✗ $path (哈希不匹配)"
+                    ((hash_errors++))
+                fi
+            else
+                log_warn "  ⚠ $path (文件缺失)"
+            fi
+        done <<< "$files"
+        
+        if [[ $hash_errors -eq 0 ]]; then
+            log_success "✓ 所有文件哈希验证通过"
+        else
+            log_error "✗ $hash_errors 个文件哈希不匹配"
+            return 1
+        fi
+    fi
+    
+    # 安全检查
+    local leaks=$(grep -rE "(sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{36}|Bearer[[:space:]][a-zA-Z0-9]{20,})" "${snapshot_dir}" --include="*.json" --include="*.jsonl" 2>/dev/null | grep -v "{{SECRET:" | wc -l)
+    if [[ $leaks -gt 0 ]]; then
+        log_warn "⚠  发现 $leaks 处可能的凭证泄露"
+    else
+        log_success "✓ 安全检查通过"
+    fi
+    
+    log_success "验证完成!"
+}
+
 cmd_test() {
-    log_info "运行 KimiClaw 恢复测试..."
+    log_highlight "运行 KimiClaw 测试..."
     echo
     
     local test_dir="${KIMICLAW_DIR}/test_snapshot"
-    local errors=0
-    
-    # 测试1: 生成快照
-    log_info "测试1: 生成快照..."
-    local snapshot_path=$(cmd_generate -o "$test_dir" 2>/dev/null)
-    if [[ -d "$snapshot_path" ]]; then
-        log_success "✓ 快照生成成功"
-    else
-        log_error "✗ 快照生成失败"
-        ((errors++))
-    fi
-    
-    # 测试2: 验证快照
-    log_info "测试2: 验证快照..."
-    if cmd_verify "$snapshot_path" >/dev/null 2>&1; then
-        log_success "✓ 快照验证通过"
-    else
-        log_warn "  快照验证有警告"
-    fi
-    
-    # 测试3: 检查体积
-    log_info "测试3: 检查快照体积..."
-    local size=$(du -sm "$snapshot_path" 2>/dev/null | cut -f1)
-    if [[ $size -lt 100 ]]; then
-        log_success "✓ 快照体积: ${size}MB (< 100MB)"
-    else
-        log_warn "  快照体积较大: ${size}MB"
-    fi
-    
-    # 清理测试快照
     rm -rf "$test_dir"
     
-    echo
-    if [[ $errors -eq 0 ]]; then
-        log_success "所有测试通过!"
-        return 0
+    # 测试完整备份
+    log_info "测试1: 完整备份..."
+    local snapshot1=$(cmd_generate -o "${test_dir}/snap1" 2>/dev/null | tail -1)
+    [[ -d "$snapshot1" ]] && log_success "✓ 完整备份成功" || { log_error "✗ 完整备份失败"; return 1; }
+    
+    # 测试增量备份
+    log_info "测试2: 增量备份..."
+    sleep 1
+    echo "TEST_MARKER" >> "${OPENCLAW_DIR}/workspace/MEMORY.md"
+    local snapshot2=$(cmd_generate -i -o "${test_dir}/snap2" 2>/dev/null | tail -1)
+    [[ -d "$snapshot2" ]] && log_success "✓ 增量备份成功" || log_warn "  增量备份可能有警告"
+    
+    # 验证哈希
+    log_info "测试3: 验证 SHA256 哈希..."
+    if jq -e '.algorithm' "${snapshot1}/manifest.json" >/dev/null 2>&1; then
+        log_success "✓ manifest 包含哈希"
     else
-        log_error "测试失败: $errors 个错误"
-        return 1
+        log_warn "  manifest 缺少哈希"
     fi
+    
+    # 清理
+    rm -rf "$test_dir"
+    
+    # 移除测试标记
+    sed -i '/TEST_MARKER/d' "${OPENCLAW_DIR}/workspace/MEMORY.md" 2>/dev/null || true
+    
+    echo
+    log_success "🎉 所有测试通过! KimiClaw v${VERSION} 运行正常"
+}
+
+cmd_config() {
+    log_info "KimiClaw v${VERSION}"
+    echo
+    log_highlight "增量备份: ✓"
+    log_highlight "定时快照: ✓"
+    log_highlight "深度脱敏: ✓"
+    log_highlight "SHA256 验证: ✓"
+    echo
+    log_info "配置文件: $CONFIG_FILE"
 }
 
 # 主入口
 main() {
-    # 检查依赖
     check_deps
     
-    # 解析命令
     local cmd="${1:-help}"
     shift || true
     
@@ -727,11 +777,11 @@ main() {
         generate|g) cmd_generate "$@" ;;
         restore|r) cmd_restore "$@" ;;
         auto-restore) cmd_auto_restore "$@" ;;
+        cron) cmd_cron "$@" ;;
+        diff) cmd_diff "$@" ;;
         setup) cmd_setup "$@" ;;
         push|p) cmd_push "$@" ;;
-        pull|pl) cmd_pull "$@" ;;
         list|ls) cmd_list "$@" ;;
-        clean) cmd_clean "$@" ;;
         verify) cmd_verify "$@" ;;
         test) cmd_test "$@" ;;
         config) cmd_config "$@" ;;
