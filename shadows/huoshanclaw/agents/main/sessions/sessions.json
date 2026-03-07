@@ -689,7 +689,7 @@
   },
   "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97": {
     "sessionId": "c5b92fba-43e4-4120-9372-c24575bde969",
-    "updatedAt": 1772907537273,
+    "updatedAt": 1772909022251,
     "systemSent": true,
     "abortedLastRun": false,
     "displayName": "feishu:g-oc_40efcf271da2a542291ab9b83d2eea97",
@@ -886,7 +886,7 @@
     "model": "ark-code-latest",
     "systemPromptReport": {
       "source": "run",
-      "generatedAt": 1772906355299,
+      "generatedAt": 1772908055731,
       "sessionId": "c5b92fba-43e4-4120-9372-c24575bde969",
       "sessionKey": "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97",
       "provider": "ark",
@@ -1371,12 +1371,14 @@
         ]
       }
     },
-    "cacheRead": 30776,
+    "cacheRead": 5688,
     "cacheWrite": 0,
     "totalTokensFresh": true,
     "contextTokens": 200000,
-    "inputTokens": 1100774,
-    "outputTokens": 718,
-    "totalTokens": 172772
+    "inputTokens": 349548,
+    "outputTokens": 572,
+    "totalTokens": 179397,
+    "memoryFlushAt": 1772907951711,
+    "memoryFlushCompactionCount": 0
   }
 }

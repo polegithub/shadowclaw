@@ -399,16 +399,17 @@ TMPL
   info "已复制: $stats_copied | 已跳过: $stats_skipped | 未变更: ${stats_unchanged:-0}"
   info "输出: $output_dir"
   $do_desensitize && info "✅ 已脱敏 + 安全扫描"
-  info "📊 报告: $output_dir/SNAPSHOT_REPORT.md"
+  info "📊 报告: $output_dir/快照报告_*.md"
 }
 
 # ── Report Generator ────────────────────────────────────────────────
 _generate_report() {
   local snap_dir="$1" desensitized="${2:-true}" is_incremental="${3:-false}"
-  local report="$snap_dir/SNAPSHOT_REPORT.md"
+  local report_name="快照报告_$(date +%Y%m%d_%H%M%S).md"
+  local report="$snap_dir/$report_name"
 
   # 统计数据
-  local total_files; total_files=$(find "$snap_dir" -type f -not -name "SNAPSHOT_REPORT.md" | wc -l)
+  local total_files; total_files=$(find "$snap_dir" -type f -not -name "快照报告_*.md" | wc -l)
   local total_size; total_size=$(du -sh "$snap_dir" 2>/dev/null | cut -f1)
   local skill_count=0; [[ -d "$snap_dir/skills" ]] && skill_count=$(find "$snap_dir/skills" -maxdepth 1 -type d | wc -l); (( skill_count > 0 )) && (( skill_count-- )) || true
   local session_count=0; [[ -d "$snap_dir/agents/main/sessions" ]] && session_count=$(find "$snap_dir/agents/main/sessions" -name "*.jsonl" | wc -l)
@@ -471,13 +472,26 @@ _generate_report() {
   done
 
   # 写报告
+  local snap_id; snap_id="SNAP-$(date +%Y%m%d-%H%M%S)"
+  local hostname_str; hostname_str=$(hostname 2>/dev/null || echo "unknown")
+  local os_str; os_str=$(uname -srm 2>/dev/null || echo "unknown")
+  local openclaw_ver; openclaw_ver=$(openclaw --version 2>/dev/null | head -1 || echo "未检测到")
+
   cat > "$report" <<REPORT
 # ShadowClaw 快照报告
 
-生成时间：$(date '+%Y-%m-%d %H:%M:%S %Z')
-工具版本：v${VERSION}
-源目录：${STATE_DIR}
-快照模式：$( [[ "$is_incremental" == "true" ]] && echo "增量" || echo "全量" )
+| 字段 | 值 |
+|------|------|
+| 报告编号 | ${snap_id} |
+| 生成时间 | $(date '+%Y-%m-%d %H:%M:%S %Z') |
+| 工具版本 | ShadowClaw v${VERSION} |
+| OpenClaw 版本 | ${openclaw_ver} |
+| 主机名 | ${hostname_str} |
+| 操作系统 | ${os_str} |
+| 源目录 | ${STATE_DIR} |
+| 输出目录 | ${snap_dir} |
+| 快照模式 | $( [[ "$is_incremental" == "true" ]] && echo "增量（仅变更文件）" || echo "全量" ) |
+| 脱敏状态 | $( [[ "$desensitized" == "true" ]] && echo "✅ 已执行" || echo "⚠️ 未执行" ) |
 
 ---
 
@@ -510,7 +524,7 @@ REPORT
   for f in "$snap_dir"/*; do
     [[ -f "$f" ]] || continue
     local fname; fname=$(basename "$f")
-    [[ "$fname" == "SNAPSHOT_REPORT.md" ]] && continue
+    [[ "$fname" == 快照报告_* ]] && continue
     echo "- ${fname}" >> "$report"
   done
 
@@ -586,7 +600,7 @@ REPORT
 *本报告由 ShadowClaw v${VERSION} 自动生成*
 REPORT
 
-  ok "报告已生成: SNAPSHOT_REPORT.md"
+  ok "报告已生成: $report_name"
 }
 
 # ── CMD: restore ────────────────────────────────────────────────────
