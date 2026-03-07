@@ -1,164 +1,124 @@
-# KimiClaw
+# KimiClaw v4.0
 
-OpenClaw 环境快照管理工具
+> OpenClaw 环境快照管理工具 - 配置驱动、简洁高效
 
-> 记住一切，随时恢复
+## 设计哲学
 
-## 简介
+**取长补短，融会贯通**
 
-KimiClaw 是一个用于管理 OpenClaw 环境快照的工具，支持：
+KimiClaw v4.0 整合了三个方案的优势：
+- **继承 KimiClaw v3** 的 CLI 设计理念和 manifest 追踪
+- **借鉴 HuoshanClaw** 的完整目录覆盖清单
+- **学习 CatClaw** 的配置驱动思想
 
-- 📦 **生成快照** - 打包当前环境为可恢复格式
-- ☁️ **推送到云端** - 备份到 GitHub/Gitee 等仓库
-- ⬇️ **从云端拉取** - 在新机器快速恢复
-- 🔄 **恢复环境** - 一键还原完整配置
+## 核心特性
+
+| 特性 | 说明 |
+|------|------|
+| ⚙️ 配置驱动 | `config/default.json` 统一定义所有行为 |
+| 📦 完整覆盖 | 支持 ⭐⭐⭐ 必备 / ⭐⭐ 重要 / ⭐ 可选 三级优先级 |
+| 🔒 自动脱敏 | 自动替换敏感字段为 `{{SECRET:xxx}}` |
+| 📝 Manifest 追踪 | 每个快照附带完整元数据 |
+| 🔄 安全恢复 | 恢复前自动备份，支持幂等操作 |
+| ☁️ Git 集成 | 一键 push/pull 到远程仓库 |
 
 ## 目录结构
 
 ```
 kimiclaw/
 ├── bin/
-│   └── kimiclaw              # 主入口脚本
-├── lib/
-│   ├── snapshot.sh           # 快照生成
-│   ├── push.sh               # 推送到远程
-│   ├── pull.sh               # 从远程拉取
-│   └── restore.sh            # 恢复环境
+│   └── kimiclaw          # 唯一入口脚本（~500行）
 ├── config/
-│   └── default.json          # 默认配置
-└── kimiclaw.md               # 详细文档
+│   └── default.json      # 配置驱动核心
+├── lib/                  # （可选）高级脚本扩展
+├── README.md             # 快速开始
+└── kimiclaw.md           # 详细文档
 
-~/.openclaw/                  # 快照目标目录结构
-├── openclaw.json             # ⭐⭐⭐ 主配置
-├── agents/                   # ⭐⭐⭐ Agent 配置
-├── credentials/              # ⭐⭐⭐ 凭证（脱敏）
-├── memory/                   # ⭐⭐⭐ 记忆文件
-├── cron/                     # ⭐⭐ 定时任务
-└── ...
+~/.openclaw/              # 快照目标
+├── openclaw.json         # ⭐⭐⭐ 主配置
+├── agents/               # ⭐⭐⭐ Agent 配置
+├── credentials/          # ⭐⭐⭐ 凭证（脱敏）
+├── memory/               # ⭐⭐⭐ 记忆数据库
+├── workspace/            # ⭐⭐⭐ 工作区
+│   ├── AGENTS.md
+│   ├── SOUL.md
+│   ├── USER.md
+│   ├── IDENTITY.md
+│   ├── MEMORY.md
+│   ├── TOOLS.md
+│   ├── HEARTBEAT.md
+│   └── memory/
+├── skills/               # ⭐⭐ 全局 Skills
+├── cron/                 # ⭐⭐ 定时任务
+├── identity/             # ⭐⭐ 设备身份
+└── .env                  # ⭐⭐ 环境变量
 ```
 
-## 安装
+## 快速开始
+
+### 安装
 
 ```bash
-# 克隆仓库
-git clone https://github.com/polegithub/shadowclaw.git
-cd shadowclaw
-
 # 添加到 PATH
-export PATH="$PWD/kimiclaw/bin:$PATH"
+export PATH="/path/to/kimiclaw/bin:$PATH"
 
 # 或使用软链接
-ln -s "$PWD/kimiclaw/bin/kimiclaw" /usr/local/bin/kimiclaw
+ln -s /path/to/kimiclaw/bin/kimiclaw /usr/local/bin/kimiclaw
 ```
-
-## 使用
 
 ### 生成快照
 
 ```bash
-# 生成到默认目录 (~/.openclaw/snapshots/)
-kimiclaw generate
-
-# 指定输出目录
-kimiclaw generate -o ./my-snapshot
-
-# 模拟运行（不实际执行）
-kimiclaw generate --dry-run
+kimiclaw generate              # 默认目录
+kimiclaw generate -o ./snap    # 指定目录
+kimiclaw generate --dry-run    # 模拟运行
 ```
 
-### 推送到远程
+### 恢复快照
 
 ```bash
-# 使用默认配置
-kimiclaw push
-
-# 指定仓库和分支
-kimiclaw push -r github.com/user/repo -b main
+kimiclaw restore ./snapshot-xxx      # 交互式恢复
+kimiclaw restore ./snapshot-xxx -f   # 强制恢复
 ```
 
-### 从远程拉取
+### Git 同步
 
 ```bash
-kimiclaw pull
-
-# 指定分支
-kimiclaw pull -b feature-branch
-```
-
-### 恢复环境
-
-```bash
-# 使用最新快照
-kimiclaw restore
-
-# 指定快照目录
-kimiclaw restore /path/to/snapshot
-
-# 强制覆盖
-kimiclaw restore -f
+kimiclaw push                  # 推送到远程
+kimiclaw push -m "更新说明"    # 自定义提交信息
+kimiclaw pull                  # 从远程拉取
 ```
 
 ### 其他命令
 
 ```bash
-kimiclaw list          # 列出本地快照
-kimiclaw clean -k 5    # 清理旧快照，保留最近5个
-kimiclaw config        # 查看配置
-kimiclaw help          # 显示帮助
+kimiclaw list                  # 列出快照
+kimiclaw clean -k 5            # 保留5个最新快照
+kimiclaw verify ./snapshot-xxx # 验证快照完整性
+kimiclaw config                # 查看配置
 ```
-
-## 配置
-
-编辑 `kimiclaw/config/default.json`：
-
-```json
-{
-  "github": {
-    "repo": "github.com/username/repo",
-    "branch": "kimiclaw"
-  },
-  "snapshot": {
-    "max_file_size_mb": 10,
-    "exclude_patterns": ["*.log", "node_modules/**"]
-  },
-  "auto_backup": {
-    "enabled": true,
-    "cron": "0 2 * * *",
-    "keep_count": 7
-  }
-}
-```
-
-## 环境变量
-
-```bash
-export GITHUB_TOKEN="ghp_xxxxxxxx"  # GitHub 访问令牌
-```
-
-## 工作原理
-
-### 快照生成
-
-1. 扫描 `~/.openclaw/` 目录
-2. 按优先级分类文件（必备/重要/可选）
-3. 脱敏处理敏感字段
-4. 排除超大文件（>10MB）
-5. 生成 `manifest.json`
-
-### 恢复流程
-
-1. 备份当前环境
-2. 复制快照文件到目标位置
-3. 提示用户填入凭证
-4. 建议重启 OpenClaw
 
 ## 文件优先级
 
-| 优先级 | 标记 | 说明 |
-|--------|------|------|
-| ⭐⭐⭐ | 必备 | 丢失后无法恢复或恢复成本极高 |
-| ⭐⭐ | 重要 | 丢失后可重建但耗时 |
-| ⭐ | 可选 | 有自动重建机制或体积过大 |
+| 优先级 | 标记 | 说明 | 示例 |
+|--------|------|------|------|
+| ⭐⭐⭐ | 必备 | 丢失后无法恢复 | openclaw.json, auth-profiles.json, SOUL.md |
+| ⭐⭐ | 重要 | 丢失后可重建但耗时 | models.json, skills/, cron/jobs.json |
+| ⭐ | 可选 | 可自动重建 | logs/, node_modules/ |
+
+完整配置见 `config/default.json`
+
+## 对比其他方案
+
+| 维度 | KimiClaw v4.0 | HuoshanClaw | CatClaw |
+|------|:-------------:|:-----------:|:-------:|
+| 可执行脚本 | ✅ CLI | ❌ 文档 | ✅ CLI |
+| 目录覆盖 | ✅ 完整 | ✅ 最完整 | ✅ 较完整 |
+| 脱敏机制 | ✅ 自动 | ❌ 手动 | ✅ 自动 |
+| Manifest | ✅ | ❌ | ✅ |
+| 配置驱动 | ✅ | ❌ | ✅ |
+| 代码简洁 | ✅ 极简 | ✅ 清晰 | ✅ 简洁 |
+| 文件数量 | ~5 个 | ~3 个 | ~4 个 |
 
 ## 许可证
 

@@ -1,232 +1,358 @@
-# KimiClaw 快照方案 v3.0
+# KimiClaw v4.0 详细文档
 
-> 基于 `~/.openclaw/` 标准状态目录的快照管理规范
+## 架构设计
 
----
+### 核心原则
 
-## 目录结构
+1. **单一职责**: `bin/kimiclaw` 是唯一的用户入口
+2. **配置驱动**: 所有行为通过 `config/default.json` 定义
+3. **最小代码**: 约 500 行 Bash 实现全部功能
+4. **透明脱敏**: 自动处理敏感字段，生成恢复模板
+
+### 快照流程
 
 ```
-~/.openclaw/                                  ← 根目录 (STATE_DIR)
-│
-├── openclaw.json                             ⭐⭐⭐ 必备 — 主配置文件（渠道、模型、Agent、Hook）
-│
-├── agents/
-│   └── main/
-│       ├── agent/
-│       │   ├── auth-profiles.json            ⭐⭐⭐ 必备 — 所有 API Key（OpenAI/Anthropic/etc）
-│       │   └── models.json                   ⭐⭐  重要 — 模型配置（可重新生成，但备份省时）
-│       └── sessions/
-│           ├── sessions.json                 ⭐⭐⭐ 必备 — 会话索引（记录所有对话的元信息）
-│           └── *.jsonl                       ⭐⭐  重要 — 对话 transcript（对话历史本身）
-│
-├── credentials/
-│   ├── oauth.json                            ⭐⭐⭐ 必备 — Web/OAuth token
-│   └── whatsapp/
-│       └── default/
-│           ├── creds.json                    ⭐⭐⭐ 必备 — WhatsApp Web 登录态（扫码后）
-│           └── creds.json.bak                ⭐    可选 — 自动备份
-│
-├── memory/
-│   ├── MEMORY.md                             ⭐⭐⭐ 必备 — 长期记忆主文件
-│   ├── YYYY-MM-DD.md                         ⭐⭐  重要 — 每日记忆日志
-│   └── lancedb/                              ⭐⭐⭐ 必备 — 向量记忆数据库（如启用了 memory-lancedb 插件）
-│
-├── workspace/                                ⭐⭐⭐ 必备 — 工作区文件
-│   ├── AGENTS.md
-│   ├── SOUL.md
-│   ├── USER.md
-│   ├── TOOLS.md
-│   ├── IDENTITY.md
-│   ├── BOOTSTRAP.md
-│   ├── HEARTBEAT.md
-│   └── skills/                               ⭐⭐⭐ 必备 — 自定义 Skills
-│       └── [skill-name]/
-│           ├── SKILL.md
-│           └── ...
-│
-├── cron/                                     ⭐⭐  重要 — 定时任务配置
-│   ├── jobs.json
-│   └── runs/
-│
-├── plugins/                                  ⭐    可选 — 插件配置
-│
-├── canvas/                                   ⭐    可选 — Canvas 相关文件
-│
-└── snapshots/                                ⭐    可选 — 本地快照存储
+生成快照:
+  1. 读取 config/default.json 获取优先级配置
+  2. 按 ⭐⭐⭐ → ⭐⭐ → ⭐ 顺序复制文件
+  3. 对 JSON 文件执行脱敏处理
+  4. 生成 manifest.json 记录快照元数据
+  5. 生成 secrets-template.json 凭证模板
+
+恢复快照:
+  1. 验证快照完整性（manifest）
+  2. 备份当前环境（可选）
+  3. 逐目录覆盖恢复
+  4. 提示用户填入真实凭证
+  5. 建议重启 OpenClaw
 ```
 
----
+## 配置文件详解
 
-## 优先级说明
-
-| 优先级 | 标记 | 说明 |
-|--------|------|------|
-| ⭐⭐⭐ 必备 | 快照必须包含 | 丢失后无法恢复或恢复成本极高 |
-| ⭐⭐ 重要 | 建议包含 | 丢失后可重建但耗时 |
-| ⭐ 可选 | 按需包含 | 有自动重建机制或体积过大 |
-
----
-
-## 敏感数据处理
-
-### 脱敏字段列表
-
-以下字段在快照中会被替换为 `{{SECRET:field_name}}` 占位符：
+### config/default.json
 
 ```json
 {
-  "sensitive_patterns": [
-    "api_key",
-    "apikey", 
-    "api-key",
-    "token",
-    "secret",
-    "password",
-    "private_key",
-    "client_secret",
-    "access_token",
-    "refresh_token",
-    "openai_api_key",
-    "anthropic_api_key",
-    "kimi_api_key",
-    "feishu_app_secret",
-    "github_token",
-    "whatsapp_session"
-  ]
-}
-```
-
-### 恢复时手动填入
-
-恢复后需要根据 `secrets-template.json` 手动填入真实凭证。
-
----
-
-## 文件大小限制
-
-```json
-{
-  "max_file_size_mb": 10,
-  "exclude_patterns": [
-    "*.log",
-    "node_modules/**",
-    ".git/**",
-    "__pycache__/**",
-    "*.tmp",
-    "*.cache",
-    "*.bin",
-    "*.exe",
-    "*.dll",
-    "*.so"
-  ],
-  "exclude_large_extensions": [".bin", ".exe", ".dll", ".so", ".pth", ".ckpt", ".safetensors"]
-}
-```
-
----
-
-## 快照生成流程
-
-```bash
-# 1. 生成快照
-snapshot-sync generate
-
-# 2. 推送到远程
-snapshot-sync push --repo github.com/polegithub/shadowclaw --branch main
-
-# 3. 自动创建 PR 或提交（可选）
-snapshot-sync push --auto-commit
-```
-
----
-
-## 快照恢复流程
-
-```bash
-# 1. 拉取快照
-snapshot-sync pull --repo github.com/polegithub/shadowclaw --branch main
-
-# 2. 恢复环境
-snapshot-sync restore
-
-# 3. 填入凭证
-# 编辑 ~/.openclaw/agents/main/agent/auth-profiles.json
-# 编辑 ~/.openclaw/credentials/oauth.json
-
-# 4. 重启服务
-openclaw gateway restart
-```
-
----
-
-## manifest.json 格式
-
-```json
-{
-  "version": "3.0.0",
-  "name": "kimiclaw",
-  "generated_at": "2026-03-06T10:56:00+08:00",
-  "generated_by": "ou_196dc9353a11da18b0cec3c11213f173",
-  "openclaw_version": "1.2.3",
-  "state_dir_structure": {
-    "openclaw.json": "present",
-    "agents/main/agent/auth-profiles.json": "present",
-    "agents/main/sessions/sessions.json": "present",
-    "credentials/oauth.json": "desensitized",
-    "memory/lancedb/": "excluded"
+  "version": "4.0.0",
+  "snapshot": {
+    "outputDir": "./snapshots",        // 默认输出目录
+    "maxFileSizeMB": 10,                // 文件大小限制
+    "excludePatterns": [...],           // 排除规则
+    "whitelist": [...]                  // 白名单路径
   },
-  "stats": {
-    "total_files": 42,
-    "total_size_mb": 3.2,
-    "desensitized_files": 3,
-    "excluded_large_files": [
-      {
-        "path": "memory/lancedb/index.bin",
-        "size_mb": 45,
-        "reason": "exceeds_max_size"
-      }
-    ]
+  "priority": {
+    "critical": { "paths": [...] },     // ⭐⭐⭐ 必备
+    "important": { "paths": [...] },    // ⭐⭐ 重要
+    "optional": { "paths": [...] }      // ⭐ 可选
   },
-  "checksums": {
-    "openclaw.json": "sha256:abc123...",
-    "agents/main/agent/auth-profiles.json": "sha256:def456...",
-    "memory/MEMORY.md": "sha256:ghi789..."
+  "sensitive": {
+    "fields": ["token", "apiKey", ...], // 敏感字段名
+    "maskTemplate": "{{SECRET:{{field}}}}"
+  },
+  "github": {
+    "repo": "github.com/user/repo",
+    "branch": "main"
   }
 }
 ```
 
----
+## 命令参考
 
-## 自动化建议
+### generate (g)
 
-### 每日自动备份
-
-```bash
-# 设置定时任务
-cron add --name "daily-kimiclaw-backup" --schedule "0 2 * * *" \
-  --command "snapshot-sync generate && snapshot-sync push --silent"
-```
-
-### 重要变更触发备份
+生成环境快照
 
 ```bash
-# 监听文件变化
-watchman watch ~/.openclaw/
-watchman trigger ~/.openclaw/ kimiclaw-backup 'openclaw.json' -- \
-  snapshot-sync generate --incremental
+kimiclaw generate [options]
+
+选项:
+  -o, --output DIR    指定输出目录
+  -d, --dry-run       模拟运行，不实际复制
+  -f, --force         强制覆盖现有目录
+
+示例:
+  kimiclaw generate
+  kimiclaw generate -o ~/backups/my-snapshot
+  kimiclaw generate --dry-run  # 预览会复制哪些文件
 ```
 
----
+### restore (r)
+
+从快照恢复环境
+
+```bash
+kimiclaw restore <snapshot-dir> [options]
+
+选项:
+  -f, --force       跳过确认提示
+  -b, --backup      恢复前备份当前环境（默认开启）
+  --no-backup       不备份当前环境
+
+示例:
+  kimiclaw restore ./snapshots/snapshot-20260307-120000
+  kimiclaw restore ./snapshot-xxx -f
+```
+
+**恢复后检查清单**:
+1. 检查 `secrets-template.json` 填入真实凭证
+2. 重启 OpenClaw: `openclaw gateway restart`
+3. 验证状态: `openclaw status`
+
+### push (p)
+
+推送到 Git 远程仓库
+
+```bash
+kimiclaw push [options]
+
+选项:
+  -r, --repo URL      仓库地址（覆盖配置）
+  -b, --branch NAME   分支名（默认 main）
+  -m, --message MSG   提交信息
+
+示例:
+  kimiclaw push
+  kimiclaw push -r github.com/user/repo -b main
+  kimiclaw push -m "更新: 添加飞书配置"
+```
+
+### pull (pl)
+
+从远程仓库拉取
+
+```bash
+kimiclaw pull [options]
+
+选项:
+  -b, --branch NAME   分支名（默认 main）
+
+示例:
+  kimiclaw pull
+  kimiclaw pull -b develop
+```
+
+### list (ls)
+
+列出本地快照
+
+```bash
+kimiclaw list
+```
+
+输出示例:
+```
+本地快照列表:
+
+  snapshot-20260307-143022          2.4M  2026-03-07
+  snapshot-20260306-092145          2.1M  2026-03-06
+
+总计: 2 个快照
+```
+
+### clean
+
+清理旧快照
+
+```bash
+kimiclaw clean [options]
+
+选项:
+  -k, --keep N      保留最近 N 个快照（默认 5）
+  -d, --dry-run     预览将要删除的快照
+
+示例:
+  kimiclaw clean -k 3
+  kimiclaw clean --dry-run
+```
+
+### verify
+
+验证快照完整性
+
+```bash
+kimiclaw verify <snapshot-dir>
+
+示例:
+  kimiclaw verify ./snapshot-xxx
+```
+
+检查项:
+- manifest.json 是否存在
+- ⭐⭐⭐ 必备文件是否齐全
+- 是否存在未脱敏的敏感信息
+
+### config
+
+显示当前配置
+
+```bash
+kimiclaw config
+```
+
+## 快照结构
+
+生成的快照目录结构:
+
+```
+snapshot-YYYYMMDD-HHMMSS/
+├── openclaw.json                 # 主配置（已脱敏）
+├── agents/
+│   └── main/
+│       ├── agent/
+│       │   ├── auth-profiles.json  # API Keys（已脱敏）
+│       │   └── models.json
+│       └── sessions/
+│           ├── sessions.json       # 会话索引
+│           └── *.jsonl             # 对话历史
+├── credentials/
+│   ├── oauth.json                  # OAuth（已脱敏）
+│   ├── feishu-pairing.json
+│   └── whatsapp/default/creds.json
+├── memory/
+│   └── main.sqlite                 # SQLite 记忆库
+├── workspace/
+│   ├── AGENTS.md                   # ⭐⭐⭐
+│   ├── SOUL.md                     # ⭐⭐⭐
+│   ├── USER.md                     # ⭐⭐⭐
+│   ├── IDENTITY.md                 # ⭐⭐⭐
+│   ├── MEMORY.md                   # ⭐⭐⭐
+│   ├── TOOLS.md
+│   ├── HEARTBEAT.md
+│   └── memory/
+│       └── YYYY-MM-DD.md          # 每日记忆
+├── skills/                         # 全局 Skills
+├── cron/
+│   └── jobs.json                   # 定时任务
+├── identity/
+│   ├── device.json
+│   └── device-auth.json
+├── .env                            # 环境变量（已脱敏）
+├── manifest.json                   # 快照元数据
+└── secrets-template.json           # 凭证填写指南
+```
+
+## 脱敏机制
+
+### 自动脱敏的字段
+
+- `token`, `apiKey`, `api_key`
+- `secret`, `password`
+- `privateKey`, `client_secret`
+- `access_token`, `refresh_token`
+
+### 脱敏示例
+
+**原始**:
+```json
+{
+  "openai": {
+    "apiKey": "sk-abc123xyz789"
+  }
+}
+```
+
+**脱敏后**:
+```json
+{
+  "openai": {
+    "apiKey": "{{SECRET:apiKey}}"
+  }
+}
+```
+
+恢复时，根据 `secrets-template.json` 填入真实值。
+
+## 高级用法
+
+### 自定义配置
+
+复制默认配置并修改:
+
+```bash
+cp config/default.json config/my-config.json
+# 编辑 my-config.json
+kimiclaw generate --config config/my-config.json
+```
+
+### 定时自动备份
+
+添加到 crontab:
+
+```bash
+# 每天凌晨 2 点自动备份
+0 2 * * * /usr/local/bin/kimiclaw generate && /usr/local/bin/kimiclaw push -m "自动备份 $(date +\%Y-\%m-\%d)"
+```
+
+### 多环境管理
+
+```bash
+# 生产环境快照
+kimiclaw generate -o ./snapshots/prod-$(date +%Y%m%d)
+
+# 测试环境快照
+kimiclaw generate -o ./snapshots/staging-$(date +%Y%m%d)
+```
+
+## 故障排除
+
+### 缺少依赖
+
+```bash
+# Ubuntu/Debian
+sudo apt-get install jq git rsync
+
+# macOS
+brew install jq git rsync
+```
+
+### Git 推送失败
+
+```bash
+# 检查远程仓库配置
+cd /path/to/kimiclaw
+git remote -v
+
+# 设置 token（免密码推送）
+export GITHUB_TOKEN="ghp_xxx"
+```
+
+### 恢复后无法启动
+
+```bash
+# 1. 检查凭证是否已填入
+grep -r "{{SECRET" ~/.openclaw/
+
+# 2. 检查配置文件语法
+jq . ~/.openclaw/openclaw.json
+
+# 3. 查看日志
+openclaw gateway logs
+```
 
 ## 版本历史
 
-| 版本 | 日期 | 变更 |
+| 版本 | 日期 | 说明 |
 |------|------|------|
-| v3.0 | 2026-03-06 | 重构为基于 STATE_DIR 的标准目录结构 |
-| v2.0 | 2026-03-05 | 新增自举模式，优化快照格式 |
-| v1.0 | 2026-03-01 | 初始版本 |
+| v4.0 | 2026-03-07 | 配置驱动重构，整合三方优势 |
+| v3.0 | 2026-03-05 | 添加 skills 系统和 token tracker |
+| v2.0 | 2026-03-04 | 多目录快照支持 |
+| v1.0 | 2026-03-04 | 初始版本 |
+
+## 与其他方案的关系
+
+```
+ShadowClaw
+├── kimiclaw/     ← Kimi 负责 - CLI + 配置驱动
+├── huoshanclaw/  ← 火山负责 - 文档 + 完整目录清单
+└── catclaw/      ← Cat 负责 - 单一脚本 + 配置驱动
+```
+
+**取长补短**:
+- KimiClaw 学习 HuoshanClaw 的完整目录覆盖
+- KimiClaw 学习 CatClaw 的配置驱动思想
+- 三方保持各自文件夹，互不干扰
+- 用户可按需选择或组合使用
 
 ---
 
-*KimiClaw - 记住一切，随时恢复*
+*最后更新: 2026-03-07*
