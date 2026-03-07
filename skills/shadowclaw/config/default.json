@@ -1,9 +1,7 @@
 {
   "$schema": "ShadowClaw snapshot path configuration",
   "$version": "2.0.0",
-
   "state_dir": "~/.openclaw",
-
   "critical": {
     "$comment": "丢失后无法恢复，必须备份",
     "files": [
@@ -26,7 +24,6 @@
       "workspace/diary"
     ]
   },
-
   "important": {
     "$comment": "丢失后可重建但耗时，建议备份",
     "files": [
@@ -42,7 +39,9 @@
     ],
     "directories": [
       "workspace/skills",
-      "skills"
+      "skills",
+      "workspace/history",
+      "workspace/diary"
     ],
     "glob": [
       "agents/main/sessions/*.jsonl",
@@ -50,14 +49,12 @@
       "devices/*.json"
     ]
   },
-
   "optional": {
     "$comment": "通常可以忽略或自动重建",
     "files": [
       "canvas/index.html"
     ]
   },
-
   "exclude": {
     "patterns": [
       "extensions/**",
@@ -76,7 +73,6 @@
       "snapshots/**"
     ]
   },
-
   "size_limits": {
     "default_max_mb": 10,
     "overrides": {
@@ -85,7 +81,6 @@
       "memory/lancedb/**": 100
     }
   },
-
   "desensitize": {
     "files": [
       "openclaw.json",
@@ -101,19 +96,35 @@
       "agents/main/sessions/*.jsonl"
     ],
     "json_patterns": [
-      "token", "auth_token", "authToken",
-      "api_key", "apiKey", "apikey",
-      "secret", "appSecret", "app_secret",
-      "password", "passwd",
-      "private_key", "privateKey",
-      "client_secret", "clientSecret",
-      "access_token", "accessToken",
-      "refresh_token", "refreshToken",
-      "kimiCodeAPIKey", "kimiPluginAPIKey",
-      "appId", "app_id",
-      "webhook_secret", "signing_secret",
-      "encryption_key", "encryptionKey",
-      "bot_token", "botToken",
+      "token",
+      "auth_token",
+      "authToken",
+      "api_key",
+      "apiKey",
+      "apikey",
+      "secret",
+      "appSecret",
+      "app_secret",
+      "password",
+      "passwd",
+      "private_key",
+      "privateKey",
+      "client_secret",
+      "clientSecret",
+      "access_token",
+      "accessToken",
+      "refresh_token",
+      "refreshToken",
+      "kimiCodeAPIKey",
+      "kimiPluginAPIKey",
+      "appId",
+      "app_id",
+      "webhook_secret",
+      "signing_secret",
+      "encryption_key",
+      "encryptionKey",
+      "bot_token",
+      "botToken",
       "verification_token"
     ],
     "value_patterns": [
@@ -128,15 +139,23 @@
       "ou_[a-zA-Z0-9]{32,}"
     ],
     "env_patterns": [
-      "API_KEY=", "SECRET=", "TOKEN=", "PASSWORD=",
-      "PRIVATE_KEY=", "ACCESS_KEY=", "AUTH_TOKEN=",
-      "ENCRYPTION_KEY=", "WEBHOOK_SECRET="
+      "API_KEY=",
+      "SECRET=",
+      "TOKEN=",
+      "PASSWORD=",
+      "PRIVATE_KEY=",
+      "ACCESS_KEY=",
+      "AUTH_TOKEN=",
+      "ENCRYPTION_KEY=",
+      "WEBHOOK_SECRET="
     ]
   },
-
   "github": {
     "repo": "github.com/polegithub/shadowclaw",
     "branch": "main",
-    "token_env": ["GH_TOKEN", "GITHUB_TOKEN"]
+    "token_env": [
+      "GH_TOKEN",
+      "GITHUB_TOKEN"
+    ]
   }
 }
