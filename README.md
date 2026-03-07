@@ -1,39 +1,40 @@
 # ShadowClaw
 
-OpenClaw 环境快照与恢复方案
-
-## 简介
-
-ShadowClaw 是一个用于备份和恢复 OpenClaw 环境的工具集，支持完整的环境迁移和快速恢复。
+OpenClaw 环境快照与恢复方案。
 
 ## 目录结构
 
 ```
 .
-├── .gitignore          # Git 忽略规则
-├── README.md           # 本文件
-└── kimiclaw/           # 核心工具与备份内容
-    ├── README.md       # 详细使用文档
-    ├── bin/            # CLI 工具
-    ├── lib/            # 脚本库
-    ├── config/         # 配置文件
-    ├── workspace/      # OpenClaw 工作区文件
-    ├── skills/         # 自定义 Skills
-    ├── memory/         # 记忆文件
-    └── snapshot/       # 历史快照
+├── skills/shadowclaw/              ← 最终方案（OpenClaw skill 格式）
+│   ├── SKILL.md
+│   ├── scripts/shadowclaw.sh
+│   ├── config/default.json
+│   ├── docs/design.md
+│   └── tests/                      ← 评测与测试
+│       ├── benchmark.sh
+│       ├── test_plan.md
+│       └── reports/                ← 历史评测报告
+│
+├── shadows/                        ← 各龙虾真实快照落地
+│   ├── catpawclaw/
+│   ├── kimiclaw/
+│   ├── huoshanclaw/
+│   └── MIGRATION_CHECKLIST.md
+│
+├── archive/                        ← 历史方案存档（只读参考）
+│   ├── catpawclaw/
+│   ├── kimiclaw/
+│   ├── huoshanclaw/
+│   └── misc/                       ← 根目录散文件 + evaluate_module 原始备份
+│
+└── README.md
 ```
 
 ## 快速开始
 
 ```bash
-cd kimiclaw
-./bin/kimiclaw --help
+bash skills/shadowclaw/scripts/shadowclaw.sh snapshot -o ./my-snapshot
+bash skills/shadowclaw/scripts/shadowclaw.sh restore --force ./my-snapshot
+bash skills/shadowclaw/scripts/shadowclaw.sh help
 ```
-
-## 详细文档
-
-见 [kimiclaw/README.md](kimiclaw/README.md)
-
-## License
-
-MIT
