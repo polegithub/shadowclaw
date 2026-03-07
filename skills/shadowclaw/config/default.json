@@ -16,7 +16,8 @@
       "workspace/SOUL.md",
       "workspace/USER.md",
       "workspace/IDENTITY.md",
-      "workspace/MEMORY.md"
+      "workspace/MEMORY.md",
+      "workspace/PEERS.md"
     ],
     "directories": [
       "memory/lancedb",
