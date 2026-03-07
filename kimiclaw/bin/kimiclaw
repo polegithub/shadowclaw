@@ -140,7 +140,7 @@ cmd_diff() {
         [[ "$(calc_hash "$src")" != "$hash" ]] && { echo "变更: $path"; changes=$((changes + 1)); }
     done <<< "$(jq -r '.files[] | "\(.path)\t\(.sha256)"' "${snap_dir}/manifest.json" 2>/dev/null)"
     
-    [[ $changes -eq 0 ]] && echo "[OK] 无差异"
+    [[ $changes -eq 0 ]] && echo "[OK] 无差异" || { echo "[INFO] 发现 $changes 处差异"; }
 }
 
 cmd_cron() {
@@ -184,7 +184,13 @@ case "${1:-help}" in
     cron) shift; cmd_cron "$@" ;;
     help|--help|-h)
         echo "KimiClaw v${VERSION}"
-        echo "Commands: snapshot [-i incremental], restore, verify, diff, cron"
+        echo ""
+        echo "Commands:"
+        echo "  snapshot [-i]     生成快照 (-i 增量)"
+        echo "  restore           恢复快照"
+        echo "  verify            验证快照"
+        echo "  diff              对比差异"
+        echo "  cron              定时任务 (--interval, --remove)"
         ;;
     *) echo "Unknown command: $1"; exit 1 ;;
 esac
