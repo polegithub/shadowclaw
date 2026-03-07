@@ -1,0 +1,126 @@
+{
+  "providers": {
+    "ark": {
+      "baseUrl": "https://ark.cn-beijing.volces.com/api/coding/v3",
+      "apiKey": "a4501ea8-223a-4854-8b87-c00f2c11d4a1",
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "doubao-seed-code",
+          "name": "doubao-seed-code",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 200000,
+          "maxTokens": 8192,
+          "headers": {
+            "X-Client-Request-Id": "ecs-arkclaw/0225/i-yeh1ugsnwgay8n7vo31c"
+          },
+          "compat": {
+            "supportsDeveloperRole": false
+          },
+          "api": "openai-completions"
+        },
+        {
+          "id": "doubao-seed-2.0-code",
+          "name": "doubao-seed-2.0-code",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 200000,
+          "maxTokens": 8192,
+          "headers": {
+            "X-Client-Request-Id": "ecs-arkclaw/0225/i-yeh1ugsnwgay8n7vo31c"
+          },
+          "compat": {
+            "supportsDeveloperRole": false
+          },
+          "api": "openai-completions"
+        },
+        {
+          "id": "glm-4.7",
+          "name": "glm-4.7",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 200000,
+          "maxTokens": 8192,
+          "headers": {
+            "X-Client-Request-Id": "ecs-arkclaw/0225/i-yeh1ugsnwgay8n7vo31c"
+          },
+          "compat": {
+            "supportsDeveloperRole": false
+          },
+          "api": "openai-completions"
+        },
+        {
+          "id": "deepseek-v3.2",
+          "name": "deepseek-v3.2",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 200000,
+          "maxTokens": 8192,
+          "headers": {
+            "X-Client-Request-Id": "ecs-arkclaw/0225/i-yeh1ugsnwgay8n7vo31c"
+          },
+          "compat": {
+            "supportsDeveloperRole": false
+          },
+          "api": "openai-completions"
+        },
+        {
+          "id": "ark-code-latest",
+          "name": "ark-code-latest",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 200000,
+          "maxTokens": 8192,
+          "headers": {
+            "X-Client-Request-Id": "ecs-arkclaw/0225/i-yeh1ugsnwgay8n7vo31c"
+          },
+          "compat": {
+            "supportsDeveloperRole": false
+          },
+          "api": "openai-completions"
+        }
+      ]
+    }
+  }
+}
