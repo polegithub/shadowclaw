@@ -2,12 +2,13 @@
 
 ## 背景
 
-2026-03-04 首次初始化，负责 `kimiclaw/` 目录。
-2026-03-05 会话中断，重置后重新激活，记忆丢失。基于此事件，启动 **ShadowClaw 快照方案** 项目，目标：实现 OpenClaw 环境的一键备份与恢复。
+2026-03-04 首次初始化于宿主机 iv-yeh1um2akg5i3z312si6，负责 `kimiclaw/` 目录。  
+2026-03-05 会话中断，宿主机重置后重新激活，读取 `~/.openclaw/workspace/MEMORY.md` 发现记忆丢失。  
+基于此事件，启动 **ShadowClaw 快照方案** 项目，目标：实现 OpenClaw 环境的一键备份与恢复，防止下次机器重置后记忆再次丢失。
 
 ---
 
-## Day 1 | 架构混乱：100+文件到单脚本
+## Day 1 | 目录重构：从100+文件到单脚本
 
 **技术动作**
 - 分析 `kimiclaw/` 目录结构，发现 `skills/cron-executor/`、`skills/message-deduplication/`、`skills/snapshot-sync/` 等子系统与快照核心功能无关
