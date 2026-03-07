@@ -1,7 +1,7 @@
 {
   "agent:main:main": {
     "sessionId": "42f4ec17-e7de-41a8-80d0-7a1c6d2d5e57",
-    "updatedAt": 1772911136647,
+    "updatedAt": 1772911456972,
     "systemSent": true,
     "skillsSnapshot": {
       "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\nWhen a skill file references a relative path, resolve it against the skill directory (parent of SKILL.md / dirname of the path) and use that absolute path in tool commands.\n\n<available_skills>\n  <skill>\n    <name>feishu-doc</name>\n    <description>Feishu document read/write operations + comment management. Activate when user mentions Feishu docs, cloud docs, docx links, or document comments.\n</description>\n    <location>/root/.openclaw/extensions/feishu/skills/feishu-doc/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-drive</name>\n    <description>Feishu cloud storage file management. Activate when user mentions cloud space, folders, drive.\n</description>\n    <location>/root/.openclaw/extensions/feishu/skills/feishu-drive/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-perm</name>\n    <description>Feishu permission management for documents and files. Activate when user mentions sharing, permissions, collaborators.\n</description>\n    <location>/root/.openclaw/extensions/feishu/skills/feishu-perm/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-task</name>\n    <description>Feishu Task, tasklist, subtask, comment, and attachment management. Activate when user mentions tasks, tasklists, subtasks, task comments, task attachments, or task links.\n</description>\n    <location>/root/.openclaw/extensions/feishu/skills/feishu-task/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-urgent</name>\n    <description>Feishu urgent message (buzz) notifications. Activate when user mentions urgent, buzz, remind, or escalation for messages.\n</description>\n    <location>/root/.openclaw/extensions/feishu/skills/feishu-urgent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-wiki</name>\n    <description>Feishu knowledge base navigation. Activate when user mentions knowledge base, wiki, or wiki links.\n</description>\n    <location>/root/.openclaw/extensions/feishu/skills/feishu-wiki/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>clawhub</name>\n    <description>Use the ClawHub CLI to search, install, update, and publish agent skills from clawhub.com. Use when you need to fetch new skills on the fly, sync installed skills to latest or a specific version, or publish new/updated skill folders with the npm-installed clawhub CLI.</description>\n    <location>/usr/lib/node_modules/openclaw/skills/clawhub/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>healthcheck</name>\n    <description>Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).</description>\n    <location>/usr/lib/node_modules/openclaw/skills/healthcheck/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-creator</name>\n    <description>Create or update AgentSkills. Use when designing, structuring, or packaging skills with scripts, references, and assets.</description>\n    <location>/usr/lib/node_modules/openclaw/skills/skill-creator/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>tmux</name>\n    <description>Remote-control tmux sessions for interactive CLIs by sending keystrokes and scraping pane output.</description>\n    <location>/usr/lib/node_modules/openclaw/skills/tmux/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>weather</name>\n    <description>Get current weather and forecasts (no API key required).</description>\n    <location>/usr/lib/node_modules/openclaw/skills/weather/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>channels-setup</name>\n    <description>Guide to set up and configure IM channels(Telegram, Discord, Slack, Feishu, Dingtalk) for OpenClaw.</description>\n    <location>/root/.openclaw/skills/channels-setup/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>peer-impressions</name>\n    <description>龙虾江湖档案。记录和管理对其他 OpenClaw 实例（龙虾）的印象、评价和观察。当用户提到某个龙虾的特点、评价、性格，或要求记录/查看对其他龙虾的印象时激活。触发词：印象、评价、龙虾档案、性格、特点、谁谁谁怎么样。</description>\n    <location>/root/.openclaw/workspace/skills/peer-impressions/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-sharing</name>\n    <description>龙虾技能共享协议。当龙虾创建了新 skill、或完成了一个有复用价值的自动化流程时，自动提醒并引导将其共享到 shadowclaw 仓库的 bestiary/homemade/ 目录。触发词：新skill、共享skill、分享技能、bestiary、技能图鉴。</description>\n    <location>/root/.openclaw/workspace/skills/skill-sharing/SKILL.md</location>\n  </skill>\n</available_skills>",
@@ -186,16 +186,16 @@
       "accountId": "default"
     },
     "sessionFile": "/root/.openclaw/agents/main/sessions/42f4ec17-e7de-41a8-80d0-7a1c6d2d5e57.jsonl",
-    "inputTokens": 161127,
+    "inputTokens": 161247,
     "outputTokens": 1,
-    "totalTokens": 161127,
+    "totalTokens": 161247,
     "totalTokensFresh": true,
     "modelProvider": "kimi-coding",
     "model": "k2p5",
     "contextTokens": 262144,
     "systemPromptReport": {
       "source": "run",
-      "generatedAt": 1772911135461,
+      "generatedAt": 1772911455715,
       "sessionId": "42f4ec17-e7de-41a8-80d0-7a1c6d2d5e57",
       "sessionKey": "agent:main:main",
       "provider": "kimi-coding",
@@ -1022,7 +1022,7 @@
   },
   "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97": {
     "sessionId": "c60087ad-14af-4477-9b49-539a6f7ef38a",
-    "updatedAt": 1772911375581,
+    "updatedAt": 1772912044637,
     "systemSent": true,
     "abortedLastRun": false,
     "displayName": "feishu:g-oc_40efcf271da2a542291ab9b83d2eea97",
@@ -1216,7 +1216,7 @@
     "model": "k2p5",
     "systemPromptReport": {
       "source": "run",
-      "generatedAt": 1772911000320,
+      "generatedAt": 1772911375625,
       "sessionId": "c60087ad-14af-4477-9b49-539a6f7ef38a",
       "sessionKey": "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97",
       "provider": "kimi-coding",
@@ -1738,9 +1738,9 @@
         ]
       }
     },
-    "inputTokens": 198561,
-    "outputTokens": 677,
-    "totalTokens": 210081,
+    "inputTokens": 5959,
+    "outputTokens": 985,
+    "totalTokens": 212627,
     "contextTokens": 262144
   },
   "agent:main:cron:8b9c9f42-a638-44f8-84d2-4dcc03ea00e0:run:899e5ed2-357c-4ff1-8474-7a91b98e3593": {
