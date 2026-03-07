@@ -41,7 +41,8 @@
     "directories": [
       "workspace/skills",
       "skills",
-      "workspace/diary"
+      "workspace/diary",
+      "workspace/report"
     ],
     "glob": [
       "agents/main/sessions/*.jsonl",
