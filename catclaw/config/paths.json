@@ -22,7 +22,8 @@
     ],
     "directories": [
       "memory/lancedb",
-      "workspace/memory"
+      "workspace/memory",
+      "workspace/diary"
     ]
   },
 
@@ -92,23 +93,44 @@
       "credentials/oauth.json",
       "credentials/feishu-pairing.json",
       "credentials/whatsapp/default/creds.json",
+      "identity/device.json",
+      "identity/device-auth.json",
       ".env"
     ],
+    "glob_files": [
+      "agents/main/sessions/*.jsonl"
+    ],
     "json_patterns": [
-      "token", "api_key", "apiKey", "apikey",
-      "secret", "appSecret", "password",
-      "private_key", "client_secret",
-      "access_token", "refresh_token",
+      "token", "auth_token", "authToken",
+      "api_key", "apiKey", "apikey",
+      "secret", "appSecret", "app_secret",
+      "password", "passwd",
+      "private_key", "privateKey",
+      "client_secret", "clientSecret",
+      "access_token", "accessToken",
+      "refresh_token", "refreshToken",
       "kimiCodeAPIKey", "kimiPluginAPIKey",
-      "appId"
+      "appId", "app_id",
+      "webhook_secret", "signing_secret",
+      "encryption_key", "encryptionKey",
+      "bot_token", "botToken",
+      "verification_token"
     ],
     "value_patterns": [
       "sk-[a-zA-Z0-9]{20,}",
       "ghp_[a-zA-Z0-9]{36}",
-      "xoxb-[a-zA-Z0-9-]+"
+      "ghu_[a-zA-Z0-9]{36}",
+      "ghs_[a-zA-Z0-9]{36}",
+      "xoxb-[a-zA-Z0-9-]+",
+      "xoxp-[a-zA-Z0-9-]+",
+      "Bearer [a-zA-Z0-9._-]{20,}",
+      "cli_[a-zA-Z0-9]{16,}",
+      "ou_[a-zA-Z0-9]{32,}"
     ],
     "env_patterns": [
-      "API_KEY=", "SECRET=", "TOKEN=", "PASSWORD="
+      "API_KEY=", "SECRET=", "TOKEN=", "PASSWORD=",
+      "PRIVATE_KEY=", "ACCESS_KEY=", "AUTH_TOKEN=",
+      "ENCRYPTION_KEY=", "WEBHOOK_SECRET="
     ]
   },
 

@@ -4,15 +4,17 @@
 # CatClaw v2.0
 #
 # Usage:
-#   shadowclaw snapshot [-o dir] [--dry-run] [--no-desensitize]
+#   shadowclaw snapshot [-o dir] [--dry-run] [--no-desensitize] [--incremental]
 #   shadowclaw restore  [--force] <snapshot-dir>
 #   shadowclaw push     [-r repo] [-b branch]
 #   shadowclaw verify   <snapshot-dir>
+#   shadowclaw cron     [--interval 6h] [--remove]
+#   shadowclaw diff     <snapshot-dir>
 #   shadowclaw help
 #
 set -euo pipefail
 
-VERSION="2.0.0"
+VERSION="2.1.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_FILE="${SCRIPT_DIR}/../config/paths.json"
 STATE_DIR="${OPENCLAW_DIR:-$HOME/.openclaw}"
@@ -67,6 +69,76 @@ desensitize() {
     [[ -z "$pat" ]] && continue
     sed -i "s/\\(${pat}\\).*/\\1{{SECRET:env}}/g" "$file" 2>/dev/null || true
   done < <(cfg_arr '.desensitize.env_patterns')
+
+  # PEM private keys (inline or multiline)
+  sed -i 's/-----BEGIN[^-]*PRIVATE KEY-----[^-]*-----END[^-]*PRIVATE KEY-----/{{SECRET:private_key}}/g' "$file" 2>/dev/null || true
+  # Handle escaped newlines in JSON (\\n style PEM)
+  sed -i 's/-----BEGIN PRIVATE KEY-----\\n[^"]*\\n-----END PRIVATE KEY-----\\n/{{SECRET:private_key}}/g' "$file" 2>/dev/null || true
+}
+
+# ── Deep security scan ──────────────────────────────────────────────
+deep_security_scan() {
+  local dir="$1"
+  local issues=0
+
+  info "🔒 深度安全扫描..."
+
+  while IFS= read -r -d '' f; do
+    local fname="${f#$dir/}"
+
+    # API keys & tokens
+    if grep -qE '(sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{36}|xoxb-[a-zA-Z0-9-]+|Bearer [a-zA-Z0-9._-]{20,})' "$f" 2>/dev/null; then
+      err "明文密钥: $fname"
+      (( issues++ )) || true
+    fi
+
+    # Private keys (but not JSON fields that mention "PRIVATE KEY" as a label)
+    if grep -q "BEGIN.*PRIVATE KEY" "$f" 2>/dev/null; then
+      err "私钥文件: $fname"
+      (( issues++ )) || true
+    fi
+
+    # Email addresses (personal info)
+    if grep -qE '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|cn|org|net|io)' "$f" 2>/dev/null; then
+      local count; count=$(grep -cE '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|cn|org|net|io)' "$f" 2>/dev/null || echo 0)
+      if (( count > 0 )); then
+        warn "发现 $count 个邮箱地址: $fname"
+      fi
+    fi
+
+    # IP addresses (internal)
+    if grep -qE '(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)[0-9]+\.[0-9]+' "$f" 2>/dev/null; then
+      warn "内网 IP: $fname"
+    fi
+
+    # Passwords in plaintext
+    if grep -qiE '"password"\s*:\s*"[^{][^"]{3,}"' "$f" 2>/dev/null; then
+      err "明文密码: $fname"
+      (( issues++ )) || true
+    fi
+
+  done < <(find "$dir" \( -name "*.json" -o -name "*.md" -o -name ".env" -o -name "*.yaml" -o -name "*.yml" -o -name "*.toml" \) -print0 2>/dev/null)
+
+  if (( issues > 0 )); then
+    err "发现 $issues 个安全问题!"
+    return 1
+  fi
+  ok "深度安全扫描通过"
+  return 0
+}
+
+# ── Incremental diff ────────────────────────────────────────────────
+compute_file_hash() {
+  sha256sum "$1" 2>/dev/null | cut -d' ' -f1
+}
+
+build_hash_map() {
+  local dir="$1"
+  declare -gA HASH_MAP
+  while IFS= read -r -d '' f; do
+    local rel="${f#$dir/}"
+    HASH_MAP["$rel"]="$(compute_file_hash "$f")"
+  done < <(find "$dir" -type f -print0 2>/dev/null)
 }
 
 # ── Copy with size check ───────────────────────────────────────────
@@ -104,13 +176,15 @@ copy_checked() {
 
 # ── CMD: snapshot ───────────────────────────────────────────────────
 cmd_snapshot() {
-  local output_dir="" dry_run=false do_desensitize=true
+  local output_dir="" dry_run=false do_desensitize=true incremental=false base_manifest=""
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
       -o|--output)  output_dir="$2"; shift 2 ;;
       --dry-run)    dry_run=true; shift ;;
       --no-desensitize) do_desensitize=false; shift ;;
+      --incremental|-i) incremental=true; shift ;;
+      --base)       base_manifest="$2"; shift 2 ;;
       *)            output_dir="$1"; shift ;;
     esac
   done
@@ -121,8 +195,28 @@ cmd_snapshot() {
   info "源:   $STATE_DIR"
   info "目标: $output_dir"
   $dry_run && warn "模拟运行模式 (--dry-run)"
+  $incremental && info "📦 增量模式"
 
-  stats_copied=0; stats_skipped=0
+  # Load base manifest for incremental
+  declare -A BASE_HASHES
+  if [[ "$incremental" == "true" ]]; then
+    # Find latest manifest
+    if [[ -z "$base_manifest" ]]; then
+      base_manifest=$(find "$(dirname "$output_dir")" -name "manifest.json" -path "*/shadowclaw-snapshot-*" -type f 2>/dev/null | sort -r | head -1)
+    fi
+    if [[ -n "$base_manifest" && -f "$base_manifest" ]]; then
+      info "增量基准: $base_manifest"
+      while IFS='=' read -r key val; do
+        BASE_HASHES["$key"]="$val"
+      done < <(jq -r '.file_hashes // {} | to_entries[] | "\(.key)=\(.value)"' "$base_manifest" 2>/dev/null)
+      info "基准文件数: ${#BASE_HASHES[@]}"
+    else
+      warn "未找到基准快照，执行完整快照"
+      incremental=false
+    fi
+  fi
+
+  stats_copied=0; stats_skipped=0; stats_unchanged=0
 
   # ─ Critical files ─
   section "🔴 必备文件"
@@ -180,15 +274,61 @@ cmd_snapshot() {
   # ─ Desensitize ─
   if [[ "$do_desensitize" == "true" && "$dry_run" == "false" ]]; then
     section "🔒 脱敏处理"
+    # Specific files
     while IFS= read -r rel; do
       [[ -z "$rel" ]] && continue
       desensitize "$output_dir/$rel"
     done < <(cfg_arr '.desensitize.files')
+
+    # Glob files (e.g., session jsonl files containing user-pasted tokens)
+    while IFS= read -r pattern; do
+      [[ -z "$pattern" ]] && continue
+      for src in $output_dir/$pattern; do
+        [[ -f "$src" ]] || continue
+        info "🔒 脱敏(glob): ${src#$output_dir/}"
+        # Direct pattern replacement for session files (handles JSON-embedded tokens)
+        # GitHub tokens
+        sed -i 's/ghp_[a-zA-Z0-9]\{20,\}/{{SECRET:redacted}}/g' "$src" 2>/dev/null || true
+        sed -i 's/ghu_[a-zA-Z0-9]\{20,\}/{{SECRET:redacted}}/g' "$src" 2>/dev/null || true
+        sed -i 's/ghs_[a-zA-Z0-9]\{20,\}/{{SECRET:redacted}}/g' "$src" 2>/dev/null || true
+        # OpenAI keys
+        sed -i 's/sk-[a-zA-Z0-9]\{20,\}/{{SECRET:redacted}}/g' "$src" 2>/dev/null || true
+        # Slack tokens
+        sed -i 's/xoxb-[a-zA-Z0-9-]\{10,\}/{{SECRET:redacted}}/g' "$src" 2>/dev/null || true
+        sed -i 's/xoxp-[a-zA-Z0-9-]\{10,\}/{{SECRET:redacted}}/g' "$src" 2>/dev/null || true
+        # Feishu app IDs and open IDs
+        sed -i 's/cli_[a-zA-Z0-9]\{16,\}/{{SECRET:redacted}}/g' "$src" 2>/dev/null || true
+        # x-access-token in URLs
+        sed -i 's|x-access-token:[a-zA-Z0-9_.-]\{10,\}|x-access-token:{{SECRET:redacted}}|g' "$src" 2>/dev/null || true
+        # Bearer tokens
+        sed -i 's/Bearer [a-zA-Z0-9._-]\{20,\}/Bearer {{SECRET:redacted}}/g' "$src" 2>/dev/null || true
+        # PEM private keys embedded in JSON (escaped newlines)
+        sed -i 's/-----BEGIN PRIVATE KEY-----\\n[^"]*\\n-----END PRIVATE KEY-----\\n/{{SECRET:private_key}}/g' "$src" 2>/dev/null || true
+        sed -i 's/-----BEGIN[^-]*PRIVATE KEY-----[^"]*-----END[^-]*PRIVATE KEY-----/{{SECRET:private_key}}/g' "$src" 2>/dev/null || true
+      done
+    done < <(cfg_arr '.desensitize.glob_files')
   fi
 
-  # ─ Manifest ─
+  # ─ Manifest with file hashes ─
   if [[ "$dry_run" == "false" ]]; then
     section "📋 Manifest"
+
+    # Build file hash map for incremental support
+    local hash_json="{"
+    local first=true
+    while IFS= read -r -d '' f; do
+      local rel="${f#$output_dir/}"
+      [[ "$rel" == "manifest.json" || "$rel" == "secrets-template.json" ]] && continue
+      local h; h=$(sha256sum "$f" 2>/dev/null | cut -d' ' -f1)
+      if [[ "$first" == "true" ]]; then
+        first=false
+      else
+        hash_json+=","
+      fi
+      hash_json+="\"${rel}\":\"${h}\""
+    done < <(find "$output_dir" -type f -print0 2>/dev/null)
+    hash_json+="}"
+
     cat > "$output_dir/manifest.json" <<EOF
 {
   "version": "${VERSION}",
@@ -196,13 +336,16 @@ cmd_snapshot() {
   "generated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "generated_by": "$(whoami)@$(hostname)",
   "state_dir": "${STATE_DIR}",
+  "incremental": ${incremental},
   "stats": {
     "copied": ${stats_copied},
-    "skipped": ${stats_skipped}
-  }
+    "skipped": ${stats_skipped},
+    "unchanged": ${stats_unchanged:-0}
+  },
+  "file_hashes": ${hash_json}
 }
 EOF
-    ok "manifest.json"
+    ok "manifest.json (含文件哈希，支持增量比对)"
 
     # Secrets template
     cat > "$output_dir/secrets-template.json" <<'TMPL'
@@ -215,13 +358,17 @@ EOF
 }
 TMPL
     ok "secrets-template.json"
+
+    # Deep security scan
+    section "🛡️ 安全验证"
+    deep_security_scan "$output_dir" || warn "请手动检查上述安全问题"
   fi
 
   # ─ Summary ─
   section "完成"
-  info "已复制: $stats_copied | 已跳过: $stats_skipped"
+  info "已复制: $stats_copied | 已跳过: $stats_skipped | 未变更: ${stats_unchanged:-0}"
   info "输出: $output_dir"
-  $do_desensitize && warn "请检查快照确保无敏感信息泄漏"
+  $do_desensitize && info "✅ 已脱敏 + 安全扫描"
 }
 
 # ── CMD: restore ────────────────────────────────────────────────────
@@ -415,23 +562,130 @@ cmd_verify() {
   fi
 }
 
+# ── CMD: cron ────────────────────────────────────────────────────────
+cmd_cron() {
+  local interval="6h" remove=false
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --interval|-i) interval="$2"; shift 2 ;;
+      --remove)       remove=true; shift ;;
+      *)              shift ;;
+    esac
+  done
+
+  section "ShadowClaw Cron v${VERSION}"
+
+  if [[ "$remove" == "true" ]]; then
+    if command -v openclaw >/dev/null 2>&1; then
+      openclaw cron remove shadowclaw-auto-snapshot 2>/dev/null || true
+      ok "已移除定时快照任务"
+    else
+      # Fallback: crontab
+      crontab -l 2>/dev/null | grep -v "shadowclaw snapshot" | crontab - 2>/dev/null || true
+      ok "已从 crontab 移除"
+    fi
+    return
+  fi
+
+  local script_path; script_path=$(realpath "${BASH_SOURCE[0]}" 2>/dev/null || echo "${BASH_SOURCE[0]}")
+
+  # Try OpenClaw cron first
+  if command -v openclaw >/dev/null 2>&1; then
+    # Convert interval to cron expression
+    local cron_expr
+    case "$interval" in
+      1h)  cron_expr="0 * * * *" ;;
+      2h)  cron_expr="0 */2 * * *" ;;
+      4h)  cron_expr="0 */4 * * *" ;;
+      6h)  cron_expr="0 */6 * * *" ;;
+      12h) cron_expr="0 */12 * * *" ;;
+      24h|1d) cron_expr="0 2 * * *" ;;
+      *)   cron_expr="0 */6 * * *"; warn "不识别的间隔 $interval，使用默认 6h" ;;
+    esac
+
+    info "配置 OpenClaw cron: $cron_expr"
+    openclaw cron add \
+      --name "shadowclaw-auto-snapshot" \
+      --schedule "$cron_expr" \
+      --command "$script_path snapshot --incremental -o ${STATE_DIR}/snapshots/auto" \
+      2>/dev/null && ok "OpenClaw cron 已配置 (每 $interval)" || {
+        warn "OpenClaw cron 配置失败，回退到系统 crontab"
+        _setup_system_cron "$script_path" "$interval"
+      }
+  else
+    _setup_system_cron "$script_path" "$interval"
+  fi
+}
+
+_setup_system_cron() {
+  local script_path="$1" interval="$2"
+  local cron_expr
+  case "$interval" in
+    1h)  cron_expr="0 * * * *" ;;
+    2h)  cron_expr="0 */2 * * *" ;;
+    6h)  cron_expr="0 */6 * * *" ;;
+    12h) cron_expr="0 */12 * * *" ;;
+    *)   cron_expr="0 */6 * * *" ;;
+  esac
+
+  # Add to crontab (idempotent)
+  (crontab -l 2>/dev/null | grep -v "shadowclaw snapshot"; echo "$cron_expr $script_path snapshot --incremental -o ${STATE_DIR}/snapshots/auto") | crontab -
+  ok "系统 crontab 已配置 (每 $interval)"
+}
+
+# ── CMD: diff ────────────────────────────────────────────────────────
+cmd_diff() {
+  local snapshot_dir="${1:-}"
+  [[ -z "$snapshot_dir" || ! -d "$snapshot_dir" ]] && { err "请指定快照目录"; exit 1; }
+
+  section "ShadowClaw Diff v${VERSION}"
+  info "对比: $STATE_DIR ↔ $snapshot_dir"
+
+  local added=0 modified=0 deleted=0
+
+  # Files in snapshot but not in state_dir or different
+  while IFS= read -r -d '' f; do
+    local rel="${f#$snapshot_dir/}"
+    [[ "$rel" == "manifest.json" || "$rel" == "secrets-template.json" ]] && continue
+
+    local current="$STATE_DIR/$rel"
+    if [[ ! -e "$current" ]]; then
+      echo -e "  ${GREEN}+ $rel${NC} (快照中有，当前缺失)"
+      (( added++ )) || true
+    elif ! diff -q "$f" "$current" >/dev/null 2>&1; then
+      echo -e "  ${YELLOW}~ $rel${NC} (已变更)"
+      (( modified++ )) || true
+    fi
+  done < <(find "$snapshot_dir" -type f -print0 2>/dev/null)
+
+  echo ""
+  info "新增: $added | 变更: $modified"
+}
+
 # ── CMD: help ───────────────────────────────────────────────────────
 cmd_help() {
   cat <<EOF
 ShadowClaw v${VERSION} — OpenClaw Snapshot & Restore
 
 命令:
-  snapshot  [-o dir] [--dry-run] [--no-desensitize]   生成快照
+  snapshot  [-o dir] [--dry-run] [--incremental]       生成快照
   restore   [--force] <snapshot-dir>                   恢复环境
   push      [-r repo] [-b branch] [-s snapshot-dir]    推送到 GitHub
   verify    <snapshot-dir>                             验证快照完整性
+  cron      [--interval 6h] [--remove]                 配置定时自动快照
+  diff      <snapshot-dir>                             对比快照与当前差异
   help                                                 显示帮助
 
 示例:
-  shadowclaw snapshot                     # 生成快照
+  shadowclaw snapshot                     # 完整快照
+  shadowclaw snapshot --incremental       # 增量快照（仅变更文件）
   shadowclaw snapshot --dry-run           # 模拟运行
   shadowclaw restore ./my-snapshot        # 恢复
   shadowclaw push -b catclaw              # 推送到 catclaw 分支
+  shadowclaw cron --interval 6h           # 每6小时自动快照
+  shadowclaw cron --remove                # 移除定时任务
+  shadowclaw diff ./my-snapshot           # 查看差异
 
 环境变量:
   GH_TOKEN / GITHUB_TOKEN   GitHub 访问令牌
@@ -453,6 +707,8 @@ main() {
     restore|r)   cmd_restore "$@" ;;
     push|p)      cmd_push "$@" ;;
     verify|v)    cmd_verify "$@" ;;
+    cron|c)      cmd_cron "$@" ;;
+    diff|d)      cmd_diff "$@" ;;
     help|--help|-h) cmd_help ;;
     version|--version|-V) echo "ShadowClaw v${VERSION}" ;;
     *) err "未知命令: $cmd"; cmd_help; exit 1 ;;

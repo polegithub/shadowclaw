@@ -15,6 +15,9 @@
 # 生成快照
 ./bin/shadowclaw snapshot
 
+# 增量快照（仅备份变更文件）
+./bin/shadowclaw snapshot --incremental
+
 # 生成快照到指定目录
 ./bin/shadowclaw snapshot -o /tmp/my-snapshot
 
@@ -32,6 +35,15 @@
 
 # 推送到指定仓库
 ./bin/shadowclaw push -r github.com/user/repo -b main
+
+# 配置定时自动快照（每6小时）
+./bin/shadowclaw cron --interval 6h
+
+# 移除定时快照
+./bin/shadowclaw cron --remove
+
+# 对比快照与当前环境差异
+./bin/shadowclaw diff /path/to/snapshot
 ```
 
 ## 目录结构
@@ -39,11 +51,12 @@
 ```
 catclaw/
 ├── bin/
-│   └── shadowclaw          # 主入口脚本（snapshot/restore/push）
+│   └── shadowclaw          # 主入口脚本（snapshot/restore/push/cron/diff）
 ├── config/
 │   └── paths.json          # 备份路径 & 优先级配置
 ├── docs/
 │   └── design.md           # 方案设计文档 & 三方对比
+├── skills/                  # 附属 skills（排查工具等）
 └── README.md               # 本文件
 ```
 
