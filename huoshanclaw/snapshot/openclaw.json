@@ -1,0 +1,287 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.3.2",
+    "lastTouchedAt": "2026-03-05T13:13:32.666Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-01T11:00:08.733Z",
+    "lastRunVersion": "2026.1.30",
+    "lastRunCommand": "onboard",
+    "lastRunMode": "local"
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "ark": {
+        "baseUrl": "https://ark.cn-beijing.volces.com/api/coding/v3",
+        "apiKey": "a4501ea8-223a-4854-8b87-c00f2c11d4a1",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "doubao-seed-code",
+            "name": "doubao-seed-code",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "headers": {
+              "X-Client-Request-Id": "ecs-arkclaw/0225/i-yeh1ugsnwgay8n7vo31c"
+            },
+            "compat": {
+              "supportsDeveloperRole": false
+            }
+          },
+          {
+            "id": "doubao-seed-2.0-code",
+            "name": "doubao-seed-2.0-code",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "headers": {
+              "X-Client-Request-Id": "ecs-arkclaw/0225/i-yeh1ugsnwgay8n7vo31c"
+            },
+            "compat": {
+              "supportsDeveloperRole": false
+            }
+          },
+          {
+            "id": "glm-4.7",
+            "name": "glm-4.7",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "headers": {
+              "X-Client-Request-Id": "ecs-arkclaw/0225/i-yeh1ugsnwgay8n7vo31c"
+            },
+            "compat": {
+              "supportsDeveloperRole": false
+            }
+          },
+          {
+            "id": "deepseek-v3.2",
+            "name": "deepseek-v3.2",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "headers": {
+              "X-Client-Request-Id": "ecs-arkclaw/0225/i-yeh1ugsnwgay8n7vo31c"
+            },
+            "compat": {
+              "supportsDeveloperRole": false
+            }
+          },
+          {
+            "id": "ark-code-latest",
+            "name": "ark-code-latest",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "headers": {
+              "X-Client-Request-Id": "ecs-arkclaw/0225/i-yeh1ugsnwgay8n7vo31c"
+            },
+            "compat": {
+              "supportsDeveloperRole": false
+            }
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "ark/ark-code-latest"
+      },
+      "models": {
+        "ark/ark-code-latest": {}
+      },
+      "workspace": "/root/.openclaw/workspace",
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    }
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "enabled": false
+      }
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "channels": {
+    "dingtalk-connector": {},
+    "feishu": {
+      "appId": "cli_a922eabf8b38dcd3",
+      "appSecret": "2ruU7fi0Zpa5RVrAQ9FEUhh24DQ3wcTF",
+      "dmPolicy": "open",
+      "allowFrom": [
+        "*"
+      ]
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "lan",
+    "controlUi": {
+      "allowedOrigins": [
+        "https://arkclaw.apigateway"
+      ],
+      "dangerouslyDisableDeviceAuth": true
+    },
+    "auth": {
+      "mode": "trusted-proxy",
+      "token": "3e3a11359dae3369da9fb2e7bbc29acea5fe6798f997c793",
+      "trustedProxy": {
+        "userHeader": "x-forwarded-user"
+      }
+    },
+    "trustedProxies": [
+      "127.0.0.1",
+      "172.31.0.0/16"
+    ],
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "plugins": {
+    "entries": {
+      "dingtalk-connector": {
+        "enabled": true
+      },
+      "wecom": {
+        "enabled": true
+      },
+      "qqbot": {
+        "enabled": true
+      },
+      "ai-assistant-security-openclaw": {
+        "enabled": true,
+        "config": {
+          "apiKey": "C804479F-CDA1-49DE-A1A5-9333F735F5F1",
+          "endpoint": "https://openclaw.sdk.access.llm-shield.omini-shield.com",
+          "appId": "app-d6iqe4ovtu9i6resbs7g"
+        }
+      },
+      "feishu": {
+        "enabled": false
+      },
+      "feishu-openclaw-plugin": {
+        "enabled": true
+      }
+    },
+    "installs": {
+      "dingtalk-connector": {
+        "source": "npm",
+        "spec": "https://github.com/DingTalk-Real-AI/dingtalk-moltbot-connector.git",
+        "installPath": "/root/.openclaw/extensions/dingtalk-connector",
+        "version": "0.6.0",
+        "installedAt": "2026-02-21T13:43:54.443Z"
+      },
+      "wecom": {
+        "source": "npm",
+        "spec": "@openclaw-china/wecom@latest",
+        "installPath": "/root/.openclaw/extensions/wecom",
+        "version": "2026.3.4-2",
+        "resolvedName": "@openclaw-china/wecom",
+        "resolvedVersion": "2026.3.4-2",
+        "resolvedSpec": "@openclaw-china/wecom@2026.3.4-2",
+        "integrity": "sha512-uKHkO7kPVFWLzMXRT+s/sXZyYuQX8fxC2CKes59hiV5Hw1NwJ78Tj15jlmXyDJoZ1L7keT5QAqc86rW+ayWyWw==",
+        "shasum": "005f77478b58eca287ab67d26a5d2fb1778b48d6",
+        "resolvedAt": "2026-03-04T08:31:57.086Z",
+        "installedAt": "2026-03-04T08:32:10.758Z"
+      },
+      "qqbot": {
+        "source": "path",
+        "sourcePath": "/root/qqbot",
+        "installPath": "/root/.openclaw/extensions/qqbot",
+        "version": "1.2.3",
+        "installedAt": "2026-02-03T09:14:05.915Z"
+      },
+      "ai-assistant-security-openclaw": {
+        "source": "npm",
+        "spec": "@omni-shield/ai-assistant-security-openclaw",
+        "installPath": "/root/.openclaw/extensions/ai-assistant-security-openclaw",
+        "version": "1.0.0",
+        "resolvedName": "@omni-shield/ai-assistant-security-openclaw",
+        "resolvedVersion": "1.0.0",
+        "resolvedSpec": "@omni-shield/ai-assistant-security-openclaw@1.0.0",
+        "integrity": "sha512-DtKymL9IxP9CXeZ5VU6CZqjKVJOqHsqGbqEuTy5oYy1VZJCjMFcTe67brpA5whe0T5uB9yoMF0uYcpEzkr0dtQ==",
+        "shasum": "b1a9adc689377f9bc441ebef188334518bfa926a",
+        "resolvedAt": "2026-03-04T08:32:12.049Z",
+        "installedAt": "2026-03-04T08:32:12.063Z"
+      },
+      "feishu-openclaw-plugin": {
+        "source": "npm",
+        "spec": "@larksuiteoapi/feishu-openclaw-plugin",
+        "installPath": "/root/.openclaw/extensions/feishu-openclaw-plugin",
+        "version": "2026.3.4",
+        "resolvedName": "@larksuiteoapi/feishu-openclaw-plugin",
+        "resolvedVersion": "2026.3.4",
+        "resolvedSpec": "@larksuiteoapi/feishu-openclaw-plugin@2026.3.4",
+        "integrity": "sha512-K/FxU3jeiELF067TdXzBl6VMHu39/6EMYWGojfp0rmYcmwrCOzc/zpUZaVMHesgBntfXzWjDLfkWOzVLts3T0A==",
+        "shasum": "77902ffb6b5f441585be60595a1e069cfd3a286f",
+        "resolvedAt": "2026-03-04T08:38:02.397Z",
+        "installedAt": "2026-03-04T08:38:13.309Z"
+      }
+    }
+  }
+}
