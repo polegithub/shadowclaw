@@ -1,0 +1,225 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.13",
+    "lastTouchedAt": "2026-03-05T02:06:40.683Z"
+  },
+  "env": {
+    "KIMI_API_KEY": "sk-kimi-raOJcflbclzY73MAR7yZCKlVMAP4di9c9PckqWRi8Cw7KWccwaknavkZdY0KL0L9",
+    "KIMI_PLUGIN_API_KEY": "sk-kimi-raOJcflbclzY73MAR7yZCKlVMAP4di9c9PckqWRi8Cw7KWccwaknavkZdY0KL0L9"
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-14T17:31:32.848Z",
+    "lastRunVersion": "2026.2.13",
+    "lastRunCommand": "configure",
+    "lastRunMode": "local"
+  },
+  "browser": {
+    "executablePath": "/usr/bin/google-chrome",
+    "headless": true,
+    "noSandbox": true,
+    "defaultProfile": "openclaw"
+  },
+  "auth": {
+    "profiles": {
+      "kimi-coding:default": {
+        "provider": "kimi-coding",
+        "mode": "api_key"
+      }
+    }
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "kimi-coding": {
+        "baseUrl": "https://api.kimi.com/coding",
+        "apiKey": "{{SECRET:apiKey}}",
+        "api": "anthropic-messages",
+        "headers": {
+          "User-Agent": "Kimi Claw Plugin",
+          "X-Kimi-Claw-ID": "19cb8831-02d2-86a1-8000-0000337ebf33"
+        },
+        "models": [
+          {
+            "id": "k2p5",
+            "name": "k2p5",
+            "reasoning": true,
+            "contextWindow": 262144,
+            "maxTokens": 32768,
+            "headers": {
+              "User-Agent": "Kimi Claw Plugin",
+              "X-Kimi-Claw-ID": "19cb8831-02d2-86a1-8000-0000337ebf33"
+            },
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            }
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "kimi-coding/k2p5"
+      },
+      "models": {
+        "kimi-coding/k2p5": {
+          "alias": "Kimi K2.5"
+        }
+      },
+      "workspace": "/root/.openclaw/workspace",
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "thinkingDefault": "high",
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true
+  },
+  "session": {
+    "dmScope": "main"
+  },
+  "channels": {
+    "feishu": {
+      "appId": "cli_a9225fcd57bb5cd3",
+      "appSecret": "Zfv6YRaYAsCZDYZiclwJ9eGEmyDumRZy",
+      "dmPolicy": "pairing",
+      "groupPolicy": "open",
+      "requireMention": true,
+      "enabled": true,
+      "connectionMode": "websocket"
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "{{SECRET:token}}"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    },
+    "nodes": {
+      "denyCommands": [
+        "camera.snap",
+        "camera.clip",
+        "screen.record",
+        "calendar.add",
+        "contacts.add",
+        "reminders.add"
+      ]
+    }
+  },
+  "plugins": {
+    "load": {
+      "paths": []
+    },
+    "entries": {
+      "feishu": {
+        "enabled": true
+      },
+      "dingtalk-connector": {
+        "enabled": true
+      },
+      "kimi-search": {
+        "enabled": true,
+        "config": {
+          "search": {
+            "baseUrl": "https://api.kimi.com/coding/v1/search"
+          },
+          "fetch": {
+            "baseUrl": "https://api.kimi.com/coding/v1/fetch"
+          }
+        }
+      },
+      "kimi-claw": {
+        "enabled": true,
+        "config": {
+          "bridge": {
+            "mode": "acp",
+            "url": "wss://www.kimi.com/api-claw/bots/agent-ws",
+            "kimiapiHost": "https://www.kimi.com/api-claw",
+            "instanceId": "connector-c-kimiclaw-test",
+            "deviceId": "c-kimiclaw-test",
+            "historyPendingTimeoutMs": 15000,
+            "shell": {
+              "enabled": true
+            },
+            "promptTimeoutMs": 300000,
+            "bot_type": "remote",
+            "token": "{{SECRET:token}}",
+            "kimiFileDownloadDir": "./openclaw/kimi/downloads",
+            "forwardThinking": false,
+            "forwardToolCalls": false,
+            "kimiCodeAPIKey": "sk-kimi-raOJcflbclzY73MAR7yZCKlVMAP4di9c9PckqWRi8Cw7KWccwaknavkZdY0KL0L9",
+            "kimiPluginAPIKey": "sk-kimi-raOJcflbclzY73MAR7yZCKlVMAP4di9c9PckqWRi8Cw7KWccwaknavkZdY0KL0L9",
+            "kimiCodeBaseURL": "https://api.kimi.com/coding"
+          },
+          "gateway": {
+            "url": "ws://127.0.0.1:18789",
+            "agentId": "main",
+            "token": "{{SECRET:token}}"
+          },
+          "retry": {
+            "baseMs": 1000,
+            "maxMs": 600000,
+            "maxAttempts": 0
+          },
+          "log": {
+            "enabled": true,
+            "verbose": false
+          },
+          "defaultModel": {
+            "enabled": true,
+            "provider": "kimi-coding",
+            "modelId": "k2p5",
+            "apiKey": "{{SECRET:apiKey}}",
+            "baseUrl": "https://api.kimi.com/coding"
+          }
+        }
+      }
+    },
+    "installs": {
+      "feishu": {
+        "source": "npm",
+        "spec": "@m1heng-clawd/feishu",
+        "installPath": "/root/.openclaw/extensions/feishu",
+        "version": "0.1.9",
+        "installedAt": "2026-02-14T16:39:17.689Z"
+      },
+      "dingtalk-connector": {
+        "source": "npm",
+        "spec": "https://github.com/DingTalk-Real-AI/dingtalk-moltbot-connector",
+        "installPath": "/root/.openclaw/extensions/dingtalk-connector",
+        "version": "0.6.0",
+        "installedAt": "2026-02-14T16:41:33.851Z"
+      },
+      "kimi-claw": {
+        "source": "path",
+        "sourcePath": "/tmp/tmp.uASOq0MjCT/staged_main",
+        "installPath": "/root/.openclaw/extensions/kimi-claw",
+        "version": "0.7.1",
+        "installedAt": "2026-02-21T06:26:56.098Z"
+      }
+    }
+  }
+}
