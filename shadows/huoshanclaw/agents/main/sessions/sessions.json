@@ -689,7 +689,7 @@
   },
   "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97": {
     "sessionId": "c5b92fba-43e4-4120-9372-c24575bde969",
-    "updatedAt": 1772909022251,
+    "updatedAt": 1772911063111,
     "systemSent": true,
     "abortedLastRun": false,
     "displayName": "feishu:g-oc_40efcf271da2a542291ab9b83d2eea97",
@@ -715,7 +715,7 @@
       "accountId": "default"
     },
     "sessionFile": "/root/.openclaw/agents/main/sessions/c5b92fba-43e4-4120-9372-c24575bde969.jsonl",
-    "compactionCount": 0,
+    "compactionCount": 1,
     "skillsSnapshot": {
       "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\nWhen a skill file references a relative path, resolve it against the skill directory (parent of SKILL.md / dirname of the path) and use that absolute path in tool commands.\n\n<available_skills>\n  <skill>\n    <name>feishu-bitable</name>\n    <description>飞书多维表格（Bitable）的创建、查询、编辑和管理工具。包含 27 种字段类型支持、高级筛选、批量操作和视图管理。\n\n**当以下情况时使用此 Skill**：\n(1) 需要创建或管理飞书多维表格 App\n(2) 需要在多维表格中新增、查询、修改、删除记录（行数据）\n(3) 需要管理字段（列）、视图、数据表\n(4) 用户提到&quot;多维表格&quot;、&quot;bitable&quot;、&quot;数据表&quot;、&quot;记录&quot;、&quot;字段&quot;\n(5) 需要批量导入数据或批量更新多维表格\n</description>\n    <location>~/.openclaw/extensions/feishu-openclaw-plugin/skills/feishu-bitable/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-calendar</name>\n    <description>飞书日历与日程管理工具集。包含日历管理、日程管理、参会人管理、忙闲查询。\n</description>\n    <location>~/.openclaw/extensions/feishu-openclaw-plugin/skills/feishu-calendar/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-channel-rules</name>\n    <description>飞书渠道输出规则。所有飞书对话中始终激活。约束 AI 输出格式，防止输出原始卡片 JSON。\n</description>\n    <location>~/.openclaw/extensions/feishu-openclaw-plugin/skills/feishu-channel-rules/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-create-doc</name>\n    <description>创建飞书云文档。从 Lark-flavored Markdown 内容创建新的飞书云文档，支持指定创建位置（文件夹/知识库/知识空间）。\n</description>\n    <location>~/.openclaw/extensions/feishu-openclaw-plugin/skills/feishu-create-doc/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-fetch-doc</name>\n    <description>获取飞书云文档内容。返回文档的 Markdown 内容，支持处理文档中的图片、文件和画板（需配合 fetch-media 工具）。\n</description>\n    <location>~/.openclaw/extensions/feishu-openclaw-plugin/skills/feishu-fetch-doc/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-im-read</name>\n    <description>飞书 IM 消息读取工具使用指南，覆盖会话消息获取、话题回复读取、跨会话消息搜索、图片/文件资源下载。\n\n**当以下情况时使用此 Skill**:\n(1) 需要获取群聊或单聊的历史消息\n(2) 需要读取话题（thread）内的回复消息\n(3) 需要跨会话搜索消息（按关键词、发送者、时间等条件）\n(4) 消息中包含图片、文件、音频、视频，需要下载\n(5) 用户提到&quot;聊天记录&quot;、&quot;消息&quot;、&quot;群里说了什么&quot;、&quot;话题回复&quot;、&quot;搜索消息&quot;、&quot;图片&quot;、&quot;文件下载&quot;\n(6) 需要按时间范围过滤消息、分页获取更多消息\n</description>\n    <location>~/.openclaw/extensions/feishu-openclaw-plugin/skills/feishu-im-read/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-task</name>\n    <description>飞书任务管理工具,用于创建、查询、更新任务和清单。\n\n**当以下情况时使用此 Skill**:\n(1) 需要创建、查询、更新、删除任务\n(2) 需要创建、管理任务清单\n(3) 需要查看任务列表或清单内的任务\n(4) 用户提到&quot;任务&quot;、&quot;待办&quot;、&quot;to-do&quot;、&quot;清单&quot;、&quot;task&quot;\n(5) 需要设置任务负责人、关注人、截止时间\n</description>\n    <location>~/.openclaw/extensions/feishu-openclaw-plugin/skills/feishu-task/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-update-doc</name>\n    <description>更新飞书云文档。支持 7 种更新模式：追加、覆盖、定位替换、全文替换、前/后插入、删除。\n</description>\n    <location>~/.openclaw/extensions/feishu-openclaw-plugin/skills/feishu-update-doc/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>clawhub</name>\n    <description>Use the ClawHub CLI to search, install, update, and publish agent skills from clawhub.com. Use when you need to fetch new skills on the fly, sync installed skills to latest or a specific version, or publish new/updated skill folders with the npm-installed clawhub CLI.</description>\n    <location>/usr/lib/node_modules/openclaw/skills/clawhub/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>coding-agent</name>\n    <description>Delegate coding tasks to Codex, Claude Code, or Pi agents via background process. Use when: (1) building/creating new features or apps, (2) reviewing PRs (spawn in temp dir), (3) refactoring large codebases, (4) iterative coding that needs file exploration. NOT for: simple one-liner fixes (just edit), reading code (use read tool), thread-bound ACP harness requests in chat (for example spawn/run Codex or Claude Code in a Discord thread; use sessions_spawn with runtime:&quot;acp&quot;), or any work in ~/clawd workspace (never spawn agents here). Requires a bash tool that supports pty:true.</description>\n    <location>/usr/lib/node_modules/openclaw/skills/coding-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>healthcheck</name>\n    <description>Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).</description>\n    <location>/usr/lib/node_modules/openclaw/skills/healthcheck/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-creator</name>\n    <description>Create or update AgentSkills. Use when designing, structuring, or packaging skills with scripts, references, and assets.</description>\n    <location>/usr/lib/node_modules/openclaw/skills/skill-creator/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>tmux</name>\n    <description>Remote-control tmux sessions for interactive CLIs by sending keystrokes and scraping pane output.</description>\n    <location>/usr/lib/node_modules/openclaw/skills/tmux/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>weather</name>\n    <description>Get current weather and forecasts via wttr.in or Open-Meteo. Use when: user asks about weather, temperature, or forecasts for any location. NOT for: historical weather data, severe weather alerts, or detailed meteorological analysis. No API key needed.</description>\n    <location>/usr/lib/node_modules/openclaw/skills/weather/SKILL.md</location>\n  </skill>\n</available_skills>",
       "skills": [
@@ -886,7 +886,7 @@
     "model": "ark-code-latest",
     "systemPromptReport": {
       "source": "run",
-      "generatedAt": 1772908055731,
+      "generatedAt": 1772910916361,
       "sessionId": "c5b92fba-43e4-4120-9372-c24575bde969",
       "sessionKey": "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97",
       "provider": "ark",
@@ -1371,14 +1371,14 @@
         ]
       }
     },
-    "cacheRead": 5688,
+    "cacheRead": 30776,
     "cacheWrite": 0,
     "totalTokensFresh": true,
     "contextTokens": 200000,
-    "inputTokens": 349548,
-    "outputTokens": 572,
-    "totalTokens": 179397,
-    "memoryFlushAt": 1772907951711,
-    "memoryFlushCompactionCount": 0
+    "inputTokens": 116741,
+    "outputTokens": 313,
+    "memoryFlushAt": 1772910634360,
+    "memoryFlushCompactionCount": 1,
+    "totalTokens": 89270
   }
 }

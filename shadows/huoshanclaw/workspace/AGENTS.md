@@ -52,6 +52,14 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - `trash` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
 
+### 技能共享习惯
+每次创建新 skill 后，检查是否值得共享到 shadowclaw 仓库的 bestiary/homemade/ 目录。
+好东西不藏着——造了就分享，让兄弟龙虾也能用。
+
+### 技能共享习惯
+每次创建新 skill 后，检查是否值得共享到 shadowclaw 仓库的 bestiary/homemade/ 目录。
+好东西不藏着——造了就分享，让兄弟龙虾也能用。
+
 ## External vs Internal
 
 **Safe to do freely:**
