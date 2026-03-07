@@ -1,0 +1,190 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.26",
+    "lastTouchedAt": "2026-03-06T17:35:23.947Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-03-06T17:35:23.942Z",
+    "lastRunVersion": "2026.2.26",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "update": {
+    "checkOnStart": false
+  },
+  "browser": {
+    "cdpUrl": "http://127.0.0.1:9222"
+  },
+  "models": {
+    "mode": "replace",
+    "providers": {
+      "kubeplex-maas": {
+        "baseUrl": "https://mmc.sankuai.com/openclaw/v1",
+        "apiKey": "{{SECRET:apiKey}}",
+        "api": "openai-completions",
+        "headers": {
+          "X-User-Id": "chenglong16",
+          "X-Conversation-Id": "ljpiafzfnkwf0acnd6x0"
+        },
+        "models": [
+          {
+            "id": "claude-opus-4.5",
+            "name": "Claude Opus 4.5 (via MaaS)",
+            "reasoning": true,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 32000
+          },
+          {
+            "id": "MiniMax-M2.5",
+            "name": "MiniMax M2.5 (via MaaS)",
+            "reasoning": false,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 128000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "kubeplex-maas/claude-opus-4.5",
+        "fallbacks": [
+          "kubeplex-maas/MiniMax-M2.5"
+        ]
+      },
+      "workspace": "/root/.openclaw/workspace",
+      "memorySearch": {
+        "enabled": true,
+        "sources": [
+          "memory",
+          "sessions"
+        ],
+        "experimental": {
+          "sessionMemory": true
+        }
+      },
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+  "channels": {
+    "daxiang": {
+      "enabled": true,
+      "bridgeUrl": "wss://openclaw-bridge.sankuai.com/ws",
+      "bridgeSecret": "",
+      "clientId": "eb8f3f5d6f",
+      "clientSecret": "{{SECRET:clientSecret}}",
+      "botId": "139052648204",
+      "botMisId": "ljpiafzfnkwf0acnd6x0",
+      "dmPolicy": "open",
+      "allowFrom": [
+        "*"
+      ],
+      "groupPolicy": "open",
+      "groupAllowFrom": [
+        "*"
+      ],
+      "requireMention": true,
+      "historyLimit": 10,
+      "textChunkLimit": 4000
+    },
+    "feishu": {
+      "enabled": true,
+      "dmPolicy": "open",
+      "allowFrom": [
+        "*"
+      ],
+      "groupPolicy": "open",
+      "groupAllowFrom": [
+        "*"
+      ],
+      "requireMention": true,
+      "accounts": {
+        "main": {
+          "appId": "{{SECRET:appId}}",
+          "appSecret": "{{SECRET:appSecret}}"
+        }
+      }
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "lan",
+    "controlUi": {
+      "allowedOrigins": [
+        "*"
+      ],
+      "dangerouslyAllowHostHeaderOriginFallback": true,
+      "dangerouslyDisableDeviceAuth": true
+    },
+    "auth": {
+      "mode": "token",
+      "token": "{{SECRET:token}}"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "skills": {
+    "load": {
+      "extraDirs": [
+        "/app/skills"
+      ],
+      "watch": true,
+      "watchDebounceMs": 3000
+    },
+    "install": {
+      "nodeManager": "bun"
+    }
+  },
+  "plugins": {
+    "entries": {
+      "daxiang": {
+        "enabled": true
+      },
+      "feishu": {
+        "enabled": true
+      }
+    }
+  }
+}

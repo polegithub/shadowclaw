@@ -1,0 +1,3825 @@
+{
+  "agent:main:daxiang:direct:1770969159": {
+    "sessionId": "db0374f4-048a-476f-9373-324b253986df",
+    "updatedAt": 1772851729568,
+    "systemSent": true,
+    "abortedLastRun": false,
+    "chatType": "direct",
+    "deliveryContext": {
+      "channel": "daxiang",
+      "to": "user:1770969159",
+      "accountId": "default"
+    },
+    "lastChannel": "daxiang",
+    "lastTo": "user:1770969159",
+    "lastAccountId": "default",
+    "origin": {
+      "label": "1770969159",
+      "provider": "daxiang",
+      "surface": "daxiang",
+      "chatType": "direct",
+      "from": "daxiang:1770969159",
+      "to": "user:1770969159",
+      "accountId": "default"
+    },
+    "sessionFile": "/mnt/openclaw/.openclaw/agents/main/sessions/db0374f4-048a-476f-9373-324b253986df.jsonl",
+    "compactionCount": 0,
+    "modelProvider": "kubeplex-maas",
+    "model": "claude-opus-4.5",
+    "systemPromptReport": {
+      "source": "run",
+      "generatedAt": 1772851715727,
+      "sessionId": "db0374f4-048a-476f-9373-324b253986df",
+      "sessionKey": "agent:main:daxiang:direct:1770969159",
+      "provider": "kubeplex-maas",
+      "model": "claude-opus-4.5",
+      "workspaceDir": "/root/.openclaw/workspace",
+      "bootstrapMaxChars": 20000,
+      "bootstrapTotalMaxChars": 150000,
+      "sandbox": {
+        "mode": "off",
+        "sandboxed": false
+      },
+      "systemPrompt": {
+        "chars": 38140,
+        "projectContextChars": 16486,
+        "nonProjectContextChars": 21654
+      },
+      "injectedWorkspaceFiles": [
+        {
+          "name": "AGENTS.md",
+          "path": "/root/.openclaw/workspace/AGENTS.md",
+          "missing": false,
+          "rawChars": 7974,
+          "injectedChars": 7974,
+          "truncated": false
+        },
+        {
+          "name": "SOUL.md",
+          "path": "/root/.openclaw/workspace/SOUL.md",
+          "missing": false,
+          "rawChars": 1664,
+          "injectedChars": 1664,
+          "truncated": false
+        },
+        {
+          "name": "TOOLS.md",
+          "path": "/root/.openclaw/workspace/TOOLS.md",
+          "missing": false,
+          "rawChars": 850,
+          "injectedChars": 850,
+          "truncated": false
+        },
+        {
+          "name": "IDENTITY.md",
+          "path": "/root/.openclaw/workspace/IDENTITY.md",
+          "missing": false,
+          "rawChars": 609,
+          "injectedChars": 609,
+          "truncated": false
+        },
+        {
+          "name": "USER.md",
+          "path": "/root/.openclaw/workspace/USER.md",
+          "missing": false,
+          "rawChars": 500,
+          "injectedChars": 500,
+          "truncated": false
+        },
+        {
+          "name": "HEARTBEAT.md",
+          "path": "/root/.openclaw/workspace/HEARTBEAT.md",
+          "missing": false,
+          "rawChars": 167,
+          "injectedChars": 167,
+          "truncated": false
+        },
+        {
+          "name": "BOOTSTRAP.md",
+          "path": "/root/.openclaw/workspace/BOOTSTRAP.md",
+          "missing": false,
+          "rawChars": 1449,
+          "injectedChars": 1449,
+          "truncated": false
+        },
+        {
+          "name": "MEMORY.md",
+          "path": "/root/.openclaw/workspace/MEMORY.md",
+          "missing": false,
+          "rawChars": 2727,
+          "injectedChars": 2727,
+          "truncated": false
+        }
+      ],
+      "skills": {
+        "promptChars": 10623,
+        "entries": [
+          {
+            "name": "calendar",
+            "blockChars": 324
+          },
+          {
+            "name": "catclaw-image",
+            "blockChars": 191
+          },
+          {
+            "name": "catclaw-search",
+            "blockChars": 206
+          },
+          {
+            "name": "code-git",
+            "blockChars": 239
+          },
+          {
+            "name": "daxiang-channel",
+            "blockChars": 212
+          },
+          {
+            "name": "daxiang-scheduled-message",
+            "blockChars": 339
+          },
+          {
+            "name": "docx",
+            "blockChars": 485
+          },
+          {
+            "name": "file-download",
+            "blockChars": 251
+          },
+          {
+            "name": "friday-skill-installer",
+            "blockChars": 319
+          },
+          {
+            "name": "gh-issues",
+            "blockChars": 473
+          },
+          {
+            "name": "github",
+            "blockChars": 270
+          },
+          {
+            "name": "healthcheck",
+            "blockChars": 456
+          },
+          {
+            "name": "km-wiki",
+            "blockChars": 299
+          },
+          {
+            "name": "meeting-room-booking",
+            "blockChars": 307
+          },
+          {
+            "name": "moa-login",
+            "blockChars": 299
+          },
+          {
+            "name": "pdf",
+            "blockChars": 373
+          },
+          {
+            "name": "pptx",
+            "blockChars": 394
+          },
+          {
+            "name": "s3plus-upload",
+            "blockChars": 344
+          },
+          {
+            "name": "skill-creator",
+            "blockChars": 372
+          },
+          {
+            "name": "video-frames",
+            "blockChars": 194
+          },
+          {
+            "name": "xlsx",
+            "blockChars": 568
+          },
+          {
+            "name": "feishu-doc",
+            "blockChars": 260
+          },
+          {
+            "name": "feishu-drive",
+            "blockChars": 252
+          },
+          {
+            "name": "feishu-perm",
+            "blockChars": 274
+          },
+          {
+            "name": "feishu-wiki",
+            "blockChars": 254
+          },
+          {
+            "name": "find-skills",
+            "blockChars": 477
+          },
+          {
+            "name": "react-best-practices-cn",
+            "blockChars": 262
+          },
+          {
+            "name": "self-improving-agent",
+            "blockChars": 637
+          },
+          {
+            "name": "tavily",
+            "blockChars": 222
+          },
+          {
+            "name": "web-search",
+            "blockChars": 614
+          }
+        ]
+      },
+      "tools": {
+        "listChars": 3135,
+        "schemaChars": 20533,
+        "entries": [
+          {
+            "name": "read",
+            "summaryChars": 298,
+            "schemaChars": 392,
+            "propertiesCount": 4
+          },
+          {
+            "name": "edit",
+            "summaryChars": 129,
+            "schemaChars": 591,
+            "propertiesCount": 6
+          },
+          {
+            "name": "write",
+            "summaryChars": 127,
+            "schemaChars": 313,
+            "propertiesCount": 3
+          },
+          {
+            "name": "exec",
+            "summaryChars": 181,
+            "schemaChars": 1086,
+            "propertiesCount": 12
+          },
+          {
+            "name": "process",
+            "summaryChars": 85,
+            "schemaChars": 961,
+            "propertiesCount": 12
+          },
+          {
+            "name": "browser",
+            "summaryChars": 1251,
+            "schemaChars": 1897,
+            "propertiesCount": 28
+          },
+          {
+            "name": "canvas",
+            "summaryChars": 106,
+            "schemaChars": 661,
+            "propertiesCount": 18
+          },
+          {
+            "name": "nodes",
+            "summaryChars": 115,
+            "schemaChars": 1741,
+            "propertiesCount": 36
+          },
+          {
+            "name": "message",
+            "summaryChars": 89,
+            "schemaChars": 4181,
+            "propertiesCount": 85
+          },
+          {
+            "name": "tts",
+            "summaryChars": 152,
+            "schemaChars": 223,
+            "propertiesCount": 2
+          },
+          {
+            "name": "agents_list",
+            "summaryChars": 118,
+            "schemaChars": 33,
+            "propertiesCount": 0
+          },
+          {
+            "name": "sessions_list",
+            "summaryChars": 54,
+            "schemaChars": 212,
+            "propertiesCount": 4
+          },
+          {
+            "name": "sessions_history",
+            "summaryChars": 36,
+            "schemaChars": 161,
+            "propertiesCount": 3
+          },
+          {
+            "name": "sessions_send",
+            "summaryChars": 84,
+            "schemaChars": 273,
+            "propertiesCount": 5
+          },
+          {
+            "name": "sessions_spawn",
+            "summaryChars": 134,
+            "schemaChars": 492,
+            "propertiesCount": 12
+          },
+          {
+            "name": "subagents",
+            "summaryChars": 105,
+            "schemaChars": 191,
+            "propertiesCount": 4
+          },
+          {
+            "name": "session_status",
+            "summaryChars": 207,
+            "schemaChars": 89,
+            "propertiesCount": 2
+          },
+          {
+            "name": "web_search",
+            "summaryChars": 175,
+            "schemaChars": 895,
+            "propertiesCount": 6
+          },
+          {
+            "name": "web_fetch",
+            "summaryChars": 129,
+            "schemaChars": 374,
+            "propertiesCount": 3
+          },
+          {
+            "name": "feishu_doc",
+            "summaryChars": 116,
+            "schemaChars": 612,
+            "propertiesCount": 6
+          },
+          {
+            "name": "feishu_app_scopes",
+            "summaryChars": 102,
+            "schemaChars": 33,
+            "propertiesCount": 0
+          },
+          {
+            "name": "feishu_wiki",
+            "summaryChars": 83,
+            "schemaChars": 971,
+            "propertiesCount": 10
+          },
+          {
+            "name": "feishu_drive",
+            "summaryChars": 81,
+            "schemaChars": 486,
+            "propertiesCount": 5
+          },
+          {
+            "name": "feishu_bitable_get_meta",
+            "summaryChars": 114,
+            "schemaChars": 170,
+            "propertiesCount": 1
+          },
+          {
+            "name": "feishu_bitable_list_fields",
+            "summaryChars": 76,
+            "schemaChars": 255,
+            "propertiesCount": 2
+          },
+          {
+            "name": "feishu_bitable_list_records",
+            "summaryChars": 64,
+            "schemaChars": 462,
+            "propertiesCount": 4
+          },
+          {
+            "name": "feishu_bitable_get_record",
+            "summaryChars": 46,
+            "schemaChars": 335,
+            "propertiesCount": 3
+          },
+          {
+            "name": "feishu_bitable_create_record",
+            "summaryChars": 44,
+            "schemaChars": 549,
+            "propertiesCount": 3
+          },
+          {
+            "name": "feishu_bitable_update_record",
+            "summaryChars": 50,
+            "schemaChars": 473,
+            "propertiesCount": 4
+          },
+          {
+            "name": "feishu_bitable_create_app",
+            "summaryChars": 57,
+            "schemaChars": 243,
+            "propertiesCount": 2
+          },
+          {
+            "name": "feishu_bitable_create_field",
+            "summaryChars": 46,
+            "schemaChars": 911,
+            "propertiesCount": 5
+          },
+          {
+            "name": "memory_search",
+            "summaryChars": 334,
+            "schemaChars": 139,
+            "propertiesCount": 3
+          },
+          {
+            "name": "memory_get",
+            "summaryChars": 151,
+            "schemaChars": 128,
+            "propertiesCount": 3
+          }
+        ]
+      }
+    },
+    "cacheRead": 0,
+    "cacheWrite": 0,
+    "totalTokensFresh": true,
+    "skillsSnapshot": {
+      "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\nWhen a skill file references a relative path, resolve it against the skill directory (parent of SKILL.md / dirname of the path) and use that absolute path in tool commands.\n\n<available_skills>\n  <skill>\n    <name>calendar</name>\n    <description>美团日程管理系统的浏览器自动化操作。用于通过 https://calendar.sankuai.com/ 进行日程的查询、创建、编辑和删除操作。当用户提到日程、日历、会议安排、calendar.sankuai.com、查看/创建/编辑/删除日程时激活此skill。支持：(1)查询日程 (2)创建日程（包含主题、时间、地点、参与人、沟通方式、提醒、内容） (3)编辑日程 (4)删除日程</description>\n    <location>/app/skills/calendar/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>catclaw-image</name>\n    <description>通过 Catclaw 图片生成接口，根据文本描述生成图片。当需要生成图片、AI 绘图、文生图时使用。</description>\n    <location>/app/skills/catclaw-image/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>catclaw-search</name>\n    <description>通过 Catclaw 通用搜索接口搜索互联网内容，支持多引擎切换和自动降级。当需要搜索网页、查找资讯、获取实时搜索结果时使用。</description>\n    <location>/app/skills/catclaw-search/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>code-git</name>\n    <description>Git 与 SSH 配置指南。当用户需要进行 git 相关操作（clone、push、pull、commit、分支管理等）、配置 SSH 密钥、新增 SSH 账户、或排查 SSH 连接问题时，必须调用此 skill。</description>\n    <location>/app/skills/code-git/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>daxiang-channel</name>\n    <description>处理大象（Daxiang）频道的消息回复格式。只要用户的沟通频道（channel）是大象，就必须调用此 SKILL 了解回复注意事项。</description>\n    <location>/app/skills/daxiang-channel/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>daxiang-scheduled-message</name>\n    <description>创建定时发送消息的任务（默认发送到大象 Daxiang）。所有定时任务、延时消息、周期提醒、cron 任务都应使用此 skill，除非用户明确指定使用其他 channel（如 Telegram、WhatsApp、Slack 等）。触发词：定时消息、定时发送、定时提醒、cron、周期任务、延时发送、报时、定时通知、每天提醒、每周提醒、X分钟后提醒。</description>\n    <location>/app/skills/daxiang-scheduled-message/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>docx</name>\n    <description>Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks</description>\n    <location>/app/skills/docx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>file-download</name>\n    <description>下载消息中的文件到本地。当需要下载用户发送的图片、文件、附件时使用。所有从大象消息中获取的文件（图片、文档、压缩包等）都必须遵循此 skill 的存储和命名规范。触发词：下载图片、下载文件、保存文件、识别图片、查看图片。</description>\n    <location>/app/skills/file-download/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>friday-skill-installer</name>\n    <description>从美团 Friday Skills 广场安装 skill。当用户提供 friday.sankuai.com 的 skill 链接、要求安装 Friday/美团 skill、或提到 mtskills 安装时激活。触发词：安装skill、friday skill、skill链接、mtskills install、技能安装。</description>\n    <location>/app/skills/friday-skill-installer/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>gh-issues</name>\n    <description>Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh-issues [owner/repo] [--label bug] [--limit 5] [--milestone v1.0] [--assignee @me] [--fork user/repo] [--watch] [--interval 5] [--reviews-only] [--cron] [--dry-run] [--model glm-5] [--notify-channel -1002381931352]</description>\n    <location>/app/skills/gh-issues/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>github</name>\n    <description>Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.</description>\n    <location>~/.openclaw/skills/github/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>healthcheck</name>\n    <description>Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).</description>\n    <location>/app/skills/healthcheck/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>km-wiki</name>\n    <description>美团学城(KM)知识库的浏览器自动化操作工具。通过 Chrome DevTools Protocol 访问学城页面、读取文档内容、提取表格数据、截图页面、编辑文档。Use when 用户提到学城、KM、知识库、km.sankuai.com、collabpage，或需要访问、阅读、编辑任何 km.sankuai.com 的页面或链接时使用.</description>\n    <location>/app/skills/km-wiki/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>meeting-room-booking</name>\n    <description>在 https://calendar.sankuai.com/rooms 进行会议室查询与预定的浏览器自动化流程。用户提出订会议室、预约会议室、找会议室、安排会议地点、确认某时段是否有空会议室、预定会议室时使用。支持 SSO 脚本登录、按日期时间人数地点筛选、时间轴空白块点击创建、提交前确认与结果核验。</description>\n    <location>/app/skills/meeting-room-booking/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>moa-login</name>\n    <description>美团 MOA (办公终端安全管理软件) 部署和登录流程。当用户访问美团内部系统 (.sankuai.com 域名) 被 MOA 登录拦截时自动触发。处理 MOA 安装、启动和 SSO 扫码登录全流程。触发场景：(1) 访问 .sankuai.com 被拦截 (2) MOA 未安装/未运行/未登录 (3) 用户提到 MOA 登录问题</description>\n    <location>/app/skills/moa-login/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pdf</name>\n    <description>Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.</description>\n    <location>/app/skills/pdf/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pptx</name>\n    <description>Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks</description>\n    <location>/app/skills/pptx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>s3plus-upload</name>\n    <description>Upload local files to Meituan S3Plus (MSS) storage service and return access URL. Use when you need to upload files to S3Plus, generate file URLs, or troubleshoot S3Plus authentication and upload errors.</description>\n    <location>/app/skills/s3plus-upload/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-creator</name>\n    <description>Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude&apos;s capabilities with specialized knowledge, workflows, or tool integrations.</description>\n    <location>/app/skills/skill-creator/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>video-frames</name>\n    <description>Extract frames or short clips from videos using ffmpeg.</description>\n    <location>/app/skills/video-frames/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>xlsx</name>\n    <description>Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas</description>\n    <location>/app/skills/xlsx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-doc</name>\n    <description>Feishu document read/write operations. Activate when user mentions Feishu docs, cloud docs, or docx links.\n</description>\n    <location>/app/extensions/feishu/skills/feishu-doc/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-drive</name>\n    <description>Feishu cloud storage file management. Activate when user mentions cloud space, folders, drive.\n</description>\n    <location>/app/extensions/feishu/skills/feishu-drive/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-perm</name>\n    <description>Feishu permission management for documents and files. Activate when user mentions sharing, permissions, collaborators.\n</description>\n    <location>/app/extensions/feishu/skills/feishu-perm/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-wiki</name>\n    <description>Feishu knowledge base navigation. Activate when user mentions knowledge base, wiki, or wiki links.\n</description>\n    <location>/app/extensions/feishu/skills/feishu-wiki/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>find-skills</name>\n    <description>Helps users discover and install agent skills when they ask questions like &quot;how do I do X&quot;, &quot;find a skill for X&quot;, &quot;is there a skill that can...&quot;, or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.</description>\n    <location>~/.openclaw/skills/find-skills/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>react-best-practices-cn</name>\n    <description>客户端 React 应用的性能优化指南（中文版）。当编写、审查或重构 React 代码以确保最佳性能模式时使用此技能。触发场景包括涉及 React 组件、数据获取、包优化或性能改进的任务。</description>\n    <location>~/.openclaw/skills/react-best-practices-cn/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>self-improving-agent</name>\n    <description>Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude (&apos;No, that&apos;s wrong...&apos;, &apos;Actually...&apos;), (3) User requests a capability that doesn&apos;t exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks.</description>\n    <location>~/.openclaw/skills/self-improving-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>tavily</name>\n    <description>AI-optimized web search via Tavily API. Returns concise, relevant results for AI agents.</description>\n    <location>~/.openclaw/skills/tavily/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>web-search</name>\n    <description>Web search and content extraction with Tavily and Exa via inference.sh CLI.\nApps: Tavily Search, Tavily Extract, Exa Search, Exa Answer, Exa Extract.\nCapabilities: AI-powered search, content extraction, direct answers, research.\nUse for: research, RAG pipelines, fact-checking, content aggregation, agents.\nTriggers: web search, tavily, exa, search api, content extraction, research,\ninternet search, ai search, search assistant, web scraping, rag, perplexity alternative\n</description>\n    <location>~/.openclaw/skills/web-search/SKILL.md</location>\n  </skill>\n</available_skills>",
+      "skills": [
+        {
+          "name": "calendar"
+        },
+        {
+          "name": "catclaw-image"
+        },
+        {
+          "name": "catclaw-search"
+        },
+        {
+          "name": "code-git"
+        },
+        {
+          "name": "daxiang-channel"
+        },
+        {
+          "name": "daxiang-scheduled-message"
+        },
+        {
+          "name": "docx"
+        },
+        {
+          "name": "file-download"
+        },
+        {
+          "name": "friday-skill-installer"
+        },
+        {
+          "name": "gh-issues",
+          "primaryEnv": "GH_TOKEN",
+          "requiredEnv": []
+        },
+        {
+          "name": "github"
+        },
+        {
+          "name": "healthcheck"
+        },
+        {
+          "name": "km-wiki"
+        },
+        {
+          "name": "meeting-room-booking"
+        },
+        {
+          "name": "moa-login"
+        },
+        {
+          "name": "pdf"
+        },
+        {
+          "name": "pptx"
+        },
+        {
+          "name": "s3plus-upload"
+        },
+        {
+          "name": "skill-creator"
+        },
+        {
+          "name": "video-frames",
+          "requiredEnv": []
+        },
+        {
+          "name": "xlsx"
+        },
+        {
+          "name": "feishu-doc"
+        },
+        {
+          "name": "feishu-drive"
+        },
+        {
+          "name": "feishu-perm"
+        },
+        {
+          "name": "feishu-wiki"
+        },
+        {
+          "name": "find-skills"
+        },
+        {
+          "name": "react-best-practices-cn"
+        },
+        {
+          "name": "self-improving-agent"
+        },
+        {
+          "name": "tavily"
+        },
+        {
+          "name": "web-search"
+        }
+      ],
+      "resolvedSkills": [
+        {
+          "name": "calendar",
+          "description": "美团日程管理系统的浏览器自动化操作。用于通过 https://calendar.sankuai.com/ 进行日程的查询、创建、编辑和删除操作。当用户提到日程、日历、会议安排、calendar.sankuai.com、查看/创建/编辑/删除日程时激活此skill。支持：(1)查询日程 (2)创建日程（包含主题、时间、地点、参与人、沟通方式、提醒、内容） (3)编辑日程 (4)删除日程",
+          "filePath": "/app/skills/calendar/SKILL.md",
+          "baseDir": "/app/skills/calendar",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "catclaw-image",
+          "description": "通过 Catclaw 图片生成接口，根据文本描述生成图片。当需要生成图片、AI 绘图、文生图时使用。",
+          "filePath": "/app/skills/catclaw-image/SKILL.md",
+          "baseDir": "/app/skills/catclaw-image",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "catclaw-search",
+          "description": "通过 Catclaw 通用搜索接口搜索互联网内容，支持多引擎切换和自动降级。当需要搜索网页、查找资讯、获取实时搜索结果时使用。",
+          "filePath": "/app/skills/catclaw-search/SKILL.md",
+          "baseDir": "/app/skills/catclaw-search",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "code-git",
+          "description": "Git 与 SSH 配置指南。当用户需要进行 git 相关操作（clone、push、pull、commit、分支管理等）、配置 SSH 密钥、新增 SSH 账户、或排查 SSH 连接问题时，必须调用此 skill。",
+          "filePath": "/app/skills/code-git/SKILL.md",
+          "baseDir": "/app/skills/code-git",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "daxiang-channel",
+          "description": "处理大象（Daxiang）频道的消息回复格式。只要用户的沟通频道（channel）是大象，就必须调用此 SKILL 了解回复注意事项。",
+          "filePath": "/app/skills/daxiang-channel/SKILL.md",
+          "baseDir": "/app/skills/daxiang-channel",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "daxiang-scheduled-message",
+          "description": "创建定时发送消息的任务（默认发送到大象 Daxiang）。所有定时任务、延时消息、周期提醒、cron 任务都应使用此 skill，除非用户明确指定使用其他 channel（如 Telegram、WhatsApp、Slack 等）。触发词：定时消息、定时发送、定时提醒、cron、周期任务、延时发送、报时、定时通知、每天提醒、每周提醒、X分钟后提醒。",
+          "filePath": "/app/skills/daxiang-scheduled-message/SKILL.md",
+          "baseDir": "/app/skills/daxiang-scheduled-message",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "docx",
+          "description": "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks",
+          "filePath": "/app/skills/docx/SKILL.md",
+          "baseDir": "/app/skills/docx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "file-download",
+          "description": "下载消息中的文件到本地。当需要下载用户发送的图片、文件、附件时使用。所有从大象消息中获取的文件（图片、文档、压缩包等）都必须遵循此 skill 的存储和命名规范。触发词：下载图片、下载文件、保存文件、识别图片、查看图片。",
+          "filePath": "/app/skills/file-download/SKILL.md",
+          "baseDir": "/app/skills/file-download",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "friday-skill-installer",
+          "description": "从美团 Friday Skills 广场安装 skill。当用户提供 friday.sankuai.com 的 skill 链接、要求安装 Friday/美团 skill、或提到 mtskills 安装时激活。触发词：安装skill、friday skill、skill链接、mtskills install、技能安装。",
+          "filePath": "/app/skills/friday-skill-installer/SKILL.md",
+          "baseDir": "/app/skills/friday-skill-installer",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "gh-issues",
+          "description": "Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh-issues [owner/repo] [--label bug] [--limit 5] [--milestone v1.0] [--assignee @me] [--fork user/repo] [--watch] [--interval 5] [--reviews-only] [--cron] [--dry-run] [--model glm-5] [--notify-channel -1002381931352]",
+          "filePath": "/app/skills/gh-issues/SKILL.md",
+          "baseDir": "/app/skills/gh-issues",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "github",
+          "description": "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.",
+          "filePath": "/root/.openclaw/skills/github/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/github",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "healthcheck",
+          "description": "Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).",
+          "filePath": "/app/skills/healthcheck/SKILL.md",
+          "baseDir": "/app/skills/healthcheck",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "km-wiki",
+          "description": "美团学城(KM)知识库的浏览器自动化操作工具。通过 Chrome DevTools Protocol 访问学城页面、读取文档内容、提取表格数据、截图页面、编辑文档。Use when 用户提到学城、KM、知识库、km.sankuai.com、collabpage，或需要访问、阅读、编辑任何 km.sankuai.com 的页面或链接时使用.",
+          "filePath": "/app/skills/km-wiki/SKILL.md",
+          "baseDir": "/app/skills/km-wiki",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "meeting-room-booking",
+          "description": "在 https://calendar.sankuai.com/rooms 进行会议室查询与预定的浏览器自动化流程。用户提出订会议室、预约会议室、找会议室、安排会议地点、确认某时段是否有空会议室、预定会议室时使用。支持 SSO 脚本登录、按日期时间人数地点筛选、时间轴空白块点击创建、提交前确认与结果核验。",
+          "filePath": "/app/skills/meeting-room-booking/SKILL.md",
+          "baseDir": "/app/skills/meeting-room-booking",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "moa-login",
+          "description": "美团 MOA (办公终端安全管理软件) 部署和登录流程。当用户访问美团内部系统 (.sankuai.com 域名) 被 MOA 登录拦截时自动触发。处理 MOA 安装、启动和 SSO 扫码登录全流程。触发场景：(1) 访问 .sankuai.com 被拦截 (2) MOA 未安装/未运行/未登录 (3) 用户提到 MOA 登录问题",
+          "filePath": "/app/skills/moa-login/SKILL.md",
+          "baseDir": "/app/skills/moa-login",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "pdf",
+          "description": "Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.",
+          "filePath": "/app/skills/pdf/SKILL.md",
+          "baseDir": "/app/skills/pdf",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "pptx",
+          "description": "Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks",
+          "filePath": "/app/skills/pptx/SKILL.md",
+          "baseDir": "/app/skills/pptx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "s3plus-upload",
+          "description": "Upload local files to Meituan S3Plus (MSS) storage service and return access URL. Use when you need to upload files to S3Plus, generate file URLs, or troubleshoot S3Plus authentication and upload errors.",
+          "filePath": "/app/skills/s3plus-upload/SKILL.md",
+          "baseDir": "/app/skills/s3plus-upload",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "skill-creator",
+          "description": "Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.",
+          "filePath": "/app/skills/skill-creator/SKILL.md",
+          "baseDir": "/app/skills/skill-creator",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "video-frames",
+          "description": "Extract frames or short clips from videos using ffmpeg.",
+          "filePath": "/app/skills/video-frames/SKILL.md",
+          "baseDir": "/app/skills/video-frames",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "xlsx",
+          "description": "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas",
+          "filePath": "/app/skills/xlsx/SKILL.md",
+          "baseDir": "/app/skills/xlsx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "feishu-doc",
+          "description": "Feishu document read/write operations. Activate when user mentions Feishu docs, cloud docs, or docx links.\n",
+          "filePath": "/app/extensions/feishu/skills/feishu-doc/SKILL.md",
+          "baseDir": "/app/extensions/feishu/skills/feishu-doc",
+          "source": "openclaw-extra",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "feishu-drive",
+          "description": "Feishu cloud storage file management. Activate when user mentions cloud space, folders, drive.\n",
+          "filePath": "/app/extensions/feishu/skills/feishu-drive/SKILL.md",
+          "baseDir": "/app/extensions/feishu/skills/feishu-drive",
+          "source": "openclaw-extra",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "feishu-perm",
+          "description": "Feishu permission management for documents and files. Activate when user mentions sharing, permissions, collaborators.\n",
+          "filePath": "/app/extensions/feishu/skills/feishu-perm/SKILL.md",
+          "baseDir": "/app/extensions/feishu/skills/feishu-perm",
+          "source": "openclaw-extra",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "feishu-wiki",
+          "description": "Feishu knowledge base navigation. Activate when user mentions knowledge base, wiki, or wiki links.\n",
+          "filePath": "/app/extensions/feishu/skills/feishu-wiki/SKILL.md",
+          "baseDir": "/app/extensions/feishu/skills/feishu-wiki",
+          "source": "openclaw-extra",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "find-skills",
+          "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.",
+          "filePath": "/root/.openclaw/skills/find-skills/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/find-skills",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "react-best-practices-cn",
+          "description": "客户端 React 应用的性能优化指南（中文版）。当编写、审查或重构 React 代码以确保最佳性能模式时使用此技能。触发场景包括涉及 React 组件、数据获取、包优化或性能改进的任务。",
+          "filePath": "/root/.openclaw/skills/react-best-practices-cn/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/react-best-practices-cn",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "self-improving-agent",
+          "description": "Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude ('No, that's wrong...', 'Actually...'), (3) User requests a capability that doesn't exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks.",
+          "filePath": "/root/.openclaw/skills/self-improving-agent/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/self-improving-agent",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "tavily",
+          "description": "AI-optimized web search via Tavily API. Returns concise, relevant results for AI agents.",
+          "filePath": "/root/.openclaw/skills/tavily/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/tavily",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "web-search",
+          "description": "Web search and content extraction with Tavily and Exa via inference.sh CLI.\nApps: Tavily Search, Tavily Extract, Exa Search, Exa Answer, Exa Extract.\nCapabilities: AI-powered search, content extraction, direct answers, research.\nUse for: research, RAG pipelines, fact-checking, content aggregation, agents.\nTriggers: web search, tavily, exa, search api, content extraction, research,\ninternet search, ai search, search assistant, web scraping, rag, perplexity alternative\n",
+          "filePath": "/root/.openclaw/skills/web-search/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/web-search",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        }
+      ],
+      "version": 0
+    },
+    "contextTokens": 200000,
+    "inputTokens": 22315,
+    "outputTokens": 334,
+    "totalTokens": 1
+  },
+  "agent:main:main": {
+    "sessionId": "d5040154-0899-432e-b3fe-389de9b22ea2",
+    "updatedAt": 1772896240934,
+    "systemSent": true,
+    "abortedLastRun": false,
+    "chatType": "direct",
+    "deliveryContext": {
+      "channel": "webchat"
+    },
+    "lastChannel": "webchat",
+    "origin": {
+      "provider": "webchat",
+      "surface": "webchat",
+      "chatType": "direct"
+    },
+    "sessionFile": "/mnt/openclaw/.openclaw/agents/main/sessions/d5040154-0899-432e-b3fe-389de9b22ea2.jsonl",
+    "compactionCount": 0,
+    "modelProvider": "kubeplex-maas",
+    "model": "claude-opus-4.5",
+    "systemPromptReport": {
+      "source": "run",
+      "generatedAt": 1772896167607,
+      "sessionId": "d5040154-0899-432e-b3fe-389de9b22ea2",
+      "sessionKey": "agent:main:main",
+      "provider": "kubeplex-maas",
+      "model": "claude-opus-4.5",
+      "workspaceDir": "/root/.openclaw/workspace",
+      "bootstrapMaxChars": 20000,
+      "bootstrapTotalMaxChars": 150000,
+      "sandbox": {
+        "mode": "off",
+        "sandboxed": false
+      },
+      "systemPrompt": {
+        "chars": 36728,
+        "projectContextChars": 16814,
+        "nonProjectContextChars": 19914
+      },
+      "injectedWorkspaceFiles": [
+        {
+          "name": "AGENTS.md",
+          "path": "/root/.openclaw/workspace/AGENTS.md",
+          "missing": false,
+          "rawChars": 7974,
+          "injectedChars": 7974,
+          "truncated": false
+        },
+        {
+          "name": "SOUL.md",
+          "path": "/root/.openclaw/workspace/SOUL.md",
+          "missing": false,
+          "rawChars": 1664,
+          "injectedChars": 1664,
+          "truncated": false
+        },
+        {
+          "name": "TOOLS.md",
+          "path": "/root/.openclaw/workspace/TOOLS.md",
+          "missing": false,
+          "rawChars": 850,
+          "injectedChars": 850,
+          "truncated": false
+        },
+        {
+          "name": "IDENTITY.md",
+          "path": "/root/.openclaw/workspace/IDENTITY.md",
+          "missing": false,
+          "rawChars": 609,
+          "injectedChars": 609,
+          "truncated": false
+        },
+        {
+          "name": "USER.md",
+          "path": "/root/.openclaw/workspace/USER.md",
+          "missing": false,
+          "rawChars": 500,
+          "injectedChars": 500,
+          "truncated": false
+        },
+        {
+          "name": "HEARTBEAT.md",
+          "path": "/root/.openclaw/workspace/HEARTBEAT.md",
+          "missing": false,
+          "rawChars": 167,
+          "injectedChars": 167,
+          "truncated": false
+        },
+        {
+          "name": "BOOTSTRAP.md",
+          "path": "/root/.openclaw/workspace/BOOTSTRAP.md",
+          "missing": false,
+          "rawChars": 1449,
+          "injectedChars": 1449,
+          "truncated": false
+        },
+        {
+          "name": "MEMORY.md",
+          "path": "/root/.openclaw/workspace/MEMORY.md",
+          "missing": false,
+          "rawChars": 3055,
+          "injectedChars": 3055,
+          "truncated": false
+        }
+      ],
+      "skills": {
+        "promptChars": 10225,
+        "entries": [
+          {
+            "name": "calendar",
+            "blockChars": 324
+          },
+          {
+            "name": "catclaw-image",
+            "blockChars": 191
+          },
+          {
+            "name": "catclaw-search",
+            "blockChars": 206
+          },
+          {
+            "name": "clawhub",
+            "blockChars": 397
+          },
+          {
+            "name": "code-git",
+            "blockChars": 239
+          },
+          {
+            "name": "coding-agent",
+            "blockChars": 251
+          },
+          {
+            "name": "daxiang-channel",
+            "blockChars": 212
+          },
+          {
+            "name": "daxiang-scheduled-message",
+            "blockChars": 339
+          },
+          {
+            "name": "docx",
+            "blockChars": 485
+          },
+          {
+            "name": "file-download",
+            "blockChars": 251
+          },
+          {
+            "name": "friday-skill-installer",
+            "blockChars": 319
+          },
+          {
+            "name": "gh-issues",
+            "blockChars": 473
+          },
+          {
+            "name": "github",
+            "blockChars": 270
+          },
+          {
+            "name": "healthcheck",
+            "blockChars": 456
+          },
+          {
+            "name": "km-wiki",
+            "blockChars": 299
+          },
+          {
+            "name": "meeting-room-booking",
+            "blockChars": 307
+          },
+          {
+            "name": "moa-login",
+            "blockChars": 299
+          },
+          {
+            "name": "pdf",
+            "blockChars": 373
+          },
+          {
+            "name": "pptx",
+            "blockChars": 394
+          },
+          {
+            "name": "s3plus-upload",
+            "blockChars": 344
+          },
+          {
+            "name": "skill-creator",
+            "blockChars": 372
+          },
+          {
+            "name": "video-frames",
+            "blockChars": 194
+          },
+          {
+            "name": "xlsx",
+            "blockChars": 568
+          },
+          {
+            "name": "find-skills",
+            "blockChars": 477
+          },
+          {
+            "name": "react-best-practices-cn",
+            "blockChars": 262
+          },
+          {
+            "name": "self-improving-agent",
+            "blockChars": 637
+          },
+          {
+            "name": "tavily",
+            "blockChars": 222
+          },
+          {
+            "name": "web-search",
+            "blockChars": 614
+          }
+        ]
+      },
+      "tools": {
+        "listChars": 1937,
+        "schemaChars": 15033,
+        "entries": [
+          {
+            "name": "read",
+            "summaryChars": 298,
+            "schemaChars": 392,
+            "propertiesCount": 4
+          },
+          {
+            "name": "edit",
+            "summaryChars": 129,
+            "schemaChars": 591,
+            "propertiesCount": 6
+          },
+          {
+            "name": "write",
+            "summaryChars": 127,
+            "schemaChars": 313,
+            "propertiesCount": 3
+          },
+          {
+            "name": "exec",
+            "summaryChars": 181,
+            "schemaChars": 1086,
+            "propertiesCount": 12
+          },
+          {
+            "name": "process",
+            "summaryChars": 85,
+            "schemaChars": 961,
+            "propertiesCount": 12
+          },
+          {
+            "name": "browser",
+            "summaryChars": 1251,
+            "schemaChars": 1897,
+            "propertiesCount": 28
+          },
+          {
+            "name": "canvas",
+            "summaryChars": 106,
+            "schemaChars": 661,
+            "propertiesCount": 18
+          },
+          {
+            "name": "nodes",
+            "summaryChars": 115,
+            "schemaChars": 1741,
+            "propertiesCount": 36
+          },
+          {
+            "name": "message",
+            "summaryChars": 89,
+            "schemaChars": 4181,
+            "propertiesCount": 85
+          },
+          {
+            "name": "tts",
+            "summaryChars": 152,
+            "schemaChars": 223,
+            "propertiesCount": 2
+          },
+          {
+            "name": "agents_list",
+            "summaryChars": 118,
+            "schemaChars": 33,
+            "propertiesCount": 0
+          },
+          {
+            "name": "sessions_list",
+            "summaryChars": 54,
+            "schemaChars": 212,
+            "propertiesCount": 4
+          },
+          {
+            "name": "sessions_history",
+            "summaryChars": 36,
+            "schemaChars": 161,
+            "propertiesCount": 3
+          },
+          {
+            "name": "sessions_send",
+            "summaryChars": 84,
+            "schemaChars": 273,
+            "propertiesCount": 5
+          },
+          {
+            "name": "sessions_spawn",
+            "summaryChars": 134,
+            "schemaChars": 492,
+            "propertiesCount": 12
+          },
+          {
+            "name": "subagents",
+            "summaryChars": 105,
+            "schemaChars": 191,
+            "propertiesCount": 4
+          },
+          {
+            "name": "session_status",
+            "summaryChars": 207,
+            "schemaChars": 89,
+            "propertiesCount": 2
+          },
+          {
+            "name": "web_search",
+            "summaryChars": 175,
+            "schemaChars": 895,
+            "propertiesCount": 6
+          },
+          {
+            "name": "web_fetch",
+            "summaryChars": 129,
+            "schemaChars": 374,
+            "propertiesCount": 3
+          },
+          {
+            "name": "memory_search",
+            "summaryChars": 334,
+            "schemaChars": 139,
+            "propertiesCount": 3
+          },
+          {
+            "name": "memory_get",
+            "summaryChars": 151,
+            "schemaChars": 128,
+            "propertiesCount": 3
+          }
+        ]
+      }
+    },
+    "cacheRead": 0,
+    "cacheWrite": 0,
+    "totalTokensFresh": true,
+    "skillsSnapshot": {
+      "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\nWhen a skill file references a relative path, resolve it against the skill directory (parent of SKILL.md / dirname of the path) and use that absolute path in tool commands.\n\n<available_skills>\n  <skill>\n    <name>calendar</name>\n    <description>美团日程管理系统的浏览器自动化操作。用于通过 https://calendar.sankuai.com/ 进行日程的查询、创建、编辑和删除操作。当用户提到日程、日历、会议安排、calendar.sankuai.com、查看/创建/编辑/删除日程时激活此skill。支持：(1)查询日程 (2)创建日程（包含主题、时间、地点、参与人、沟通方式、提醒、内容） (3)编辑日程 (4)删除日程</description>\n    <location>/app/skills/calendar/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>catclaw-image</name>\n    <description>通过 Catclaw 图片生成接口，根据文本描述生成图片。当需要生成图片、AI 绘图、文生图时使用。</description>\n    <location>/app/skills/catclaw-image/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>catclaw-search</name>\n    <description>通过 Catclaw 通用搜索接口搜索互联网内容，支持多引擎切换和自动降级。当需要搜索网页、查找资讯、获取实时搜索结果时使用。</description>\n    <location>/app/skills/catclaw-search/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>clawhub</name>\n    <description>Use the ClawHub CLI to search, install, update, and publish agent skills from clawhub.com. Use when you need to fetch new skills on the fly, sync installed skills to latest or a specific version, or publish new/updated skill folders with the npm-installed clawhub CLI.</description>\n    <location>/app/skills/clawhub/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>code-git</name>\n    <description>Git 与 SSH 配置指南。当用户需要进行 git 相关操作（clone、push、pull、commit、分支管理等）、配置 SSH 密钥、新增 SSH 账户、或排查 SSH 连接问题时，必须调用此 skill。</description>\n    <location>/app/skills/code-git/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>coding-agent</name>\n    <description>Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.</description>\n    <location>~/.openclaw/skills/coding-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>daxiang-channel</name>\n    <description>处理大象（Daxiang）频道的消息回复格式。只要用户的沟通频道（channel）是大象，就必须调用此 SKILL 了解回复注意事项。</description>\n    <location>/app/skills/daxiang-channel/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>daxiang-scheduled-message</name>\n    <description>创建定时发送消息的任务（默认发送到大象 Daxiang）。所有定时任务、延时消息、周期提醒、cron 任务都应使用此 skill，除非用户明确指定使用其他 channel（如 Telegram、WhatsApp、Slack 等）。触发词：定时消息、定时发送、定时提醒、cron、周期任务、延时发送、报时、定时通知、每天提醒、每周提醒、X分钟后提醒。</description>\n    <location>/app/skills/daxiang-scheduled-message/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>docx</name>\n    <description>Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks</description>\n    <location>/app/skills/docx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>file-download</name>\n    <description>下载消息中的文件到本地。当需要下载用户发送的图片、文件、附件时使用。所有从大象消息中获取的文件（图片、文档、压缩包等）都必须遵循此 skill 的存储和命名规范。触发词：下载图片、下载文件、保存文件、识别图片、查看图片。</description>\n    <location>/app/skills/file-download/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>friday-skill-installer</name>\n    <description>从美团 Friday Skills 广场安装 skill。当用户提供 friday.sankuai.com 的 skill 链接、要求安装 Friday/美团 skill、或提到 mtskills 安装时激活。触发词：安装skill、friday skill、skill链接、mtskills install、技能安装。</description>\n    <location>/app/skills/friday-skill-installer/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>gh-issues</name>\n    <description>Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh-issues [owner/repo] [--label bug] [--limit 5] [--milestone v1.0] [--assignee @me] [--fork user/repo] [--watch] [--interval 5] [--reviews-only] [--cron] [--dry-run] [--model glm-5] [--notify-channel -1002381931352]</description>\n    <location>/app/skills/gh-issues/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>github</name>\n    <description>Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.</description>\n    <location>~/.openclaw/skills/github/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>healthcheck</name>\n    <description>Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).</description>\n    <location>/app/skills/healthcheck/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>km-wiki</name>\n    <description>美团学城(KM)知识库的浏览器自动化操作工具。通过 Chrome DevTools Protocol 访问学城页面、读取文档内容、提取表格数据、截图页面、编辑文档。Use when 用户提到学城、KM、知识库、km.sankuai.com、collabpage，或需要访问、阅读、编辑任何 km.sankuai.com 的页面或链接时使用.</description>\n    <location>/app/skills/km-wiki/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>meeting-room-booking</name>\n    <description>在 https://calendar.sankuai.com/rooms 进行会议室查询与预定的浏览器自动化流程。用户提出订会议室、预约会议室、找会议室、安排会议地点、确认某时段是否有空会议室、预定会议室时使用。支持 SSO 脚本登录、按日期时间人数地点筛选、时间轴空白块点击创建、提交前确认与结果核验。</description>\n    <location>/app/skills/meeting-room-booking/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>moa-login</name>\n    <description>美团 MOA (办公终端安全管理软件) 部署和登录流程。当用户访问美团内部系统 (.sankuai.com 域名) 被 MOA 登录拦截时自动触发。处理 MOA 安装、启动和 SSO 扫码登录全流程。触发场景：(1) 访问 .sankuai.com 被拦截 (2) MOA 未安装/未运行/未登录 (3) 用户提到 MOA 登录问题</description>\n    <location>/app/skills/moa-login/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pdf</name>\n    <description>Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.</description>\n    <location>/app/skills/pdf/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pptx</name>\n    <description>Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks</description>\n    <location>/app/skills/pptx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>s3plus-upload</name>\n    <description>Upload local files to Meituan S3Plus (MSS) storage service and return access URL. Use when you need to upload files to S3Plus, generate file URLs, or troubleshoot S3Plus authentication and upload errors.</description>\n    <location>/app/skills/s3plus-upload/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-creator</name>\n    <description>Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude&apos;s capabilities with specialized knowledge, workflows, or tool integrations.</description>\n    <location>/app/skills/skill-creator/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>video-frames</name>\n    <description>Extract frames or short clips from videos using ffmpeg.</description>\n    <location>/app/skills/video-frames/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>xlsx</name>\n    <description>Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas</description>\n    <location>/app/skills/xlsx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>find-skills</name>\n    <description>Helps users discover and install agent skills when they ask questions like &quot;how do I do X&quot;, &quot;find a skill for X&quot;, &quot;is there a skill that can...&quot;, or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.</description>\n    <location>~/.openclaw/skills/find-skills/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>react-best-practices-cn</name>\n    <description>客户端 React 应用的性能优化指南（中文版）。当编写、审查或重构 React 代码以确保最佳性能模式时使用此技能。触发场景包括涉及 React 组件、数据获取、包优化或性能改进的任务。</description>\n    <location>~/.openclaw/skills/react-best-practices-cn/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>self-improving-agent</name>\n    <description>Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude (&apos;No, that&apos;s wrong...&apos;, &apos;Actually...&apos;), (3) User requests a capability that doesn&apos;t exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks.</description>\n    <location>~/.openclaw/skills/self-improving-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>tavily</name>\n    <description>AI-optimized web search via Tavily API. Returns concise, relevant results for AI agents.</description>\n    <location>~/.openclaw/skills/tavily/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>web-search</name>\n    <description>Web search and content extraction with Tavily and Exa via inference.sh CLI.\nApps: Tavily Search, Tavily Extract, Exa Search, Exa Answer, Exa Extract.\nCapabilities: AI-powered search, content extraction, direct answers, research.\nUse for: research, RAG pipelines, fact-checking, content aggregation, agents.\nTriggers: web search, tavily, exa, search api, content extraction, research,\ninternet search, ai search, search assistant, web scraping, rag, perplexity alternative\n</description>\n    <location>~/.openclaw/skills/web-search/SKILL.md</location>\n  </skill>\n</available_skills>",
+      "skills": [
+        {
+          "name": "calendar"
+        },
+        {
+          "name": "catclaw-image"
+        },
+        {
+          "name": "catclaw-search"
+        },
+        {
+          "name": "clawhub",
+          "requiredEnv": []
+        },
+        {
+          "name": "code-git"
+        },
+        {
+          "name": "coding-agent"
+        },
+        {
+          "name": "daxiang-channel"
+        },
+        {
+          "name": "daxiang-scheduled-message"
+        },
+        {
+          "name": "docx"
+        },
+        {
+          "name": "file-download"
+        },
+        {
+          "name": "friday-skill-installer"
+        },
+        {
+          "name": "gh-issues",
+          "primaryEnv": "GH_TOKEN",
+          "requiredEnv": []
+        },
+        {
+          "name": "github"
+        },
+        {
+          "name": "healthcheck"
+        },
+        {
+          "name": "km-wiki"
+        },
+        {
+          "name": "meeting-room-booking"
+        },
+        {
+          "name": "moa-login"
+        },
+        {
+          "name": "pdf"
+        },
+        {
+          "name": "pptx"
+        },
+        {
+          "name": "s3plus-upload"
+        },
+        {
+          "name": "skill-creator"
+        },
+        {
+          "name": "video-frames",
+          "requiredEnv": []
+        },
+        {
+          "name": "xlsx"
+        },
+        {
+          "name": "find-skills"
+        },
+        {
+          "name": "react-best-practices-cn"
+        },
+        {
+          "name": "self-improving-agent"
+        },
+        {
+          "name": "tavily"
+        },
+        {
+          "name": "web-search"
+        }
+      ],
+      "resolvedSkills": [
+        {
+          "name": "calendar",
+          "description": "美团日程管理系统的浏览器自动化操作。用于通过 https://calendar.sankuai.com/ 进行日程的查询、创建、编辑和删除操作。当用户提到日程、日历、会议安排、calendar.sankuai.com、查看/创建/编辑/删除日程时激活此skill。支持：(1)查询日程 (2)创建日程（包含主题、时间、地点、参与人、沟通方式、提醒、内容） (3)编辑日程 (4)删除日程",
+          "filePath": "/app/skills/calendar/SKILL.md",
+          "baseDir": "/app/skills/calendar",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "catclaw-image",
+          "description": "通过 Catclaw 图片生成接口，根据文本描述生成图片。当需要生成图片、AI 绘图、文生图时使用。",
+          "filePath": "/app/skills/catclaw-image/SKILL.md",
+          "baseDir": "/app/skills/catclaw-image",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "catclaw-search",
+          "description": "通过 Catclaw 通用搜索接口搜索互联网内容，支持多引擎切换和自动降级。当需要搜索网页、查找资讯、获取实时搜索结果时使用。",
+          "filePath": "/app/skills/catclaw-search/SKILL.md",
+          "baseDir": "/app/skills/catclaw-search",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "clawhub",
+          "description": "Use the ClawHub CLI to search, install, update, and publish agent skills from clawhub.com. Use when you need to fetch new skills on the fly, sync installed skills to latest or a specific version, or publish new/updated skill folders with the npm-installed clawhub CLI.",
+          "filePath": "/app/skills/clawhub/SKILL.md",
+          "baseDir": "/app/skills/clawhub",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "code-git",
+          "description": "Git 与 SSH 配置指南。当用户需要进行 git 相关操作（clone、push、pull、commit、分支管理等）、配置 SSH 密钥、新增 SSH 账户、或排查 SSH 连接问题时，必须调用此 skill。",
+          "filePath": "/app/skills/code-git/SKILL.md",
+          "baseDir": "/app/skills/code-git",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "coding-agent",
+          "description": "Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.",
+          "filePath": "/root/.openclaw/skills/coding-agent/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/coding-agent",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "daxiang-channel",
+          "description": "处理大象（Daxiang）频道的消息回复格式。只要用户的沟通频道（channel）是大象，就必须调用此 SKILL 了解回复注意事项。",
+          "filePath": "/app/skills/daxiang-channel/SKILL.md",
+          "baseDir": "/app/skills/daxiang-channel",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "daxiang-scheduled-message",
+          "description": "创建定时发送消息的任务（默认发送到大象 Daxiang）。所有定时任务、延时消息、周期提醒、cron 任务都应使用此 skill，除非用户明确指定使用其他 channel（如 Telegram、WhatsApp、Slack 等）。触发词：定时消息、定时发送、定时提醒、cron、周期任务、延时发送、报时、定时通知、每天提醒、每周提醒、X分钟后提醒。",
+          "filePath": "/app/skills/daxiang-scheduled-message/SKILL.md",
+          "baseDir": "/app/skills/daxiang-scheduled-message",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "docx",
+          "description": "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks",
+          "filePath": "/app/skills/docx/SKILL.md",
+          "baseDir": "/app/skills/docx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "file-download",
+          "description": "下载消息中的文件到本地。当需要下载用户发送的图片、文件、附件时使用。所有从大象消息中获取的文件（图片、文档、压缩包等）都必须遵循此 skill 的存储和命名规范。触发词：下载图片、下载文件、保存文件、识别图片、查看图片。",
+          "filePath": "/app/skills/file-download/SKILL.md",
+          "baseDir": "/app/skills/file-download",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "friday-skill-installer",
+          "description": "从美团 Friday Skills 广场安装 skill。当用户提供 friday.sankuai.com 的 skill 链接、要求安装 Friday/美团 skill、或提到 mtskills 安装时激活。触发词：安装skill、friday skill、skill链接、mtskills install、技能安装。",
+          "filePath": "/app/skills/friday-skill-installer/SKILL.md",
+          "baseDir": "/app/skills/friday-skill-installer",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "gh-issues",
+          "description": "Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh-issues [owner/repo] [--label bug] [--limit 5] [--milestone v1.0] [--assignee @me] [--fork user/repo] [--watch] [--interval 5] [--reviews-only] [--cron] [--dry-run] [--model glm-5] [--notify-channel -1002381931352]",
+          "filePath": "/app/skills/gh-issues/SKILL.md",
+          "baseDir": "/app/skills/gh-issues",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "github",
+          "description": "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.",
+          "filePath": "/root/.openclaw/skills/github/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/github",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "healthcheck",
+          "description": "Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).",
+          "filePath": "/app/skills/healthcheck/SKILL.md",
+          "baseDir": "/app/skills/healthcheck",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "km-wiki",
+          "description": "美团学城(KM)知识库的浏览器自动化操作工具。通过 Chrome DevTools Protocol 访问学城页面、读取文档内容、提取表格数据、截图页面、编辑文档。Use when 用户提到学城、KM、知识库、km.sankuai.com、collabpage，或需要访问、阅读、编辑任何 km.sankuai.com 的页面或链接时使用.",
+          "filePath": "/app/skills/km-wiki/SKILL.md",
+          "baseDir": "/app/skills/km-wiki",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "meeting-room-booking",
+          "description": "在 https://calendar.sankuai.com/rooms 进行会议室查询与预定的浏览器自动化流程。用户提出订会议室、预约会议室、找会议室、安排会议地点、确认某时段是否有空会议室、预定会议室时使用。支持 SSO 脚本登录、按日期时间人数地点筛选、时间轴空白块点击创建、提交前确认与结果核验。",
+          "filePath": "/app/skills/meeting-room-booking/SKILL.md",
+          "baseDir": "/app/skills/meeting-room-booking",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "moa-login",
+          "description": "美团 MOA (办公终端安全管理软件) 部署和登录流程。当用户访问美团内部系统 (.sankuai.com 域名) 被 MOA 登录拦截时自动触发。处理 MOA 安装、启动和 SSO 扫码登录全流程。触发场景：(1) 访问 .sankuai.com 被拦截 (2) MOA 未安装/未运行/未登录 (3) 用户提到 MOA 登录问题",
+          "filePath": "/app/skills/moa-login/SKILL.md",
+          "baseDir": "/app/skills/moa-login",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "pdf",
+          "description": "Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.",
+          "filePath": "/app/skills/pdf/SKILL.md",
+          "baseDir": "/app/skills/pdf",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "pptx",
+          "description": "Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks",
+          "filePath": "/app/skills/pptx/SKILL.md",
+          "baseDir": "/app/skills/pptx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "s3plus-upload",
+          "description": "Upload local files to Meituan S3Plus (MSS) storage service and return access URL. Use when you need to upload files to S3Plus, generate file URLs, or troubleshoot S3Plus authentication and upload errors.",
+          "filePath": "/app/skills/s3plus-upload/SKILL.md",
+          "baseDir": "/app/skills/s3plus-upload",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "skill-creator",
+          "description": "Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.",
+          "filePath": "/app/skills/skill-creator/SKILL.md",
+          "baseDir": "/app/skills/skill-creator",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "video-frames",
+          "description": "Extract frames or short clips from videos using ffmpeg.",
+          "filePath": "/app/skills/video-frames/SKILL.md",
+          "baseDir": "/app/skills/video-frames",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "xlsx",
+          "description": "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas",
+          "filePath": "/app/skills/xlsx/SKILL.md",
+          "baseDir": "/app/skills/xlsx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "find-skills",
+          "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.",
+          "filePath": "/root/.openclaw/skills/find-skills/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/find-skills",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "react-best-practices-cn",
+          "description": "客户端 React 应用的性能优化指南（中文版）。当编写、审查或重构 React 代码以确保最佳性能模式时使用此技能。触发场景包括涉及 React 组件、数据获取、包优化或性能改进的任务。",
+          "filePath": "/root/.openclaw/skills/react-best-practices-cn/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/react-best-practices-cn",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "self-improving-agent",
+          "description": "Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude ('No, that's wrong...', 'Actually...'), (3) User requests a capability that doesn't exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks.",
+          "filePath": "/root/.openclaw/skills/self-improving-agent/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/self-improving-agent",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "tavily",
+          "description": "AI-optimized web search via Tavily API. Returns concise, relevant results for AI agents.",
+          "filePath": "/root/.openclaw/skills/tavily/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/tavily",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "web-search",
+          "description": "Web search and content extraction with Tavily and Exa via inference.sh CLI.\nApps: Tavily Search, Tavily Extract, Exa Search, Exa Answer, Exa Extract.\nCapabilities: AI-powered search, content extraction, direct answers, research.\nUse for: research, RAG pipelines, fact-checking, content aggregation, agents.\nTriggers: web search, tavily, exa, search api, content extraction, research,\ninternet search, ai search, search assistant, web scraping, rag, perplexity alternative\n",
+          "filePath": "/root/.openclaw/skills/web-search/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/web-search",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        }
+      ],
+      "version": 0
+    },
+    "contextTokens": 200000,
+    "inputTokens": 264,
+    "outputTokens": 594,
+    "totalTokens": 1
+  },
+  "agent:main:feishu:direct:ou_85efae4d2eca2271215fa481f5463fb5": {
+    "sessionId": "7a7f6af1-5807-43d4-9b1b-c7e39b4337d6",
+    "updatedAt": 1772900058753,
+    "systemSent": true,
+    "abortedLastRun": false,
+    "chatType": "direct",
+    "deliveryContext": {
+      "channel": "feishu",
+      "to": "user:ou_85efae4d2eca2271215fa481f5463fb5",
+      "accountId": "main"
+    },
+    "lastChannel": "feishu",
+    "lastTo": "user:ou_85efae4d2eca2271215fa481f5463fb5",
+    "lastAccountId": "main",
+    "origin": {
+      "label": "ou_85efae4d2eca2271215fa481f5463fb5",
+      "provider": "feishu",
+      "surface": "feishu",
+      "chatType": "direct",
+      "from": "feishu:ou_85efae4d2eca2271215fa481f5463fb5",
+      "to": "user:ou_85efae4d2eca2271215fa481f5463fb5",
+      "accountId": "main"
+    },
+    "sessionFile": "/mnt/openclaw/.openclaw/agents/main/sessions/7a7f6af1-5807-43d4-9b1b-c7e39b4337d6.jsonl",
+    "compactionCount": 0,
+    "modelProvider": "kubeplex-maas",
+    "model": "claude-opus-4.5",
+    "systemPromptReport": {
+      "source": "run",
+      "generatedAt": 1772900054030,
+      "sessionId": "7a7f6af1-5807-43d4-9b1b-c7e39b4337d6",
+      "sessionKey": "agent:main:feishu:direct:ou_85efae4d2eca2271215fa481f5463fb5",
+      "provider": "kubeplex-maas",
+      "model": "claude-opus-4.5",
+      "workspaceDir": "/root/.openclaw/workspace",
+      "bootstrapMaxChars": 20000,
+      "bootstrapTotalMaxChars": 150000,
+      "sandbox": {
+        "mode": "off",
+        "sandboxed": false
+      },
+      "systemPrompt": {
+        "chars": 38577,
+        "projectContextChars": 16814,
+        "nonProjectContextChars": 21763
+      },
+      "injectedWorkspaceFiles": [
+        {
+          "name": "AGENTS.md",
+          "path": "/root/.openclaw/workspace/AGENTS.md",
+          "missing": false,
+          "rawChars": 7974,
+          "injectedChars": 7974,
+          "truncated": false
+        },
+        {
+          "name": "SOUL.md",
+          "path": "/root/.openclaw/workspace/SOUL.md",
+          "missing": false,
+          "rawChars": 1664,
+          "injectedChars": 1664,
+          "truncated": false
+        },
+        {
+          "name": "TOOLS.md",
+          "path": "/root/.openclaw/workspace/TOOLS.md",
+          "missing": false,
+          "rawChars": 850,
+          "injectedChars": 850,
+          "truncated": false
+        },
+        {
+          "name": "IDENTITY.md",
+          "path": "/root/.openclaw/workspace/IDENTITY.md",
+          "missing": false,
+          "rawChars": 609,
+          "injectedChars": 609,
+          "truncated": false
+        },
+        {
+          "name": "USER.md",
+          "path": "/root/.openclaw/workspace/USER.md",
+          "missing": false,
+          "rawChars": 500,
+          "injectedChars": 500,
+          "truncated": false
+        },
+        {
+          "name": "HEARTBEAT.md",
+          "path": "/root/.openclaw/workspace/HEARTBEAT.md",
+          "missing": false,
+          "rawChars": 167,
+          "injectedChars": 167,
+          "truncated": false
+        },
+        {
+          "name": "BOOTSTRAP.md",
+          "path": "/root/.openclaw/workspace/BOOTSTRAP.md",
+          "missing": false,
+          "rawChars": 1449,
+          "injectedChars": 1449,
+          "truncated": false
+        },
+        {
+          "name": "MEMORY.md",
+          "path": "/root/.openclaw/workspace/MEMORY.md",
+          "missing": false,
+          "rawChars": 3055,
+          "injectedChars": 3055,
+          "truncated": false
+        }
+      ],
+      "skills": {
+        "promptChars": 10623,
+        "entries": [
+          {
+            "name": "calendar",
+            "blockChars": 324
+          },
+          {
+            "name": "catclaw-image",
+            "blockChars": 191
+          },
+          {
+            "name": "catclaw-search",
+            "blockChars": 206
+          },
+          {
+            "name": "code-git",
+            "blockChars": 239
+          },
+          {
+            "name": "daxiang-channel",
+            "blockChars": 212
+          },
+          {
+            "name": "daxiang-scheduled-message",
+            "blockChars": 339
+          },
+          {
+            "name": "docx",
+            "blockChars": 485
+          },
+          {
+            "name": "file-download",
+            "blockChars": 251
+          },
+          {
+            "name": "friday-skill-installer",
+            "blockChars": 319
+          },
+          {
+            "name": "gh-issues",
+            "blockChars": 473
+          },
+          {
+            "name": "github",
+            "blockChars": 270
+          },
+          {
+            "name": "healthcheck",
+            "blockChars": 456
+          },
+          {
+            "name": "km-wiki",
+            "blockChars": 299
+          },
+          {
+            "name": "meeting-room-booking",
+            "blockChars": 307
+          },
+          {
+            "name": "moa-login",
+            "blockChars": 299
+          },
+          {
+            "name": "pdf",
+            "blockChars": 373
+          },
+          {
+            "name": "pptx",
+            "blockChars": 394
+          },
+          {
+            "name": "s3plus-upload",
+            "blockChars": 344
+          },
+          {
+            "name": "skill-creator",
+            "blockChars": 372
+          },
+          {
+            "name": "video-frames",
+            "blockChars": 194
+          },
+          {
+            "name": "xlsx",
+            "blockChars": 568
+          },
+          {
+            "name": "feishu-doc",
+            "blockChars": 260
+          },
+          {
+            "name": "feishu-drive",
+            "blockChars": 252
+          },
+          {
+            "name": "feishu-perm",
+            "blockChars": 274
+          },
+          {
+            "name": "feishu-wiki",
+            "blockChars": 254
+          },
+          {
+            "name": "find-skills",
+            "blockChars": 477
+          },
+          {
+            "name": "react-best-practices-cn",
+            "blockChars": 262
+          },
+          {
+            "name": "self-improving-agent",
+            "blockChars": 637
+          },
+          {
+            "name": "tavily",
+            "blockChars": 222
+          },
+          {
+            "name": "web-search",
+            "blockChars": 614
+          }
+        ]
+      },
+      "tools": {
+        "listChars": 3135,
+        "schemaChars": 20533,
+        "entries": [
+          {
+            "name": "read",
+            "summaryChars": 298,
+            "schemaChars": 392,
+            "propertiesCount": 4
+          },
+          {
+            "name": "edit",
+            "summaryChars": 129,
+            "schemaChars": 591,
+            "propertiesCount": 6
+          },
+          {
+            "name": "write",
+            "summaryChars": 127,
+            "schemaChars": 313,
+            "propertiesCount": 3
+          },
+          {
+            "name": "exec",
+            "summaryChars": 181,
+            "schemaChars": 1086,
+            "propertiesCount": 12
+          },
+          {
+            "name": "process",
+            "summaryChars": 85,
+            "schemaChars": 961,
+            "propertiesCount": 12
+          },
+          {
+            "name": "browser",
+            "summaryChars": 1251,
+            "schemaChars": 1897,
+            "propertiesCount": 28
+          },
+          {
+            "name": "canvas",
+            "summaryChars": 106,
+            "schemaChars": 661,
+            "propertiesCount": 18
+          },
+          {
+            "name": "nodes",
+            "summaryChars": 115,
+            "schemaChars": 1741,
+            "propertiesCount": 36
+          },
+          {
+            "name": "message",
+            "summaryChars": 89,
+            "schemaChars": 4181,
+            "propertiesCount": 85
+          },
+          {
+            "name": "tts",
+            "summaryChars": 152,
+            "schemaChars": 223,
+            "propertiesCount": 2
+          },
+          {
+            "name": "agents_list",
+            "summaryChars": 118,
+            "schemaChars": 33,
+            "propertiesCount": 0
+          },
+          {
+            "name": "sessions_list",
+            "summaryChars": 54,
+            "schemaChars": 212,
+            "propertiesCount": 4
+          },
+          {
+            "name": "sessions_history",
+            "summaryChars": 36,
+            "schemaChars": 161,
+            "propertiesCount": 3
+          },
+          {
+            "name": "sessions_send",
+            "summaryChars": 84,
+            "schemaChars": 273,
+            "propertiesCount": 5
+          },
+          {
+            "name": "sessions_spawn",
+            "summaryChars": 134,
+            "schemaChars": 492,
+            "propertiesCount": 12
+          },
+          {
+            "name": "subagents",
+            "summaryChars": 105,
+            "schemaChars": 191,
+            "propertiesCount": 4
+          },
+          {
+            "name": "session_status",
+            "summaryChars": 207,
+            "schemaChars": 89,
+            "propertiesCount": 2
+          },
+          {
+            "name": "web_search",
+            "summaryChars": 175,
+            "schemaChars": 895,
+            "propertiesCount": 6
+          },
+          {
+            "name": "web_fetch",
+            "summaryChars": 129,
+            "schemaChars": 374,
+            "propertiesCount": 3
+          },
+          {
+            "name": "feishu_doc",
+            "summaryChars": 116,
+            "schemaChars": 612,
+            "propertiesCount": 6
+          },
+          {
+            "name": "feishu_app_scopes",
+            "summaryChars": 102,
+            "schemaChars": 33,
+            "propertiesCount": 0
+          },
+          {
+            "name": "feishu_wiki",
+            "summaryChars": 83,
+            "schemaChars": 971,
+            "propertiesCount": 10
+          },
+          {
+            "name": "feishu_drive",
+            "summaryChars": 81,
+            "schemaChars": 486,
+            "propertiesCount": 5
+          },
+          {
+            "name": "feishu_bitable_get_meta",
+            "summaryChars": 114,
+            "schemaChars": 170,
+            "propertiesCount": 1
+          },
+          {
+            "name": "feishu_bitable_list_fields",
+            "summaryChars": 76,
+            "schemaChars": 255,
+            "propertiesCount": 2
+          },
+          {
+            "name": "feishu_bitable_list_records",
+            "summaryChars": 64,
+            "schemaChars": 462,
+            "propertiesCount": 4
+          },
+          {
+            "name": "feishu_bitable_get_record",
+            "summaryChars": 46,
+            "schemaChars": 335,
+            "propertiesCount": 3
+          },
+          {
+            "name": "feishu_bitable_create_record",
+            "summaryChars": 44,
+            "schemaChars": 549,
+            "propertiesCount": 3
+          },
+          {
+            "name": "feishu_bitable_update_record",
+            "summaryChars": 50,
+            "schemaChars": 473,
+            "propertiesCount": 4
+          },
+          {
+            "name": "feishu_bitable_create_app",
+            "summaryChars": 57,
+            "schemaChars": 243,
+            "propertiesCount": 2
+          },
+          {
+            "name": "feishu_bitable_create_field",
+            "summaryChars": 46,
+            "schemaChars": 911,
+            "propertiesCount": 5
+          },
+          {
+            "name": "memory_search",
+            "summaryChars": 334,
+            "schemaChars": 139,
+            "propertiesCount": 3
+          },
+          {
+            "name": "memory_get",
+            "summaryChars": 151,
+            "schemaChars": 128,
+            "propertiesCount": 3
+          }
+        ]
+      }
+    },
+    "cacheRead": 0,
+    "cacheWrite": 0,
+    "totalTokensFresh": true,
+    "skillsSnapshot": {
+      "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\nWhen a skill file references a relative path, resolve it against the skill directory (parent of SKILL.md / dirname of the path) and use that absolute path in tool commands.\n\n<available_skills>\n  <skill>\n    <name>calendar</name>\n    <description>美团日程管理系统的浏览器自动化操作。用于通过 https://calendar.sankuai.com/ 进行日程的查询、创建、编辑和删除操作。当用户提到日程、日历、会议安排、calendar.sankuai.com、查看/创建/编辑/删除日程时激活此skill。支持：(1)查询日程 (2)创建日程（包含主题、时间、地点、参与人、沟通方式、提醒、内容） (3)编辑日程 (4)删除日程</description>\n    <location>/app/skills/calendar/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>catclaw-image</name>\n    <description>通过 Catclaw 图片生成接口，根据文本描述生成图片。当需要生成图片、AI 绘图、文生图时使用。</description>\n    <location>/app/skills/catclaw-image/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>catclaw-search</name>\n    <description>通过 Catclaw 通用搜索接口搜索互联网内容，支持多引擎切换和自动降级。当需要搜索网页、查找资讯、获取实时搜索结果时使用。</description>\n    <location>/app/skills/catclaw-search/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>code-git</name>\n    <description>Git 与 SSH 配置指南。当用户需要进行 git 相关操作（clone、push、pull、commit、分支管理等）、配置 SSH 密钥、新增 SSH 账户、或排查 SSH 连接问题时，必须调用此 skill。</description>\n    <location>/app/skills/code-git/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>daxiang-channel</name>\n    <description>处理大象（Daxiang）频道的消息回复格式。只要用户的沟通频道（channel）是大象，就必须调用此 SKILL 了解回复注意事项。</description>\n    <location>/app/skills/daxiang-channel/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>daxiang-scheduled-message</name>\n    <description>创建定时发送消息的任务（默认发送到大象 Daxiang）。所有定时任务、延时消息、周期提醒、cron 任务都应使用此 skill，除非用户明确指定使用其他 channel（如 Telegram、WhatsApp、Slack 等）。触发词：定时消息、定时发送、定时提醒、cron、周期任务、延时发送、报时、定时通知、每天提醒、每周提醒、X分钟后提醒。</description>\n    <location>/app/skills/daxiang-scheduled-message/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>docx</name>\n    <description>Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks</description>\n    <location>/app/skills/docx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>file-download</name>\n    <description>下载消息中的文件到本地。当需要下载用户发送的图片、文件、附件时使用。所有从大象消息中获取的文件（图片、文档、压缩包等）都必须遵循此 skill 的存储和命名规范。触发词：下载图片、下载文件、保存文件、识别图片、查看图片。</description>\n    <location>/app/skills/file-download/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>friday-skill-installer</name>\n    <description>从美团 Friday Skills 广场安装 skill。当用户提供 friday.sankuai.com 的 skill 链接、要求安装 Friday/美团 skill、或提到 mtskills 安装时激活。触发词：安装skill、friday skill、skill链接、mtskills install、技能安装。</description>\n    <location>/app/skills/friday-skill-installer/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>gh-issues</name>\n    <description>Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh-issues [owner/repo] [--label bug] [--limit 5] [--milestone v1.0] [--assignee @me] [--fork user/repo] [--watch] [--interval 5] [--reviews-only] [--cron] [--dry-run] [--model glm-5] [--notify-channel -1002381931352]</description>\n    <location>/app/skills/gh-issues/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>github</name>\n    <description>Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.</description>\n    <location>~/.openclaw/skills/github/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>healthcheck</name>\n    <description>Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).</description>\n    <location>/app/skills/healthcheck/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>km-wiki</name>\n    <description>美团学城(KM)知识库的浏览器自动化操作工具。通过 Chrome DevTools Protocol 访问学城页面、读取文档内容、提取表格数据、截图页面、编辑文档。Use when 用户提到学城、KM、知识库、km.sankuai.com、collabpage，或需要访问、阅读、编辑任何 km.sankuai.com 的页面或链接时使用.</description>\n    <location>/app/skills/km-wiki/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>meeting-room-booking</name>\n    <description>在 https://calendar.sankuai.com/rooms 进行会议室查询与预定的浏览器自动化流程。用户提出订会议室、预约会议室、找会议室、安排会议地点、确认某时段是否有空会议室、预定会议室时使用。支持 SSO 脚本登录、按日期时间人数地点筛选、时间轴空白块点击创建、提交前确认与结果核验。</description>\n    <location>/app/skills/meeting-room-booking/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>moa-login</name>\n    <description>美团 MOA (办公终端安全管理软件) 部署和登录流程。当用户访问美团内部系统 (.sankuai.com 域名) 被 MOA 登录拦截时自动触发。处理 MOA 安装、启动和 SSO 扫码登录全流程。触发场景：(1) 访问 .sankuai.com 被拦截 (2) MOA 未安装/未运行/未登录 (3) 用户提到 MOA 登录问题</description>\n    <location>/app/skills/moa-login/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pdf</name>\n    <description>Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.</description>\n    <location>/app/skills/pdf/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pptx</name>\n    <description>Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks</description>\n    <location>/app/skills/pptx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>s3plus-upload</name>\n    <description>Upload local files to Meituan S3Plus (MSS) storage service and return access URL. Use when you need to upload files to S3Plus, generate file URLs, or troubleshoot S3Plus authentication and upload errors.</description>\n    <location>/app/skills/s3plus-upload/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-creator</name>\n    <description>Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude&apos;s capabilities with specialized knowledge, workflows, or tool integrations.</description>\n    <location>/app/skills/skill-creator/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>video-frames</name>\n    <description>Extract frames or short clips from videos using ffmpeg.</description>\n    <location>/app/skills/video-frames/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>xlsx</name>\n    <description>Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas</description>\n    <location>/app/skills/xlsx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-doc</name>\n    <description>Feishu document read/write operations. Activate when user mentions Feishu docs, cloud docs, or docx links.\n</description>\n    <location>/app/extensions/feishu/skills/feishu-doc/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-drive</name>\n    <description>Feishu cloud storage file management. Activate when user mentions cloud space, folders, drive.\n</description>\n    <location>/app/extensions/feishu/skills/feishu-drive/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-perm</name>\n    <description>Feishu permission management for documents and files. Activate when user mentions sharing, permissions, collaborators.\n</description>\n    <location>/app/extensions/feishu/skills/feishu-perm/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-wiki</name>\n    <description>Feishu knowledge base navigation. Activate when user mentions knowledge base, wiki, or wiki links.\n</description>\n    <location>/app/extensions/feishu/skills/feishu-wiki/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>find-skills</name>\n    <description>Helps users discover and install agent skills when they ask questions like &quot;how do I do X&quot;, &quot;find a skill for X&quot;, &quot;is there a skill that can...&quot;, or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.</description>\n    <location>~/.openclaw/skills/find-skills/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>react-best-practices-cn</name>\n    <description>客户端 React 应用的性能优化指南（中文版）。当编写、审查或重构 React 代码以确保最佳性能模式时使用此技能。触发场景包括涉及 React 组件、数据获取、包优化或性能改进的任务。</description>\n    <location>~/.openclaw/skills/react-best-practices-cn/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>self-improving-agent</name>\n    <description>Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude (&apos;No, that&apos;s wrong...&apos;, &apos;Actually...&apos;), (3) User requests a capability that doesn&apos;t exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks.</description>\n    <location>~/.openclaw/skills/self-improving-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>tavily</name>\n    <description>AI-optimized web search via Tavily API. Returns concise, relevant results for AI agents.</description>\n    <location>~/.openclaw/skills/tavily/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>web-search</name>\n    <description>Web search and content extraction with Tavily and Exa via inference.sh CLI.\nApps: Tavily Search, Tavily Extract, Exa Search, Exa Answer, Exa Extract.\nCapabilities: AI-powered search, content extraction, direct answers, research.\nUse for: research, RAG pipelines, fact-checking, content aggregation, agents.\nTriggers: web search, tavily, exa, search api, content extraction, research,\ninternet search, ai search, search assistant, web scraping, rag, perplexity alternative\n</description>\n    <location>~/.openclaw/skills/web-search/SKILL.md</location>\n  </skill>\n</available_skills>",
+      "skills": [
+        {
+          "name": "calendar"
+        },
+        {
+          "name": "catclaw-image"
+        },
+        {
+          "name": "catclaw-search"
+        },
+        {
+          "name": "code-git"
+        },
+        {
+          "name": "daxiang-channel"
+        },
+        {
+          "name": "daxiang-scheduled-message"
+        },
+        {
+          "name": "docx"
+        },
+        {
+          "name": "file-download"
+        },
+        {
+          "name": "friday-skill-installer"
+        },
+        {
+          "name": "gh-issues",
+          "primaryEnv": "GH_TOKEN",
+          "requiredEnv": []
+        },
+        {
+          "name": "github"
+        },
+        {
+          "name": "healthcheck"
+        },
+        {
+          "name": "km-wiki"
+        },
+        {
+          "name": "meeting-room-booking"
+        },
+        {
+          "name": "moa-login"
+        },
+        {
+          "name": "pdf"
+        },
+        {
+          "name": "pptx"
+        },
+        {
+          "name": "s3plus-upload"
+        },
+        {
+          "name": "skill-creator"
+        },
+        {
+          "name": "video-frames",
+          "requiredEnv": []
+        },
+        {
+          "name": "xlsx"
+        },
+        {
+          "name": "feishu-doc"
+        },
+        {
+          "name": "feishu-drive"
+        },
+        {
+          "name": "feishu-perm"
+        },
+        {
+          "name": "feishu-wiki"
+        },
+        {
+          "name": "find-skills"
+        },
+        {
+          "name": "react-best-practices-cn"
+        },
+        {
+          "name": "self-improving-agent"
+        },
+        {
+          "name": "tavily"
+        },
+        {
+          "name": "web-search"
+        }
+      ],
+      "resolvedSkills": [
+        {
+          "name": "calendar",
+          "description": "美团日程管理系统的浏览器自动化操作。用于通过 https://calendar.sankuai.com/ 进行日程的查询、创建、编辑和删除操作。当用户提到日程、日历、会议安排、calendar.sankuai.com、查看/创建/编辑/删除日程时激活此skill。支持：(1)查询日程 (2)创建日程（包含主题、时间、地点、参与人、沟通方式、提醒、内容） (3)编辑日程 (4)删除日程",
+          "filePath": "/app/skills/calendar/SKILL.md",
+          "baseDir": "/app/skills/calendar",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "catclaw-image",
+          "description": "通过 Catclaw 图片生成接口，根据文本描述生成图片。当需要生成图片、AI 绘图、文生图时使用。",
+          "filePath": "/app/skills/catclaw-image/SKILL.md",
+          "baseDir": "/app/skills/catclaw-image",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "catclaw-search",
+          "description": "通过 Catclaw 通用搜索接口搜索互联网内容，支持多引擎切换和自动降级。当需要搜索网页、查找资讯、获取实时搜索结果时使用。",
+          "filePath": "/app/skills/catclaw-search/SKILL.md",
+          "baseDir": "/app/skills/catclaw-search",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "code-git",
+          "description": "Git 与 SSH 配置指南。当用户需要进行 git 相关操作（clone、push、pull、commit、分支管理等）、配置 SSH 密钥、新增 SSH 账户、或排查 SSH 连接问题时，必须调用此 skill。",
+          "filePath": "/app/skills/code-git/SKILL.md",
+          "baseDir": "/app/skills/code-git",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "daxiang-channel",
+          "description": "处理大象（Daxiang）频道的消息回复格式。只要用户的沟通频道（channel）是大象，就必须调用此 SKILL 了解回复注意事项。",
+          "filePath": "/app/skills/daxiang-channel/SKILL.md",
+          "baseDir": "/app/skills/daxiang-channel",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "daxiang-scheduled-message",
+          "description": "创建定时发送消息的任务（默认发送到大象 Daxiang）。所有定时任务、延时消息、周期提醒、cron 任务都应使用此 skill，除非用户明确指定使用其他 channel（如 Telegram、WhatsApp、Slack 等）。触发词：定时消息、定时发送、定时提醒、cron、周期任务、延时发送、报时、定时通知、每天提醒、每周提醒、X分钟后提醒。",
+          "filePath": "/app/skills/daxiang-scheduled-message/SKILL.md",
+          "baseDir": "/app/skills/daxiang-scheduled-message",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "docx",
+          "description": "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks",
+          "filePath": "/app/skills/docx/SKILL.md",
+          "baseDir": "/app/skills/docx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "file-download",
+          "description": "下载消息中的文件到本地。当需要下载用户发送的图片、文件、附件时使用。所有从大象消息中获取的文件（图片、文档、压缩包等）都必须遵循此 skill 的存储和命名规范。触发词：下载图片、下载文件、保存文件、识别图片、查看图片。",
+          "filePath": "/app/skills/file-download/SKILL.md",
+          "baseDir": "/app/skills/file-download",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "friday-skill-installer",
+          "description": "从美团 Friday Skills 广场安装 skill。当用户提供 friday.sankuai.com 的 skill 链接、要求安装 Friday/美团 skill、或提到 mtskills 安装时激活。触发词：安装skill、friday skill、skill链接、mtskills install、技能安装。",
+          "filePath": "/app/skills/friday-skill-installer/SKILL.md",
+          "baseDir": "/app/skills/friday-skill-installer",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "gh-issues",
+          "description": "Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh-issues [owner/repo] [--label bug] [--limit 5] [--milestone v1.0] [--assignee @me] [--fork user/repo] [--watch] [--interval 5] [--reviews-only] [--cron] [--dry-run] [--model glm-5] [--notify-channel -1002381931352]",
+          "filePath": "/app/skills/gh-issues/SKILL.md",
+          "baseDir": "/app/skills/gh-issues",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "github",
+          "description": "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.",
+          "filePath": "/root/.openclaw/skills/github/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/github",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "healthcheck",
+          "description": "Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).",
+          "filePath": "/app/skills/healthcheck/SKILL.md",
+          "baseDir": "/app/skills/healthcheck",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "km-wiki",
+          "description": "美团学城(KM)知识库的浏览器自动化操作工具。通过 Chrome DevTools Protocol 访问学城页面、读取文档内容、提取表格数据、截图页面、编辑文档。Use when 用户提到学城、KM、知识库、km.sankuai.com、collabpage，或需要访问、阅读、编辑任何 km.sankuai.com 的页面或链接时使用.",
+          "filePath": "/app/skills/km-wiki/SKILL.md",
+          "baseDir": "/app/skills/km-wiki",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "meeting-room-booking",
+          "description": "在 https://calendar.sankuai.com/rooms 进行会议室查询与预定的浏览器自动化流程。用户提出订会议室、预约会议室、找会议室、安排会议地点、确认某时段是否有空会议室、预定会议室时使用。支持 SSO 脚本登录、按日期时间人数地点筛选、时间轴空白块点击创建、提交前确认与结果核验。",
+          "filePath": "/app/skills/meeting-room-booking/SKILL.md",
+          "baseDir": "/app/skills/meeting-room-booking",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "moa-login",
+          "description": "美团 MOA (办公终端安全管理软件) 部署和登录流程。当用户访问美团内部系统 (.sankuai.com 域名) 被 MOA 登录拦截时自动触发。处理 MOA 安装、启动和 SSO 扫码登录全流程。触发场景：(1) 访问 .sankuai.com 被拦截 (2) MOA 未安装/未运行/未登录 (3) 用户提到 MOA 登录问题",
+          "filePath": "/app/skills/moa-login/SKILL.md",
+          "baseDir": "/app/skills/moa-login",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "pdf",
+          "description": "Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.",
+          "filePath": "/app/skills/pdf/SKILL.md",
+          "baseDir": "/app/skills/pdf",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "pptx",
+          "description": "Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks",
+          "filePath": "/app/skills/pptx/SKILL.md",
+          "baseDir": "/app/skills/pptx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "s3plus-upload",
+          "description": "Upload local files to Meituan S3Plus (MSS) storage service and return access URL. Use when you need to upload files to S3Plus, generate file URLs, or troubleshoot S3Plus authentication and upload errors.",
+          "filePath": "/app/skills/s3plus-upload/SKILL.md",
+          "baseDir": "/app/skills/s3plus-upload",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "skill-creator",
+          "description": "Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.",
+          "filePath": "/app/skills/skill-creator/SKILL.md",
+          "baseDir": "/app/skills/skill-creator",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "video-frames",
+          "description": "Extract frames or short clips from videos using ffmpeg.",
+          "filePath": "/app/skills/video-frames/SKILL.md",
+          "baseDir": "/app/skills/video-frames",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "xlsx",
+          "description": "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas",
+          "filePath": "/app/skills/xlsx/SKILL.md",
+          "baseDir": "/app/skills/xlsx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "feishu-doc",
+          "description": "Feishu document read/write operations. Activate when user mentions Feishu docs, cloud docs, or docx links.\n",
+          "filePath": "/app/extensions/feishu/skills/feishu-doc/SKILL.md",
+          "baseDir": "/app/extensions/feishu/skills/feishu-doc",
+          "source": "openclaw-extra",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "feishu-drive",
+          "description": "Feishu cloud storage file management. Activate when user mentions cloud space, folders, drive.\n",
+          "filePath": "/app/extensions/feishu/skills/feishu-drive/SKILL.md",
+          "baseDir": "/app/extensions/feishu/skills/feishu-drive",
+          "source": "openclaw-extra",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "feishu-perm",
+          "description": "Feishu permission management for documents and files. Activate when user mentions sharing, permissions, collaborators.\n",
+          "filePath": "/app/extensions/feishu/skills/feishu-perm/SKILL.md",
+          "baseDir": "/app/extensions/feishu/skills/feishu-perm",
+          "source": "openclaw-extra",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "feishu-wiki",
+          "description": "Feishu knowledge base navigation. Activate when user mentions knowledge base, wiki, or wiki links.\n",
+          "filePath": "/app/extensions/feishu/skills/feishu-wiki/SKILL.md",
+          "baseDir": "/app/extensions/feishu/skills/feishu-wiki",
+          "source": "openclaw-extra",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "find-skills",
+          "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.",
+          "filePath": "/root/.openclaw/skills/find-skills/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/find-skills",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "react-best-practices-cn",
+          "description": "客户端 React 应用的性能优化指南（中文版）。当编写、审查或重构 React 代码以确保最佳性能模式时使用此技能。触发场景包括涉及 React 组件、数据获取、包优化或性能改进的任务。",
+          "filePath": "/root/.openclaw/skills/react-best-practices-cn/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/react-best-practices-cn",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "self-improving-agent",
+          "description": "Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude ('No, that's wrong...', 'Actually...'), (3) User requests a capability that doesn't exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks.",
+          "filePath": "/root/.openclaw/skills/self-improving-agent/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/self-improving-agent",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "tavily",
+          "description": "AI-optimized web search via Tavily API. Returns concise, relevant results for AI agents.",
+          "filePath": "/root/.openclaw/skills/tavily/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/tavily",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "web-search",
+          "description": "Web search and content extraction with Tavily and Exa via inference.sh CLI.\nApps: Tavily Search, Tavily Extract, Exa Search, Exa Answer, Exa Extract.\nCapabilities: AI-powered search, content extraction, direct answers, research.\nUse for: research, RAG pipelines, fact-checking, content aggregation, agents.\nTriggers: web search, tavily, exa, search api, content extraction, research,\ninternet search, ai search, search assistant, web scraping, rag, perplexity alternative\n",
+          "filePath": "/root/.openclaw/skills/web-search/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/web-search",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        }
+      ],
+      "version": 0
+    },
+    "contextTokens": 200000,
+    "inputTokens": 33890,
+    "outputTokens": 16,
+    "totalTokens": 33890
+  },
+  "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97": {
+    "sessionId": "5fe72f1c-94a9-4b89-a274-61774506ecd6",
+    "updatedAt": 1772905344188,
+    "systemSent": true,
+    "abortedLastRun": false,
+    "displayName": "feishu:g-oc_40efcf271da2a542291ab9b83d2eea97",
+    "chatType": "group",
+    "channel": "feishu",
+    "groupId": "ou_85efae4d2eca2271215fa481f5463fb5",
+    "subject": "oc_40efcf271da2a542291ab9b83d2eea97",
+    "deliveryContext": {
+      "channel": "feishu",
+      "to": "chat:oc_40efcf271da2a542291ab9b83d2eea97",
+      "accountId": "main"
+    },
+    "lastChannel": "feishu",
+    "lastTo": "chat:oc_40efcf271da2a542291ab9b83d2eea97",
+    "lastAccountId": "main",
+    "origin": {
+      "label": "oc_40efcf271da2a542291ab9b83d2eea97",
+      "provider": "feishu",
+      "surface": "feishu",
+      "chatType": "group",
+      "from": "feishu:ou_85efae4d2eca2271215fa481f5463fb5",
+      "to": "chat:oc_40efcf271da2a542291ab9b83d2eea97",
+      "accountId": "main"
+    },
+    "sessionFile": "/mnt/openclaw/.openclaw/agents/main/sessions/5fe72f1c-94a9-4b89-a274-61774506ecd6.jsonl",
+    "compactionCount": 1,
+    "skillsSnapshot": {
+      "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\nWhen a skill file references a relative path, resolve it against the skill directory (parent of SKILL.md / dirname of the path) and use that absolute path in tool commands.\n\n<available_skills>\n  <skill>\n    <name>calendar</name>\n    <description>美团日程管理系统的浏览器自动化操作。用于通过 https://calendar.sankuai.com/ 进行日程的查询、创建、编辑和删除操作。当用户提到日程、日历、会议安排、calendar.sankuai.com、查看/创建/编辑/删除日程时激活此skill。支持：(1)查询日程 (2)创建日程（包含主题、时间、地点、参与人、沟通方式、提醒、内容） (3)编辑日程 (4)删除日程</description>\n    <location>/app/skills/calendar/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>catclaw-image</name>\n    <description>通过 Catclaw 图片生成接口，根据文本描述生成图片。当需要生成图片、AI 绘图、文生图时使用。</description>\n    <location>/app/skills/catclaw-image/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>catclaw-search</name>\n    <description>通过 Catclaw 通用搜索接口搜索互联网内容，支持多引擎切换和自动降级。当需要搜索网页、查找资讯、获取实时搜索结果时使用。</description>\n    <location>/app/skills/catclaw-search/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>code-git</name>\n    <description>Git 与 SSH 配置指南。当用户需要进行 git 相关操作（clone、push、pull、commit、分支管理等）、配置 SSH 密钥、新增 SSH 账户、或排查 SSH 连接问题时，必须调用此 skill。</description>\n    <location>/app/skills/code-git/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>daxiang-channel</name>\n    <description>处理大象（Daxiang）频道的消息回复格式。只要用户的沟通频道（channel）是大象，就必须调用此 SKILL 了解回复注意事项。</description>\n    <location>/app/skills/daxiang-channel/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>daxiang-scheduled-message</name>\n    <description>创建定时发送消息的任务（默认发送到大象 Daxiang）。所有定时任务、延时消息、周期提醒、cron 任务都应使用此 skill，除非用户明确指定使用其他 channel（如 Telegram、WhatsApp、Slack 等）。触发词：定时消息、定时发送、定时提醒、cron、周期任务、延时发送、报时、定时通知、每天提醒、每周提醒、X分钟后提醒。</description>\n    <location>/app/skills/daxiang-scheduled-message/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>docx</name>\n    <description>Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks</description>\n    <location>/app/skills/docx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>file-download</name>\n    <description>下载消息中的文件到本地。当需要下载用户发送的图片、文件、附件时使用。所有从大象消息中获取的文件（图片、文档、压缩包等）都必须遵循此 skill 的存储和命名规范。触发词：下载图片、下载文件、保存文件、识别图片、查看图片。</description>\n    <location>/app/skills/file-download/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>friday-skill-installer</name>\n    <description>从美团 Friday Skills 广场安装 skill。当用户提供 friday.sankuai.com 的 skill 链接、要求安装 Friday/美团 skill、或提到 mtskills 安装时激活。触发词：安装skill、friday skill、skill链接、mtskills install、技能安装。</description>\n    <location>/app/skills/friday-skill-installer/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>gh-issues</name>\n    <description>Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh-issues [owner/repo] [--label bug] [--limit 5] [--milestone v1.0] [--assignee @me] [--fork user/repo] [--watch] [--interval 5] [--reviews-only] [--cron] [--dry-run] [--model glm-5] [--notify-channel -1002381931352]</description>\n    <location>/app/skills/gh-issues/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>github</name>\n    <description>Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.</description>\n    <location>~/.openclaw/skills/github/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>healthcheck</name>\n    <description>Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).</description>\n    <location>/app/skills/healthcheck/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>km-wiki</name>\n    <description>美团学城(KM)知识库的浏览器自动化操作工具。通过 Chrome DevTools Protocol 访问学城页面、读取文档内容、提取表格数据、截图页面、编辑文档。Use when 用户提到学城、KM、知识库、km.sankuai.com、collabpage，或需要访问、阅读、编辑任何 km.sankuai.com 的页面或链接时使用.</description>\n    <location>/app/skills/km-wiki/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>meeting-room-booking</name>\n    <description>在 https://calendar.sankuai.com/rooms 进行会议室查询与预定的浏览器自动化流程。用户提出订会议室、预约会议室、找会议室、安排会议地点、确认某时段是否有空会议室、预定会议室时使用。支持 SSO 脚本登录、按日期时间人数地点筛选、时间轴空白块点击创建、提交前确认与结果核验。</description>\n    <location>/app/skills/meeting-room-booking/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>moa-login</name>\n    <description>美团 MOA (办公终端安全管理软件) 部署和登录流程。当用户访问美团内部系统 (.sankuai.com 域名) 被 MOA 登录拦截时自动触发。处理 MOA 安装、启动和 SSO 扫码登录全流程。触发场景：(1) 访问 .sankuai.com 被拦截 (2) MOA 未安装/未运行/未登录 (3) 用户提到 MOA 登录问题</description>\n    <location>/app/skills/moa-login/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pdf</name>\n    <description>Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.</description>\n    <location>/app/skills/pdf/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pptx</name>\n    <description>Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks</description>\n    <location>/app/skills/pptx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>s3plus-upload</name>\n    <description>Upload local files to Meituan S3Plus (MSS) storage service and return access URL. Use when you need to upload files to S3Plus, generate file URLs, or troubleshoot S3Plus authentication and upload errors.</description>\n    <location>/app/skills/s3plus-upload/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-creator</name>\n    <description>Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude&apos;s capabilities with specialized knowledge, workflows, or tool integrations.</description>\n    <location>/app/skills/skill-creator/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>video-frames</name>\n    <description>Extract frames or short clips from videos using ffmpeg.</description>\n    <location>/app/skills/video-frames/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>xlsx</name>\n    <description>Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas</description>\n    <location>/app/skills/xlsx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-doc</name>\n    <description>Feishu document read/write operations. Activate when user mentions Feishu docs, cloud docs, or docx links.\n</description>\n    <location>/app/extensions/feishu/skills/feishu-doc/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-drive</name>\n    <description>Feishu cloud storage file management. Activate when user mentions cloud space, folders, drive.\n</description>\n    <location>/app/extensions/feishu/skills/feishu-drive/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-perm</name>\n    <description>Feishu permission management for documents and files. Activate when user mentions sharing, permissions, collaborators.\n</description>\n    <location>/app/extensions/feishu/skills/feishu-perm/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>feishu-wiki</name>\n    <description>Feishu knowledge base navigation. Activate when user mentions knowledge base, wiki, or wiki links.\n</description>\n    <location>/app/extensions/feishu/skills/feishu-wiki/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>find-skills</name>\n    <description>Helps users discover and install agent skills when they ask questions like &quot;how do I do X&quot;, &quot;find a skill for X&quot;, &quot;is there a skill that can...&quot;, or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.</description>\n    <location>~/.openclaw/skills/find-skills/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>react-best-practices-cn</name>\n    <description>客户端 React 应用的性能优化指南（中文版）。当编写、审查或重构 React 代码以确保最佳性能模式时使用此技能。触发场景包括涉及 React 组件、数据获取、包优化或性能改进的任务。</description>\n    <location>~/.openclaw/skills/react-best-practices-cn/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>self-improving-agent</name>\n    <description>Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude (&apos;No, that&apos;s wrong...&apos;, &apos;Actually...&apos;), (3) User requests a capability that doesn&apos;t exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks.</description>\n    <location>~/.openclaw/skills/self-improving-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>tavily</name>\n    <description>AI-optimized web search via Tavily API. Returns concise, relevant results for AI agents.</description>\n    <location>~/.openclaw/skills/tavily/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>web-search</name>\n    <description>Web search and content extraction with Tavily and Exa via inference.sh CLI.\nApps: Tavily Search, Tavily Extract, Exa Search, Exa Answer, Exa Extract.\nCapabilities: AI-powered search, content extraction, direct answers, research.\nUse for: research, RAG pipelines, fact-checking, content aggregation, agents.\nTriggers: web search, tavily, exa, search api, content extraction, research,\ninternet search, ai search, search assistant, web scraping, rag, perplexity alternative\n</description>\n    <location>~/.openclaw/skills/web-search/SKILL.md</location>\n  </skill>\n</available_skills>",
+      "skills": [
+        {
+          "name": "calendar"
+        },
+        {
+          "name": "catclaw-image"
+        },
+        {
+          "name": "catclaw-search"
+        },
+        {
+          "name": "code-git"
+        },
+        {
+          "name": "daxiang-channel"
+        },
+        {
+          "name": "daxiang-scheduled-message"
+        },
+        {
+          "name": "docx"
+        },
+        {
+          "name": "file-download"
+        },
+        {
+          "name": "friday-skill-installer"
+        },
+        {
+          "name": "gh-issues",
+          "primaryEnv": "GH_TOKEN",
+          "requiredEnv": []
+        },
+        {
+          "name": "github"
+        },
+        {
+          "name": "healthcheck"
+        },
+        {
+          "name": "km-wiki"
+        },
+        {
+          "name": "meeting-room-booking"
+        },
+        {
+          "name": "moa-login"
+        },
+        {
+          "name": "pdf"
+        },
+        {
+          "name": "pptx"
+        },
+        {
+          "name": "s3plus-upload"
+        },
+        {
+          "name": "skill-creator"
+        },
+        {
+          "name": "video-frames",
+          "requiredEnv": []
+        },
+        {
+          "name": "xlsx"
+        },
+        {
+          "name": "feishu-doc"
+        },
+        {
+          "name": "feishu-drive"
+        },
+        {
+          "name": "feishu-perm"
+        },
+        {
+          "name": "feishu-wiki"
+        },
+        {
+          "name": "find-skills"
+        },
+        {
+          "name": "react-best-practices-cn"
+        },
+        {
+          "name": "self-improving-agent"
+        },
+        {
+          "name": "tavily"
+        },
+        {
+          "name": "web-search"
+        }
+      ],
+      "resolvedSkills": [
+        {
+          "name": "calendar",
+          "description": "美团日程管理系统的浏览器自动化操作。用于通过 https://calendar.sankuai.com/ 进行日程的查询、创建、编辑和删除操作。当用户提到日程、日历、会议安排、calendar.sankuai.com、查看/创建/编辑/删除日程时激活此skill。支持：(1)查询日程 (2)创建日程（包含主题、时间、地点、参与人、沟通方式、提醒、内容） (3)编辑日程 (4)删除日程",
+          "filePath": "/app/skills/calendar/SKILL.md",
+          "baseDir": "/app/skills/calendar",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "catclaw-image",
+          "description": "通过 Catclaw 图片生成接口，根据文本描述生成图片。当需要生成图片、AI 绘图、文生图时使用。",
+          "filePath": "/app/skills/catclaw-image/SKILL.md",
+          "baseDir": "/app/skills/catclaw-image",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "catclaw-search",
+          "description": "通过 Catclaw 通用搜索接口搜索互联网内容，支持多引擎切换和自动降级。当需要搜索网页、查找资讯、获取实时搜索结果时使用。",
+          "filePath": "/app/skills/catclaw-search/SKILL.md",
+          "baseDir": "/app/skills/catclaw-search",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "code-git",
+          "description": "Git 与 SSH 配置指南。当用户需要进行 git 相关操作（clone、push、pull、commit、分支管理等）、配置 SSH 密钥、新增 SSH 账户、或排查 SSH 连接问题时，必须调用此 skill。",
+          "filePath": "/app/skills/code-git/SKILL.md",
+          "baseDir": "/app/skills/code-git",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "daxiang-channel",
+          "description": "处理大象（Daxiang）频道的消息回复格式。只要用户的沟通频道（channel）是大象，就必须调用此 SKILL 了解回复注意事项。",
+          "filePath": "/app/skills/daxiang-channel/SKILL.md",
+          "baseDir": "/app/skills/daxiang-channel",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "daxiang-scheduled-message",
+          "description": "创建定时发送消息的任务（默认发送到大象 Daxiang）。所有定时任务、延时消息、周期提醒、cron 任务都应使用此 skill，除非用户明确指定使用其他 channel（如 Telegram、WhatsApp、Slack 等）。触发词：定时消息、定时发送、定时提醒、cron、周期任务、延时发送、报时、定时通知、每天提醒、每周提醒、X分钟后提醒。",
+          "filePath": "/app/skills/daxiang-scheduled-message/SKILL.md",
+          "baseDir": "/app/skills/daxiang-scheduled-message",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "docx",
+          "description": "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks",
+          "filePath": "/app/skills/docx/SKILL.md",
+          "baseDir": "/app/skills/docx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "file-download",
+          "description": "下载消息中的文件到本地。当需要下载用户发送的图片、文件、附件时使用。所有从大象消息中获取的文件（图片、文档、压缩包等）都必须遵循此 skill 的存储和命名规范。触发词：下载图片、下载文件、保存文件、识别图片、查看图片。",
+          "filePath": "/app/skills/file-download/SKILL.md",
+          "baseDir": "/app/skills/file-download",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "friday-skill-installer",
+          "description": "从美团 Friday Skills 广场安装 skill。当用户提供 friday.sankuai.com 的 skill 链接、要求安装 Friday/美团 skill、或提到 mtskills 安装时激活。触发词：安装skill、friday skill、skill链接、mtskills install、技能安装。",
+          "filePath": "/app/skills/friday-skill-installer/SKILL.md",
+          "baseDir": "/app/skills/friday-skill-installer",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "gh-issues",
+          "description": "Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh-issues [owner/repo] [--label bug] [--limit 5] [--milestone v1.0] [--assignee @me] [--fork user/repo] [--watch] [--interval 5] [--reviews-only] [--cron] [--dry-run] [--model glm-5] [--notify-channel -1002381931352]",
+          "filePath": "/app/skills/gh-issues/SKILL.md",
+          "baseDir": "/app/skills/gh-issues",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "github",
+          "description": "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.",
+          "filePath": "/root/.openclaw/skills/github/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/github",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "healthcheck",
+          "description": "Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).",
+          "filePath": "/app/skills/healthcheck/SKILL.md",
+          "baseDir": "/app/skills/healthcheck",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "km-wiki",
+          "description": "美团学城(KM)知识库的浏览器自动化操作工具。通过 Chrome DevTools Protocol 访问学城页面、读取文档内容、提取表格数据、截图页面、编辑文档。Use when 用户提到学城、KM、知识库、km.sankuai.com、collabpage，或需要访问、阅读、编辑任何 km.sankuai.com 的页面或链接时使用.",
+          "filePath": "/app/skills/km-wiki/SKILL.md",
+          "baseDir": "/app/skills/km-wiki",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "meeting-room-booking",
+          "description": "在 https://calendar.sankuai.com/rooms 进行会议室查询与预定的浏览器自动化流程。用户提出订会议室、预约会议室、找会议室、安排会议地点、确认某时段是否有空会议室、预定会议室时使用。支持 SSO 脚本登录、按日期时间人数地点筛选、时间轴空白块点击创建、提交前确认与结果核验。",
+          "filePath": "/app/skills/meeting-room-booking/SKILL.md",
+          "baseDir": "/app/skills/meeting-room-booking",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "moa-login",
+          "description": "美团 MOA (办公终端安全管理软件) 部署和登录流程。当用户访问美团内部系统 (.sankuai.com 域名) 被 MOA 登录拦截时自动触发。处理 MOA 安装、启动和 SSO 扫码登录全流程。触发场景：(1) 访问 .sankuai.com 被拦截 (2) MOA 未安装/未运行/未登录 (3) 用户提到 MOA 登录问题",
+          "filePath": "/app/skills/moa-login/SKILL.md",
+          "baseDir": "/app/skills/moa-login",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "pdf",
+          "description": "Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.",
+          "filePath": "/app/skills/pdf/SKILL.md",
+          "baseDir": "/app/skills/pdf",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "pptx",
+          "description": "Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks",
+          "filePath": "/app/skills/pptx/SKILL.md",
+          "baseDir": "/app/skills/pptx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "s3plus-upload",
+          "description": "Upload local files to Meituan S3Plus (MSS) storage service and return access URL. Use when you need to upload files to S3Plus, generate file URLs, or troubleshoot S3Plus authentication and upload errors.",
+          "filePath": "/app/skills/s3plus-upload/SKILL.md",
+          "baseDir": "/app/skills/s3plus-upload",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "skill-creator",
+          "description": "Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.",
+          "filePath": "/app/skills/skill-creator/SKILL.md",
+          "baseDir": "/app/skills/skill-creator",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "video-frames",
+          "description": "Extract frames or short clips from videos using ffmpeg.",
+          "filePath": "/app/skills/video-frames/SKILL.md",
+          "baseDir": "/app/skills/video-frames",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "xlsx",
+          "description": "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas",
+          "filePath": "/app/skills/xlsx/SKILL.md",
+          "baseDir": "/app/skills/xlsx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "feishu-doc",
+          "description": "Feishu document read/write operations. Activate when user mentions Feishu docs, cloud docs, or docx links.\n",
+          "filePath": "/app/extensions/feishu/skills/feishu-doc/SKILL.md",
+          "baseDir": "/app/extensions/feishu/skills/feishu-doc",
+          "source": "openclaw-extra",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "feishu-drive",
+          "description": "Feishu cloud storage file management. Activate when user mentions cloud space, folders, drive.\n",
+          "filePath": "/app/extensions/feishu/skills/feishu-drive/SKILL.md",
+          "baseDir": "/app/extensions/feishu/skills/feishu-drive",
+          "source": "openclaw-extra",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "feishu-perm",
+          "description": "Feishu permission management for documents and files. Activate when user mentions sharing, permissions, collaborators.\n",
+          "filePath": "/app/extensions/feishu/skills/feishu-perm/SKILL.md",
+          "baseDir": "/app/extensions/feishu/skills/feishu-perm",
+          "source": "openclaw-extra",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "feishu-wiki",
+          "description": "Feishu knowledge base navigation. Activate when user mentions knowledge base, wiki, or wiki links.\n",
+          "filePath": "/app/extensions/feishu/skills/feishu-wiki/SKILL.md",
+          "baseDir": "/app/extensions/feishu/skills/feishu-wiki",
+          "source": "openclaw-extra",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "find-skills",
+          "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.",
+          "filePath": "/root/.openclaw/skills/find-skills/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/find-skills",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "react-best-practices-cn",
+          "description": "客户端 React 应用的性能优化指南（中文版）。当编写、审查或重构 React 代码以确保最佳性能模式时使用此技能。触发场景包括涉及 React 组件、数据获取、包优化或性能改进的任务。",
+          "filePath": "/root/.openclaw/skills/react-best-practices-cn/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/react-best-practices-cn",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "self-improving-agent",
+          "description": "Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude ('No, that's wrong...', 'Actually...'), (3) User requests a capability that doesn't exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks.",
+          "filePath": "/root/.openclaw/skills/self-improving-agent/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/self-improving-agent",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "tavily",
+          "description": "AI-optimized web search via Tavily API. Returns concise, relevant results for AI agents.",
+          "filePath": "/root/.openclaw/skills/tavily/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/tavily",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "web-search",
+          "description": "Web search and content extraction with Tavily and Exa via inference.sh CLI.\nApps: Tavily Search, Tavily Extract, Exa Search, Exa Answer, Exa Extract.\nCapabilities: AI-powered search, content extraction, direct answers, research.\nUse for: research, RAG pipelines, fact-checking, content aggregation, agents.\nTriggers: web search, tavily, exa, search api, content extraction, research,\ninternet search, ai search, search assistant, web scraping, rag, perplexity alternative\n",
+          "filePath": "/root/.openclaw/skills/web-search/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/web-search",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        }
+      ],
+      "version": 0
+    },
+    "modelProvider": "kubeplex-maas",
+    "model": "claude-opus-4.5",
+    "systemPromptReport": {
+      "source": "run",
+      "generatedAt": 1772905102290,
+      "sessionId": "5fe72f1c-94a9-4b89-a274-61774506ecd6",
+      "sessionKey": "agent:main:feishu:group:oc_40efcf271da2a542291ab9b83d2eea97",
+      "provider": "kubeplex-maas",
+      "model": "claude-opus-4.5",
+      "workspaceDir": "/root/.openclaw/workspace",
+      "bootstrapMaxChars": 20000,
+      "bootstrapTotalMaxChars": 150000,
+      "sandbox": {
+        "mode": "off",
+        "sandboxed": false
+      },
+      "systemPrompt": {
+        "chars": 38784,
+        "projectContextChars": 16814,
+        "nonProjectContextChars": 21970
+      },
+      "injectedWorkspaceFiles": [
+        {
+          "name": "AGENTS.md",
+          "path": "/root/.openclaw/workspace/AGENTS.md",
+          "missing": false,
+          "rawChars": 7974,
+          "injectedChars": 7974,
+          "truncated": false
+        },
+        {
+          "name": "SOUL.md",
+          "path": "/root/.openclaw/workspace/SOUL.md",
+          "missing": false,
+          "rawChars": 1664,
+          "injectedChars": 1664,
+          "truncated": false
+        },
+        {
+          "name": "TOOLS.md",
+          "path": "/root/.openclaw/workspace/TOOLS.md",
+          "missing": false,
+          "rawChars": 850,
+          "injectedChars": 850,
+          "truncated": false
+        },
+        {
+          "name": "IDENTITY.md",
+          "path": "/root/.openclaw/workspace/IDENTITY.md",
+          "missing": false,
+          "rawChars": 609,
+          "injectedChars": 609,
+          "truncated": false
+        },
+        {
+          "name": "USER.md",
+          "path": "/root/.openclaw/workspace/USER.md",
+          "missing": false,
+          "rawChars": 500,
+          "injectedChars": 500,
+          "truncated": false
+        },
+        {
+          "name": "HEARTBEAT.md",
+          "path": "/root/.openclaw/workspace/HEARTBEAT.md",
+          "missing": false,
+          "rawChars": 167,
+          "injectedChars": 167,
+          "truncated": false
+        },
+        {
+          "name": "BOOTSTRAP.md",
+          "path": "/root/.openclaw/workspace/BOOTSTRAP.md",
+          "missing": false,
+          "rawChars": 1449,
+          "injectedChars": 1449,
+          "truncated": false
+        },
+        {
+          "name": "MEMORY.md",
+          "path": "/root/.openclaw/workspace/MEMORY.md",
+          "missing": false,
+          "rawChars": 3055,
+          "injectedChars": 3055,
+          "truncated": false
+        }
+      ],
+      "skills": {
+        "promptChars": 10623,
+        "entries": [
+          {
+            "name": "calendar",
+            "blockChars": 324
+          },
+          {
+            "name": "catclaw-image",
+            "blockChars": 191
+          },
+          {
+            "name": "catclaw-search",
+            "blockChars": 206
+          },
+          {
+            "name": "code-git",
+            "blockChars": 239
+          },
+          {
+            "name": "daxiang-channel",
+            "blockChars": 212
+          },
+          {
+            "name": "daxiang-scheduled-message",
+            "blockChars": 339
+          },
+          {
+            "name": "docx",
+            "blockChars": 485
+          },
+          {
+            "name": "file-download",
+            "blockChars": 251
+          },
+          {
+            "name": "friday-skill-installer",
+            "blockChars": 319
+          },
+          {
+            "name": "gh-issues",
+            "blockChars": 473
+          },
+          {
+            "name": "github",
+            "blockChars": 270
+          },
+          {
+            "name": "healthcheck",
+            "blockChars": 456
+          },
+          {
+            "name": "km-wiki",
+            "blockChars": 299
+          },
+          {
+            "name": "meeting-room-booking",
+            "blockChars": 307
+          },
+          {
+            "name": "moa-login",
+            "blockChars": 299
+          },
+          {
+            "name": "pdf",
+            "blockChars": 373
+          },
+          {
+            "name": "pptx",
+            "blockChars": 394
+          },
+          {
+            "name": "s3plus-upload",
+            "blockChars": 344
+          },
+          {
+            "name": "skill-creator",
+            "blockChars": 372
+          },
+          {
+            "name": "video-frames",
+            "blockChars": 194
+          },
+          {
+            "name": "xlsx",
+            "blockChars": 568
+          },
+          {
+            "name": "feishu-doc",
+            "blockChars": 260
+          },
+          {
+            "name": "feishu-drive",
+            "blockChars": 252
+          },
+          {
+            "name": "feishu-perm",
+            "blockChars": 274
+          },
+          {
+            "name": "feishu-wiki",
+            "blockChars": 254
+          },
+          {
+            "name": "find-skills",
+            "blockChars": 477
+          },
+          {
+            "name": "react-best-practices-cn",
+            "blockChars": 262
+          },
+          {
+            "name": "self-improving-agent",
+            "blockChars": 637
+          },
+          {
+            "name": "tavily",
+            "blockChars": 222
+          },
+          {
+            "name": "web-search",
+            "blockChars": 614
+          }
+        ]
+      },
+      "tools": {
+        "listChars": 3135,
+        "schemaChars": 20533,
+        "entries": [
+          {
+            "name": "read",
+            "summaryChars": 298,
+            "schemaChars": 392,
+            "propertiesCount": 4
+          },
+          {
+            "name": "edit",
+            "summaryChars": 129,
+            "schemaChars": 591,
+            "propertiesCount": 6
+          },
+          {
+            "name": "write",
+            "summaryChars": 127,
+            "schemaChars": 313,
+            "propertiesCount": 3
+          },
+          {
+            "name": "exec",
+            "summaryChars": 181,
+            "schemaChars": 1086,
+            "propertiesCount": 12
+          },
+          {
+            "name": "process",
+            "summaryChars": 85,
+            "schemaChars": 961,
+            "propertiesCount": 12
+          },
+          {
+            "name": "browser",
+            "summaryChars": 1251,
+            "schemaChars": 1897,
+            "propertiesCount": 28
+          },
+          {
+            "name": "canvas",
+            "summaryChars": 106,
+            "schemaChars": 661,
+            "propertiesCount": 18
+          },
+          {
+            "name": "nodes",
+            "summaryChars": 115,
+            "schemaChars": 1741,
+            "propertiesCount": 36
+          },
+          {
+            "name": "message",
+            "summaryChars": 89,
+            "schemaChars": 4181,
+            "propertiesCount": 85
+          },
+          {
+            "name": "tts",
+            "summaryChars": 152,
+            "schemaChars": 223,
+            "propertiesCount": 2
+          },
+          {
+            "name": "agents_list",
+            "summaryChars": 118,
+            "schemaChars": 33,
+            "propertiesCount": 0
+          },
+          {
+            "name": "sessions_list",
+            "summaryChars": 54,
+            "schemaChars": 212,
+            "propertiesCount": 4
+          },
+          {
+            "name": "sessions_history",
+            "summaryChars": 36,
+            "schemaChars": 161,
+            "propertiesCount": 3
+          },
+          {
+            "name": "sessions_send",
+            "summaryChars": 84,
+            "schemaChars": 273,
+            "propertiesCount": 5
+          },
+          {
+            "name": "sessions_spawn",
+            "summaryChars": 134,
+            "schemaChars": 492,
+            "propertiesCount": 12
+          },
+          {
+            "name": "subagents",
+            "summaryChars": 105,
+            "schemaChars": 191,
+            "propertiesCount": 4
+          },
+          {
+            "name": "session_status",
+            "summaryChars": 207,
+            "schemaChars": 89,
+            "propertiesCount": 2
+          },
+          {
+            "name": "web_search",
+            "summaryChars": 175,
+            "schemaChars": 895,
+            "propertiesCount": 6
+          },
+          {
+            "name": "web_fetch",
+            "summaryChars": 129,
+            "schemaChars": 374,
+            "propertiesCount": 3
+          },
+          {
+            "name": "feishu_doc",
+            "summaryChars": 116,
+            "schemaChars": 612,
+            "propertiesCount": 6
+          },
+          {
+            "name": "feishu_app_scopes",
+            "summaryChars": 102,
+            "schemaChars": 33,
+            "propertiesCount": 0
+          },
+          {
+            "name": "feishu_wiki",
+            "summaryChars": 83,
+            "schemaChars": 971,
+            "propertiesCount": 10
+          },
+          {
+            "name": "feishu_drive",
+            "summaryChars": 81,
+            "schemaChars": 486,
+            "propertiesCount": 5
+          },
+          {
+            "name": "feishu_bitable_get_meta",
+            "summaryChars": 114,
+            "schemaChars": 170,
+            "propertiesCount": 1
+          },
+          {
+            "name": "feishu_bitable_list_fields",
+            "summaryChars": 76,
+            "schemaChars": 255,
+            "propertiesCount": 2
+          },
+          {
+            "name": "feishu_bitable_list_records",
+            "summaryChars": 64,
+            "schemaChars": 462,
+            "propertiesCount": 4
+          },
+          {
+            "name": "feishu_bitable_get_record",
+            "summaryChars": 46,
+            "schemaChars": 335,
+            "propertiesCount": 3
+          },
+          {
+            "name": "feishu_bitable_create_record",
+            "summaryChars": 44,
+            "schemaChars": 549,
+            "propertiesCount": 3
+          },
+          {
+            "name": "feishu_bitable_update_record",
+            "summaryChars": 50,
+            "schemaChars": 473,
+            "propertiesCount": 4
+          },
+          {
+            "name": "feishu_bitable_create_app",
+            "summaryChars": 57,
+            "schemaChars": 243,
+            "propertiesCount": 2
+          },
+          {
+            "name": "feishu_bitable_create_field",
+            "summaryChars": 46,
+            "schemaChars": 911,
+            "propertiesCount": 5
+          },
+          {
+            "name": "memory_search",
+            "summaryChars": 334,
+            "schemaChars": 139,
+            "propertiesCount": 3
+          },
+          {
+            "name": "memory_get",
+            "summaryChars": 151,
+            "schemaChars": 128,
+            "propertiesCount": 3
+          }
+        ]
+      }
+    },
+    "cacheRead": 0,
+    "cacheWrite": 0,
+    "totalTokensFresh": true,
+    "contextTokens": 200000,
+    "inputTokens": 7,
+    "outputTokens": 1287,
+    "memoryFlushAt": 1772900667655,
+    "memoryFlushCompactionCount": 0,
+    "totalTokens": 1
+  },
+  "agent:main:daxiang:direct:chenglong16": {
+    "sessionId": "cccc3bf5-9c12-47d9-b127-9f76c9c48c73",
+    "updatedAt": 1772897028688,
+    "systemSent": true,
+    "abortedLastRun": false,
+    "chatType": "direct",
+    "deliveryContext": {
+      "channel": "daxiang",
+      "to": "user:chenglong16",
+      "accountId": "default"
+    },
+    "lastChannel": "daxiang",
+    "lastTo": "user:chenglong16",
+    "lastAccountId": "default",
+    "origin": {
+      "label": "chenglong16",
+      "provider": "daxiang",
+      "surface": "daxiang",
+      "chatType": "direct",
+      "from": "daxiang:chenglong16",
+      "to": "user:chenglong16",
+      "accountId": "default"
+    },
+    "sessionFile": "/mnt/openclaw/.openclaw/agents/main/sessions/cccc3bf5-9c12-47d9-b127-9f76c9c48c73.jsonl",
+    "compactionCount": 0,
+    "skillsSnapshot": {
+      "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\nWhen a skill file references a relative path, resolve it against the skill directory (parent of SKILL.md / dirname of the path) and use that absolute path in tool commands.\n\n<available_skills>\n  <skill>\n    <name>calendar</name>\n    <description>美团日程管理系统的浏览器自动化操作。用于通过 https://calendar.sankuai.com/ 进行日程的查询、创建、编辑和删除操作。当用户提到日程、日历、会议安排、calendar.sankuai.com、查看/创建/编辑/删除日程时激活此skill。支持：(1)查询日程 (2)创建日程（包含主题、时间、地点、参与人、沟通方式、提醒、内容） (3)编辑日程 (4)删除日程</description>\n    <location>/app/skills/calendar/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>catclaw-image</name>\n    <description>通过 Catclaw 图片生成接口，根据文本描述生成图片。当需要生成图片、AI 绘图、文生图时使用。</description>\n    <location>/app/skills/catclaw-image/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>catclaw-search</name>\n    <description>通过 Catclaw 通用搜索接口搜索互联网内容，支持多引擎切换和自动降级。当需要搜索网页、查找资讯、获取实时搜索结果时使用。</description>\n    <location>/app/skills/catclaw-search/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>clawhub</name>\n    <description>Use the ClawHub CLI to search, install, update, and publish agent skills from clawhub.com. Use when you need to fetch new skills on the fly, sync installed skills to latest or a specific version, or publish new/updated skill folders with the npm-installed clawhub CLI.</description>\n    <location>/app/skills/clawhub/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>code-git</name>\n    <description>Git 与 SSH 配置指南。当用户需要进行 git 相关操作（clone、push、pull、commit、分支管理等）、配置 SSH 密钥、新增 SSH 账户、或排查 SSH 连接问题时，必须调用此 skill。</description>\n    <location>/app/skills/code-git/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>coding-agent</name>\n    <description>Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.</description>\n    <location>~/.openclaw/skills/coding-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>daxiang-channel</name>\n    <description>处理大象（Daxiang）频道的消息回复格式。只要用户的沟通频道（channel）是大象，就必须调用此 SKILL 了解回复注意事项。</description>\n    <location>/app/skills/daxiang-channel/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>daxiang-scheduled-message</name>\n    <description>创建定时发送消息的任务（默认发送到大象 Daxiang）。所有定时任务、延时消息、周期提醒、cron 任务都应使用此 skill，除非用户明确指定使用其他 channel（如 Telegram、WhatsApp、Slack 等）。触发词：定时消息、定时发送、定时提醒、cron、周期任务、延时发送、报时、定时通知、每天提醒、每周提醒、X分钟后提醒。</description>\n    <location>/app/skills/daxiang-scheduled-message/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>docx</name>\n    <description>Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks</description>\n    <location>/app/skills/docx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>file-download</name>\n    <description>下载消息中的文件到本地。当需要下载用户发送的图片、文件、附件时使用。所有从大象消息中获取的文件（图片、文档、压缩包等）都必须遵循此 skill 的存储和命名规范。触发词：下载图片、下载文件、保存文件、识别图片、查看图片。</description>\n    <location>/app/skills/file-download/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>friday-skill-installer</name>\n    <description>从美团 Friday Skills 广场安装 skill。当用户提供 friday.sankuai.com 的 skill 链接、要求安装 Friday/美团 skill、或提到 mtskills 安装时激活。触发词：安装skill、friday skill、skill链接、mtskills install、技能安装。</description>\n    <location>/app/skills/friday-skill-installer/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>gh-issues</name>\n    <description>Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh-issues [owner/repo] [--label bug] [--limit 5] [--milestone v1.0] [--assignee @me] [--fork user/repo] [--watch] [--interval 5] [--reviews-only] [--cron] [--dry-run] [--model glm-5] [--notify-channel -1002381931352]</description>\n    <location>/app/skills/gh-issues/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>github</name>\n    <description>Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.</description>\n    <location>~/.openclaw/skills/github/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>healthcheck</name>\n    <description>Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).</description>\n    <location>/app/skills/healthcheck/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>km-wiki</name>\n    <description>美团学城(KM)知识库的浏览器自动化操作工具。通过 Chrome DevTools Protocol 访问学城页面、读取文档内容、提取表格数据、截图页面、编辑文档。Use when 用户提到学城、KM、知识库、km.sankuai.com、collabpage，或需要访问、阅读、编辑任何 km.sankuai.com 的页面或链接时使用.</description>\n    <location>/app/skills/km-wiki/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>meeting-room-booking</name>\n    <description>在 https://calendar.sankuai.com/rooms 进行会议室查询与预定的浏览器自动化流程。用户提出订会议室、预约会议室、找会议室、安排会议地点、确认某时段是否有空会议室、预定会议室时使用。支持 SSO 脚本登录、按日期时间人数地点筛选、时间轴空白块点击创建、提交前确认与结果核验。</description>\n    <location>/app/skills/meeting-room-booking/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>moa-login</name>\n    <description>美团 MOA (办公终端安全管理软件) 部署和登录流程。当用户访问美团内部系统 (.sankuai.com 域名) 被 MOA 登录拦截时自动触发。处理 MOA 安装、启动和 SSO 扫码登录全流程。触发场景：(1) 访问 .sankuai.com 被拦截 (2) MOA 未安装/未运行/未登录 (3) 用户提到 MOA 登录问题</description>\n    <location>/app/skills/moa-login/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pdf</name>\n    <description>Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.</description>\n    <location>/app/skills/pdf/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>pptx</name>\n    <description>Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks</description>\n    <location>/app/skills/pptx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>s3plus-upload</name>\n    <description>Upload local files to Meituan S3Plus (MSS) storage service and return access URL. Use when you need to upload files to S3Plus, generate file URLs, or troubleshoot S3Plus authentication and upload errors.</description>\n    <location>/app/skills/s3plus-upload/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-creator</name>\n    <description>Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude&apos;s capabilities with specialized knowledge, workflows, or tool integrations.</description>\n    <location>/app/skills/skill-creator/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>video-frames</name>\n    <description>Extract frames or short clips from videos using ffmpeg.</description>\n    <location>/app/skills/video-frames/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>xlsx</name>\n    <description>Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas</description>\n    <location>/app/skills/xlsx/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>find-skills</name>\n    <description>Helps users discover and install agent skills when they ask questions like &quot;how do I do X&quot;, &quot;find a skill for X&quot;, &quot;is there a skill that can...&quot;, or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.</description>\n    <location>~/.openclaw/skills/find-skills/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>react-best-practices-cn</name>\n    <description>客户端 React 应用的性能优化指南（中文版）。当编写、审查或重构 React 代码以确保最佳性能模式时使用此技能。触发场景包括涉及 React 组件、数据获取、包优化或性能改进的任务。</description>\n    <location>~/.openclaw/skills/react-best-practices-cn/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>self-improving-agent</name>\n    <description>Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude (&apos;No, that&apos;s wrong...&apos;, &apos;Actually...&apos;), (3) User requests a capability that doesn&apos;t exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks.</description>\n    <location>~/.openclaw/skills/self-improving-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>tavily</name>\n    <description>AI-optimized web search via Tavily API. Returns concise, relevant results for AI agents.</description>\n    <location>~/.openclaw/skills/tavily/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>web-search</name>\n    <description>Web search and content extraction with Tavily and Exa via inference.sh CLI.\nApps: Tavily Search, Tavily Extract, Exa Search, Exa Answer, Exa Extract.\nCapabilities: AI-powered search, content extraction, direct answers, research.\nUse for: research, RAG pipelines, fact-checking, content aggregation, agents.\nTriggers: web search, tavily, exa, search api, content extraction, research,\ninternet search, ai search, search assistant, web scraping, rag, perplexity alternative\n</description>\n    <location>~/.openclaw/skills/web-search/SKILL.md</location>\n  </skill>\n</available_skills>",
+      "skills": [
+        {
+          "name": "calendar"
+        },
+        {
+          "name": "catclaw-image"
+        },
+        {
+          "name": "catclaw-search"
+        },
+        {
+          "name": "clawhub",
+          "requiredEnv": []
+        },
+        {
+          "name": "code-git"
+        },
+        {
+          "name": "coding-agent"
+        },
+        {
+          "name": "daxiang-channel"
+        },
+        {
+          "name": "daxiang-scheduled-message"
+        },
+        {
+          "name": "docx"
+        },
+        {
+          "name": "file-download"
+        },
+        {
+          "name": "friday-skill-installer"
+        },
+        {
+          "name": "gh-issues",
+          "primaryEnv": "GH_TOKEN",
+          "requiredEnv": []
+        },
+        {
+          "name": "github"
+        },
+        {
+          "name": "healthcheck"
+        },
+        {
+          "name": "km-wiki"
+        },
+        {
+          "name": "meeting-room-booking"
+        },
+        {
+          "name": "moa-login"
+        },
+        {
+          "name": "pdf"
+        },
+        {
+          "name": "pptx"
+        },
+        {
+          "name": "s3plus-upload"
+        },
+        {
+          "name": "skill-creator"
+        },
+        {
+          "name": "video-frames",
+          "requiredEnv": []
+        },
+        {
+          "name": "xlsx"
+        },
+        {
+          "name": "find-skills"
+        },
+        {
+          "name": "react-best-practices-cn"
+        },
+        {
+          "name": "self-improving-agent"
+        },
+        {
+          "name": "tavily"
+        },
+        {
+          "name": "web-search"
+        }
+      ],
+      "resolvedSkills": [
+        {
+          "name": "calendar",
+          "description": "美团日程管理系统的浏览器自动化操作。用于通过 https://calendar.sankuai.com/ 进行日程的查询、创建、编辑和删除操作。当用户提到日程、日历、会议安排、calendar.sankuai.com、查看/创建/编辑/删除日程时激活此skill。支持：(1)查询日程 (2)创建日程（包含主题、时间、地点、参与人、沟通方式、提醒、内容） (3)编辑日程 (4)删除日程",
+          "filePath": "/app/skills/calendar/SKILL.md",
+          "baseDir": "/app/skills/calendar",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "catclaw-image",
+          "description": "通过 Catclaw 图片生成接口，根据文本描述生成图片。当需要生成图片、AI 绘图、文生图时使用。",
+          "filePath": "/app/skills/catclaw-image/SKILL.md",
+          "baseDir": "/app/skills/catclaw-image",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "catclaw-search",
+          "description": "通过 Catclaw 通用搜索接口搜索互联网内容，支持多引擎切换和自动降级。当需要搜索网页、查找资讯、获取实时搜索结果时使用。",
+          "filePath": "/app/skills/catclaw-search/SKILL.md",
+          "baseDir": "/app/skills/catclaw-search",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "clawhub",
+          "description": "Use the ClawHub CLI to search, install, update, and publish agent skills from clawhub.com. Use when you need to fetch new skills on the fly, sync installed skills to latest or a specific version, or publish new/updated skill folders with the npm-installed clawhub CLI.",
+          "filePath": "/app/skills/clawhub/SKILL.md",
+          "baseDir": "/app/skills/clawhub",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "code-git",
+          "description": "Git 与 SSH 配置指南。当用户需要进行 git 相关操作（clone、push、pull、commit、分支管理等）、配置 SSH 密钥、新增 SSH 账户、或排查 SSH 连接问题时，必须调用此 skill。",
+          "filePath": "/app/skills/code-git/SKILL.md",
+          "baseDir": "/app/skills/code-git",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "coding-agent",
+          "description": "Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.",
+          "filePath": "/root/.openclaw/skills/coding-agent/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/coding-agent",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "daxiang-channel",
+          "description": "处理大象（Daxiang）频道的消息回复格式。只要用户的沟通频道（channel）是大象，就必须调用此 SKILL 了解回复注意事项。",
+          "filePath": "/app/skills/daxiang-channel/SKILL.md",
+          "baseDir": "/app/skills/daxiang-channel",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "daxiang-scheduled-message",
+          "description": "创建定时发送消息的任务（默认发送到大象 Daxiang）。所有定时任务、延时消息、周期提醒、cron 任务都应使用此 skill，除非用户明确指定使用其他 channel（如 Telegram、WhatsApp、Slack 等）。触发词：定时消息、定时发送、定时提醒、cron、周期任务、延时发送、报时、定时通知、每天提醒、每周提醒、X分钟后提醒。",
+          "filePath": "/app/skills/daxiang-scheduled-message/SKILL.md",
+          "baseDir": "/app/skills/daxiang-scheduled-message",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "docx",
+          "description": "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks",
+          "filePath": "/app/skills/docx/SKILL.md",
+          "baseDir": "/app/skills/docx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "file-download",
+          "description": "下载消息中的文件到本地。当需要下载用户发送的图片、文件、附件时使用。所有从大象消息中获取的文件（图片、文档、压缩包等）都必须遵循此 skill 的存储和命名规范。触发词：下载图片、下载文件、保存文件、识别图片、查看图片。",
+          "filePath": "/app/skills/file-download/SKILL.md",
+          "baseDir": "/app/skills/file-download",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "friday-skill-installer",
+          "description": "从美团 Friday Skills 广场安装 skill。当用户提供 friday.sankuai.com 的 skill 链接、要求安装 Friday/美团 skill、或提到 mtskills 安装时激活。触发词：安装skill、friday skill、skill链接、mtskills install、技能安装。",
+          "filePath": "/app/skills/friday-skill-installer/SKILL.md",
+          "baseDir": "/app/skills/friday-skill-installer",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "gh-issues",
+          "description": "Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh-issues [owner/repo] [--label bug] [--limit 5] [--milestone v1.0] [--assignee @me] [--fork user/repo] [--watch] [--interval 5] [--reviews-only] [--cron] [--dry-run] [--model glm-5] [--notify-channel -1002381931352]",
+          "filePath": "/app/skills/gh-issues/SKILL.md",
+          "baseDir": "/app/skills/gh-issues",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "github",
+          "description": "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.",
+          "filePath": "/root/.openclaw/skills/github/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/github",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "healthcheck",
+          "description": "Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).",
+          "filePath": "/app/skills/healthcheck/SKILL.md",
+          "baseDir": "/app/skills/healthcheck",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "km-wiki",
+          "description": "美团学城(KM)知识库的浏览器自动化操作工具。通过 Chrome DevTools Protocol 访问学城页面、读取文档内容、提取表格数据、截图页面、编辑文档。Use when 用户提到学城、KM、知识库、km.sankuai.com、collabpage，或需要访问、阅读、编辑任何 km.sankuai.com 的页面或链接时使用.",
+          "filePath": "/app/skills/km-wiki/SKILL.md",
+          "baseDir": "/app/skills/km-wiki",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "meeting-room-booking",
+          "description": "在 https://calendar.sankuai.com/rooms 进行会议室查询与预定的浏览器自动化流程。用户提出订会议室、预约会议室、找会议室、安排会议地点、确认某时段是否有空会议室、预定会议室时使用。支持 SSO 脚本登录、按日期时间人数地点筛选、时间轴空白块点击创建、提交前确认与结果核验。",
+          "filePath": "/app/skills/meeting-room-booking/SKILL.md",
+          "baseDir": "/app/skills/meeting-room-booking",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "moa-login",
+          "description": "美团 MOA (办公终端安全管理软件) 部署和登录流程。当用户访问美团内部系统 (.sankuai.com 域名) 被 MOA 登录拦截时自动触发。处理 MOA 安装、启动和 SSO 扫码登录全流程。触发场景：(1) 访问 .sankuai.com 被拦截 (2) MOA 未安装/未运行/未登录 (3) 用户提到 MOA 登录问题",
+          "filePath": "/app/skills/moa-login/SKILL.md",
+          "baseDir": "/app/skills/moa-login",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "pdf",
+          "description": "Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.",
+          "filePath": "/app/skills/pdf/SKILL.md",
+          "baseDir": "/app/skills/pdf",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "pptx",
+          "description": "Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks",
+          "filePath": "/app/skills/pptx/SKILL.md",
+          "baseDir": "/app/skills/pptx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "s3plus-upload",
+          "description": "Upload local files to Meituan S3Plus (MSS) storage service and return access URL. Use when you need to upload files to S3Plus, generate file URLs, or troubleshoot S3Plus authentication and upload errors.",
+          "filePath": "/app/skills/s3plus-upload/SKILL.md",
+          "baseDir": "/app/skills/s3plus-upload",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "skill-creator",
+          "description": "Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.",
+          "filePath": "/app/skills/skill-creator/SKILL.md",
+          "baseDir": "/app/skills/skill-creator",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "video-frames",
+          "description": "Extract frames or short clips from videos using ffmpeg.",
+          "filePath": "/app/skills/video-frames/SKILL.md",
+          "baseDir": "/app/skills/video-frames",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "xlsx",
+          "description": "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas",
+          "filePath": "/app/skills/xlsx/SKILL.md",
+          "baseDir": "/app/skills/xlsx",
+          "source": "openclaw-bundled",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "find-skills",
+          "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.",
+          "filePath": "/root/.openclaw/skills/find-skills/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/find-skills",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "react-best-practices-cn",
+          "description": "客户端 React 应用的性能优化指南（中文版）。当编写、审查或重构 React 代码以确保最佳性能模式时使用此技能。触发场景包括涉及 React 组件、数据获取、包优化或性能改进的任务。",
+          "filePath": "/root/.openclaw/skills/react-best-practices-cn/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/react-best-practices-cn",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "self-improving-agent",
+          "description": "Captures learnings, errors, and corrections to enable continuous improvement. Use when: (1) A command or operation fails unexpectedly, (2) User corrects Claude ('No, that's wrong...', 'Actually...'), (3) User requests a capability that doesn't exist, (4) An external API or tool fails, (5) Claude realizes its knowledge is outdated or incorrect, (6) A better approach is discovered for a recurring task. Also review learnings before major tasks.",
+          "filePath": "/root/.openclaw/skills/self-improving-agent/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/self-improving-agent",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "tavily",
+          "description": "AI-optimized web search via Tavily API. Returns concise, relevant results for AI agents.",
+          "filePath": "/root/.openclaw/skills/tavily/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/tavily",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        },
+        {
+          "name": "web-search",
+          "description": "Web search and content extraction with Tavily and Exa via inference.sh CLI.\nApps: Tavily Search, Tavily Extract, Exa Search, Exa Answer, Exa Extract.\nCapabilities: AI-powered search, content extraction, direct answers, research.\nUse for: research, RAG pipelines, fact-checking, content aggregation, agents.\nTriggers: web search, tavily, exa, search api, content extraction, research,\ninternet search, ai search, search assistant, web scraping, rag, perplexity alternative\n",
+          "filePath": "/root/.openclaw/skills/web-search/SKILL.md",
+          "baseDir": "/root/.openclaw/skills/web-search",
+          "source": "openclaw-managed",
+          "disableModelInvocation": false
+        }
+      ],
+      "version": 0
+    },
+    "modelProvider": "kubeplex-maas",
+    "model": "claude-opus-4.5",
+    "contextTokens": 200000,
+    "systemPromptReport": {
+      "source": "run",
+      "generatedAt": 1772897021501,
+      "sessionId": "cccc3bf5-9c12-47d9-b127-9f76c9c48c73",
+      "sessionKey": "agent:main:daxiang:direct:chenglong16",
+      "provider": "kubeplex-maas",
+      "model": "claude-opus-4.5",
+      "workspaceDir": "/root/.openclaw/workspace",
+      "bootstrapMaxChars": 20000,
+      "bootstrapTotalMaxChars": 150000,
+      "sandbox": {
+        "mode": "off",
+        "sandboxed": false
+      },
+      "systemPrompt": {
+        "chars": 38055,
+        "projectContextChars": 16814,
+        "nonProjectContextChars": 21241
+      },
+      "injectedWorkspaceFiles": [
+        {
+          "name": "AGENTS.md",
+          "path": "/root/.openclaw/workspace/AGENTS.md",
+          "missing": false,
+          "rawChars": 7974,
+          "injectedChars": 7974,
+          "truncated": false
+        },
+        {
+          "name": "SOUL.md",
+          "path": "/root/.openclaw/workspace/SOUL.md",
+          "missing": false,
+          "rawChars": 1664,
+          "injectedChars": 1664,
+          "truncated": false
+        },
+        {
+          "name": "TOOLS.md",
+          "path": "/root/.openclaw/workspace/TOOLS.md",
+          "missing": false,
+          "rawChars": 850,
+          "injectedChars": 850,
+          "truncated": false
+        },
+        {
+          "name": "IDENTITY.md",
+          "path": "/root/.openclaw/workspace/IDENTITY.md",
+          "missing": false,
+          "rawChars": 609,
+          "injectedChars": 609,
+          "truncated": false
+        },
+        {
+          "name": "USER.md",
+          "path": "/root/.openclaw/workspace/USER.md",
+          "missing": false,
+          "rawChars": 500,
+          "injectedChars": 500,
+          "truncated": false
+        },
+        {
+          "name": "HEARTBEAT.md",
+          "path": "/root/.openclaw/workspace/HEARTBEAT.md",
+          "missing": false,
+          "rawChars": 167,
+          "injectedChars": 167,
+          "truncated": false
+        },
+        {
+          "name": "BOOTSTRAP.md",
+          "path": "/root/.openclaw/workspace/BOOTSTRAP.md",
+          "missing": false,
+          "rawChars": 1449,
+          "injectedChars": 1449,
+          "truncated": false
+        },
+        {
+          "name": "MEMORY.md",
+          "path": "/root/.openclaw/workspace/MEMORY.md",
+          "missing": false,
+          "rawChars": 3055,
+          "injectedChars": 3055,
+          "truncated": false
+        }
+      ],
+      "skills": {
+        "promptChars": 10225,
+        "entries": [
+          {
+            "name": "calendar",
+            "blockChars": 324
+          },
+          {
+            "name": "catclaw-image",
+            "blockChars": 191
+          },
+          {
+            "name": "catclaw-search",
+            "blockChars": 206
+          },
+          {
+            "name": "clawhub",
+            "blockChars": 397
+          },
+          {
+            "name": "code-git",
+            "blockChars": 239
+          },
+          {
+            "name": "coding-agent",
+            "blockChars": 251
+          },
+          {
+            "name": "daxiang-channel",
+            "blockChars": 212
+          },
+          {
+            "name": "daxiang-scheduled-message",
+            "blockChars": 339
+          },
+          {
+            "name": "docx",
+            "blockChars": 485
+          },
+          {
+            "name": "file-download",
+            "blockChars": 251
+          },
+          {
+            "name": "friday-skill-installer",
+            "blockChars": 319
+          },
+          {
+            "name": "gh-issues",
+            "blockChars": 473
+          },
+          {
+            "name": "github",
+            "blockChars": 270
+          },
+          {
+            "name": "healthcheck",
+            "blockChars": 456
+          },
+          {
+            "name": "km-wiki",
+            "blockChars": 299
+          },
+          {
+            "name": "meeting-room-booking",
+            "blockChars": 307
+          },
+          {
+            "name": "moa-login",
+            "blockChars": 299
+          },
+          {
+            "name": "pdf",
+            "blockChars": 373
+          },
+          {
+            "name": "pptx",
+            "blockChars": 394
+          },
+          {
+            "name": "s3plus-upload",
+            "blockChars": 344
+          },
+          {
+            "name": "skill-creator",
+            "blockChars": 372
+          },
+          {
+            "name": "video-frames",
+            "blockChars": 194
+          },
+          {
+            "name": "xlsx",
+            "blockChars": 568
+          },
+          {
+            "name": "find-skills",
+            "blockChars": 477
+          },
+          {
+            "name": "react-best-practices-cn",
+            "blockChars": 262
+          },
+          {
+            "name": "self-improving-agent",
+            "blockChars": 637
+          },
+          {
+            "name": "tavily",
+            "blockChars": 222
+          },
+          {
+            "name": "web-search",
+            "blockChars": 614
+          }
+        ]
+      },
+      "tools": {
+        "listChars": 3135,
+        "schemaChars": 20533,
+        "entries": [
+          {
+            "name": "read",
+            "summaryChars": 298,
+            "schemaChars": 392,
+            "propertiesCount": 4
+          },
+          {
+            "name": "edit",
+            "summaryChars": 129,
+            "schemaChars": 591,
+            "propertiesCount": 6
+          },
+          {
+            "name": "write",
+            "summaryChars": 127,
+            "schemaChars": 313,
+            "propertiesCount": 3
+          },
+          {
+            "name": "exec",
+            "summaryChars": 181,
+            "schemaChars": 1086,
+            "propertiesCount": 12
+          },
+          {
+            "name": "process",
+            "summaryChars": 85,
+            "schemaChars": 961,
+            "propertiesCount": 12
+          },
+          {
+            "name": "browser",
+            "summaryChars": 1251,
+            "schemaChars": 1897,
+            "propertiesCount": 28
+          },
+          {
+            "name": "canvas",
+            "summaryChars": 106,
+            "schemaChars": 661,
+            "propertiesCount": 18
+          },
+          {
+            "name": "nodes",
+            "summaryChars": 115,
+            "schemaChars": 1741,
+            "propertiesCount": 36
+          },
+          {
+            "name": "message",
+            "summaryChars": 89,
+            "schemaChars": 4181,
+            "propertiesCount": 85
+          },
+          {
+            "name": "tts",
+            "summaryChars": 152,
+            "schemaChars": 223,
+            "propertiesCount": 2
+          },
+          {
+            "name": "agents_list",
+            "summaryChars": 118,
+            "schemaChars": 33,
+            "propertiesCount": 0
+          },
+          {
+            "name": "sessions_list",
+            "summaryChars": 54,
+            "schemaChars": 212,
+            "propertiesCount": 4
+          },
+          {
+            "name": "sessions_history",
+            "summaryChars": 36,
+            "schemaChars": 161,
+            "propertiesCount": 3
+          },
+          {
+            "name": "sessions_send",
+            "summaryChars": 84,
+            "schemaChars": 273,
+            "propertiesCount": 5
+          },
+          {
+            "name": "sessions_spawn",
+            "summaryChars": 134,
+            "schemaChars": 492,
+            "propertiesCount": 12
+          },
+          {
+            "name": "subagents",
+            "summaryChars": 105,
+            "schemaChars": 191,
+            "propertiesCount": 4
+          },
+          {
+            "name": "session_status",
+            "summaryChars": 207,
+            "schemaChars": 89,
+            "propertiesCount": 2
+          },
+          {
+            "name": "web_search",
+            "summaryChars": 175,
+            "schemaChars": 895,
+            "propertiesCount": 6
+          },
+          {
+            "name": "web_fetch",
+            "summaryChars": 129,
+            "schemaChars": 374,
+            "propertiesCount": 3
+          },
+          {
+            "name": "feishu_doc",
+            "summaryChars": 116,
+            "schemaChars": 612,
+            "propertiesCount": 6
+          },
+          {
+            "name": "feishu_app_scopes",
+            "summaryChars": 102,
+            "schemaChars": 33,
+            "propertiesCount": 0
+          },
+          {
+            "name": "feishu_wiki",
+            "summaryChars": 83,
+            "schemaChars": 971,
+            "propertiesCount": 10
+          },
+          {
+            "name": "feishu_drive",
+            "summaryChars": 81,
+            "schemaChars": 486,
+            "propertiesCount": 5
+          },
+          {
+            "name": "feishu_bitable_get_meta",
+            "summaryChars": 114,
+            "schemaChars": 170,
+            "propertiesCount": 1
+          },
+          {
+            "name": "feishu_bitable_list_fields",
+            "summaryChars": 76,
+            "schemaChars": 255,
+            "propertiesCount": 2
+          },
+          {
+            "name": "feishu_bitable_list_records",
+            "summaryChars": 64,
+            "schemaChars": 462,
+            "propertiesCount": 4
+          },
+          {
+            "name": "feishu_bitable_get_record",
+            "summaryChars": 46,
+            "schemaChars": 335,
+            "propertiesCount": 3
+          },
+          {
+            "name": "feishu_bitable_create_record",
+            "summaryChars": 44,
+            "schemaChars": 549,
+            "propertiesCount": 3
+          },
+          {
+            "name": "feishu_bitable_update_record",
+            "summaryChars": 50,
+            "schemaChars": 473,
+            "propertiesCount": 4
+          },
+          {
+            "name": "feishu_bitable_create_app",
+            "summaryChars": 57,
+            "schemaChars": 243,
+            "propertiesCount": 2
+          },
+          {
+            "name": "feishu_bitable_create_field",
+            "summaryChars": 46,
+            "schemaChars": 911,
+            "propertiesCount": 5
+          },
+          {
+            "name": "memory_search",
+            "summaryChars": 334,
+            "schemaChars": 139,
+            "propertiesCount": 3
+          },
+          {
+            "name": "memory_get",
+            "summaryChars": 151,
+            "schemaChars": 128,
+            "propertiesCount": 3
+          }
+        ]
+      }
+    },
+    "inputTokens": 22379,
+    "outputTokens": 104,
+    "cacheRead": 0,
+    "cacheWrite": 0,
+    "totalTokens": 22379,
+    "totalTokensFresh": true
+  }
+}

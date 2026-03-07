@@ -1,0 +1,51 @@
+{
+  "providers": {
+    "kubeplex-maas": {
+      "baseUrl": "https://mmc.sankuai.com/openclaw/v1",
+      "apiKey": "catpaw",
+      "api": "openai-completions",
+      "headers": {
+        "X-User-Id": "chenglong16",
+        "X-Conversation-Id": "ljpiafzfnkwf0acnd6x0"
+      },
+      "models": [
+        {
+          "id": "claude-opus-4.5",
+          "name": "Claude Opus 4.5 (via MaaS)",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 200000,
+          "maxTokens": 32000,
+          "api": "openai-completions"
+        },
+        {
+          "id": "MiniMax-M2.5",
+          "name": "MiniMax M2.5 (via MaaS)",
+          "reasoning": false,
+          "input": [
+            "text",
+            "image"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 128000,
+          "maxTokens": 8192,
+          "api": "openai-completions"
+        }
+      ]
+    }
+  }
+}
