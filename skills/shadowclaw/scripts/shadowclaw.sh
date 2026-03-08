@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 #
 # ShadowClaw — OpenClaw Snapshot & Restore
-# CatPawClaw v2.2
+# CatPawClaw v2.3
 #
 # Usage:
 #   shadowclaw snapshot [-o dir] [--dry-run] [--no-desensitize] [--incremental]
 #   shadowclaw restore  [--force] <snapshot-dir>
+#   shadowclaw merge    [--force] [--dry-run] <snapshot-dir>
 #   shadowclaw push     [-r repo] [-b branch]
 #   shadowclaw verify   <snapshot-dir>
 #   shadowclaw cron     [--interval 6h] [--remove]
@@ -14,7 +15,7 @@
 #
 set -euo pipefail
 
-VERSION="2.2.0"
+VERSION="2.3.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_FILE="${SHADOWCLAW_CONFIG:-${SCRIPT_DIR}/../config/default.json}"
 STATE_DIR="${OPENCLAW_DIR:-$HOME/.openclaw}"
@@ -679,6 +680,121 @@ cmd_restore() {
   info "回滚备份: $backup_dir"
 }
 
+# ── CMD: merge ──────────────────────────────────────────────────────
+# Merge snapshot into local state: only add missing files, never overwrite.
+# Like git merge: local wins on conflict, snapshot fills gaps.
+# openclaw.json is ALWAYS skipped (snapshot has redacted secrets).
+cmd_merge() {
+  local snapshot_dir="" force=false dry_run=false
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --force|-f) force=true; shift ;;
+      --dry-run)  dry_run=true; shift ;;
+      *)          snapshot_dir="$1"; shift ;;
+    esac
+  done
+
+  [[ -z "$snapshot_dir" ]] && { err "请指定快照目录"; echo "用法: shadowclaw merge [--force] [--dry-run] <snapshot-dir>"; exit 1; }
+  [[ -d "$snapshot_dir" ]] || { err "快照目录不存在: $snapshot_dir"; exit 1; }
+
+  section "ShadowClaw Merge v${VERSION}"
+  info "快照源: $snapshot_dir"
+  info "目标:   $STATE_DIR"
+  $dry_run && warn "模拟运行模式 (--dry-run)"
+
+  # Show manifest
+  if [[ -f "$snapshot_dir/manifest.json" ]]; then
+    info "快照信息:"
+    jq -r '"  版本: \(.version)\n  时间: \(.generated_at)\n  来源: \(.generated_by)"' "$snapshot_dir/manifest.json" 2>/dev/null || true
+  fi
+
+  if [[ "$force" == "false" && "$dry_run" == "false" ]]; then
+    warn "此操作将把快照中缺失的文件合并到本地（不覆盖已有文件）"
+    read -p "继续? [y/N] " -n 1 -r
+    echo
+    [[ $REPLY =~ ^[Yy]$ ]] || { info "已取消"; exit 0; }
+  fi
+
+  # ─ Backup current (even merge deserves a safety net) ─
+  if [[ "$dry_run" == "false" ]]; then
+    local backup_dir="${STATE_DIR}/backup/merge-$(date +%Y%m%d-%H%M%S)"
+    section "📦 备份当前状态"
+    mkdir -p "$backup_dir"
+    for item in openclaw.json agents credentials memory workspace cron identity .env; do
+      [[ -e "$STATE_DIR/$item" ]] && cp -r "$STATE_DIR/$item" "$backup_dir/" 2>/dev/null || true
+    done
+    ok "已备份到: $backup_dir"
+  fi
+
+  # ─ Skip list: files that should NEVER be merged from snapshot ─
+  local -a SKIP_FILES=("openclaw.json" "manifest.json" "secrets-template.json")
+  # Also skip any snapshot report dirs (not part of runtime state)
+  local -a SKIP_DIRS=("report")
+
+  _is_skipped_file() {
+    local name="$1"
+    for s in "${SKIP_FILES[@]}"; do
+      [[ "$name" == "$s" ]] && return 0
+    done
+    return 1
+  }
+
+  _is_skipped_dir() {
+    local name="$1"
+    for s in "${SKIP_DIRS[@]}"; do
+      [[ "$name" == "$s" ]] && return 0
+    done
+    return 1
+  }
+
+  # ─ Merge: walk snapshot, copy only what's missing locally ─
+  section "🔀 合并文件（本地优先）"
+
+  local stats_added=0 stats_skipped=0 stats_existed=0
+
+  while IFS= read -r -d '' src_file; do
+    local rel="${src_file#$snapshot_dir/}"
+
+    # Skip meta/config files
+    local top_name="${rel%%/*}"
+    [[ "$top_name" == "$rel" ]] && {
+      # Top-level file
+      _is_skipped_file "$rel" && { (( stats_skipped++ )) || true; continue; }
+    }
+    _is_skipped_dir "$top_name" && { (( stats_skipped++ )) || true; continue; }
+
+    # Also skip any file matching 快照报告_*.md
+    [[ "$(basename "$rel")" == 快照报告_* ]] && { (( stats_skipped++ )) || true; continue; }
+
+    local dst="$STATE_DIR/$rel"
+
+    if [[ -f "$dst" ]]; then
+      # File exists locally → keep local version (no overwrite)
+      (( stats_existed++ )) || true
+    else
+      # File missing locally → add from snapshot
+      if [[ "$dry_run" == "false" ]]; then
+        mkdir -p "$(dirname "$dst")"
+        cp "$src_file" "$dst"
+      fi
+      ok "+ $rel"
+      (( stats_added++ )) || true
+    fi
+  done < <(find "$snapshot_dir" -type f -print0 2>/dev/null)
+
+  # ─ Summary ─
+  section "完成"
+  info "新增: $stats_added | 已存在(跳过): $stats_existed | 排除: $stats_skipped"
+  if [[ "$dry_run" == "true" ]]; then
+    info "（模拟运行，未实际写入文件）"
+  else
+    info "本地已有文件未被覆盖 ✅"
+    info "openclaw.json 未被替换 ✅"
+    [[ -n "${backup_dir:-}" ]] && info "回滚备份: $backup_dir"
+  fi
+}
+
 # ── CMD: push ───────────────────────────────────────────────────────
 cmd_push() {
   local repo="" branch="" snapshot_dir=""
@@ -966,8 +1082,53 @@ cmd_test() {
   # Test 12: backup created during restore
   _assert "恢复前自动备份存在" test -d "$restore_target/backup"
 
+  # ── Merge tests ──────────────────────────────────────────────────
+  # Setup: create a fake "local" state and a fake "snapshot" with overlapping + unique files
+  local merge_local; merge_local=$(mktemp -d)
+  local merge_snap; merge_snap=$(mktemp -d)
+
+  # Local state: has file_a and file_common
+  mkdir -p "$merge_local/workspace/memory"
+  echo "local-content-a" > "$merge_local/workspace/memory/local_only.md"
+  echo "local-version" > "$merge_local/workspace/memory/common.md"
+  echo '{"local":"config"}' > "$merge_local/openclaw.json"
+
+  # Snapshot: has file_b, file_common (different content), and openclaw.json (redacted)
+  mkdir -p "$merge_snap/workspace/memory"
+  echo "snap-content-b" > "$merge_snap/workspace/memory/snap_only.md"
+  echo "snap-version" > "$merge_snap/workspace/memory/common.md"
+  echo '{"secret":"{{SECRET:redacted}}"}' > "$merge_snap/openclaw.json"
+  echo '{}' > "$merge_snap/manifest.json"
+  echo '{}' > "$merge_snap/secrets-template.json"
+  mkdir -p "$merge_snap/report"
+  echo "report" > "$merge_snap/report/some_report.md"
+
+  # Test 13: merge --dry-run works
+  _assert "merge --dry-run 可执行" env OPENCLAW_DIR="$merge_local" bash "${BASH_SOURCE[0]}" merge --force --dry-run "$merge_snap"
+
+  # Test 14: dry-run does NOT add missing file
+  _assert "dry-run 不写入文件" test ! -f "$merge_local/workspace/memory/snap_only.md"
+
+  # Test 15: actual merge
+  _assert "merge --force 可执行" env OPENCLAW_DIR="$merge_local" bash "${BASH_SOURCE[0]}" merge --force "$merge_snap"
+
+  # Test 16: missing file was added
+  _assert "合并补充了缺失文件" test -f "$merge_local/workspace/memory/snap_only.md"
+
+  # Test 17: existing file was NOT overwritten (local wins)
+  _assert "已有文件未被覆盖（本地优先）" grep -q "local-version" "$merge_local/workspace/memory/common.md"
+
+  # Test 18: openclaw.json was NOT replaced
+  _assert "openclaw.json 未被替换" grep -q "local" "$merge_local/openclaw.json"
+
+  # Test 19: report dir was not merged
+  _assert "report 目录未合并" test ! -f "$merge_local/report/some_report.md"
+
+  # Test 20: backup created during merge
+  _assert "合并前自动备份存在" test -d "$merge_local/backup"
+
   # Cleanup
-  rm -rf "$snap" "$restore_target"
+  rm -rf "$snap" "$restore_target" "$merge_local" "$merge_snap"
 
   # Summary
   section "测试结果"
@@ -989,25 +1150,28 @@ ShadowClaw v${VERSION} — OpenClaw Snapshot & Restore
 
 命令:
   snapshot  [-o dir] [--dry-run] [--incremental]       生成快照
-  restore   [--force] <snapshot-dir>                   恢复环境
+  restore   [--force] <snapshot-dir>                   覆盖恢复（全量替换）
+  merge     [--force] [--dry-run] <snapshot-dir>       合并快照（只补缺失，不覆盖）
   push      [-r repo] [-b branch] [-s snapshot-dir]    推送到 GitHub
   verify    <snapshot-dir>                             验证快照完整性
   cron      [--interval 6h] [--push] [--remove]        配置定时快照(+推送)
   diff      <snapshot-dir>                             对比快照与当前差异
-  test                                                 运行自测（12项）
+  test                                                 运行自测
   help                                                 显示帮助
 
 示例:
   shadowclaw snapshot                     # 完整快照
   shadowclaw snapshot --incremental       # 增量快照（仅变更文件）
   shadowclaw snapshot --dry-run           # 模拟运行
-  shadowclaw restore ./my-snapshot        # 恢复
+  shadowclaw restore ./my-snapshot        # 覆盖恢复
+  shadowclaw merge ./my-snapshot          # 合并快照（本地优先）
+  shadowclaw merge --dry-run ./snap       # 预览合并（不写入）
   shadowclaw push -b main              # 推送到 catclaw 分支
   shadowclaw cron --interval 6h           # 每6小时自动快照
   shadowclaw cron --interval 6h --push    # 每6小时快照+推送
   shadowclaw cron --remove                # 移除定时任务
   shadowclaw diff ./my-snapshot           # 查看差异
-  shadowclaw test                         # 运行12项自测
+  shadowclaw test                         # 运行自测
 
 环境变量:
   GH_TOKEN / GITHUB_TOKEN   GitHub 访问令牌
@@ -1027,6 +1191,7 @@ main() {
   case "$cmd" in
     snapshot|s)  cmd_snapshot "$@" ;;
     restore|r)   cmd_restore "$@" ;;
+    merge|m)     cmd_merge "$@" ;;
     push|p)      cmd_push "$@" ;;
     verify|v)    cmd_verify "$@" ;;
     cron|c)      cmd_cron "$@" ;;
