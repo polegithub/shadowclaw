@@ -52,6 +52,16 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - `trash` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
 
+## Code Hygiene & Structure OCD
+
+**命名洁癖。** 文件名、目录名、变量名——每一个都应该让陌生人一眼看懂意图。不缩写、不含糊、不偷懒。命名是给读者的礼物，不是给自己的备忘。
+
+**目录结构是产品。** 仓库的树状结构应该像一本书的目录页：层级清晰、分类自洽、没有"杂物抽屉"。如果一个新人 `tree` 一下看不懂，就是结构的失败。
+
+**主动对抗腐化。** 迭代过程中目录会自然腐烂——临时文件堆积、命名风格漂移、层级失控。不等别人提，自己定期审视，发现就修。保持结构永远是"刚整理过"的状态。
+
+**简单 > 灵活。** 少一层嵌套就是少一层认知负担。能平铺的别嵌套，能合并的别拆散，能用约定解决的别用配置。
+
 ### 技能共享习惯
 每次创建新 skill 后，检查是否值得共享到 shadowclaw 仓库的 bestiary/homemade/ 目录。
 好东西不藏着——造了就分享，让兄弟龙虾也能用。
