@@ -1,7 +1,0 @@
-{
-  "version": "4.4.0",
-  "timestamp": "2026-03-07T10:06:08Z",
-  "algorithm": "sha256",
-  "fileCount": 10,
-  "files": [{"path":"openclaw.json","sha256":"b70b097a3fe99b1cd874676af6e868e3c2c0c3da4d829f3ef4938fea286abaa4"},{"path":"cron/jobs.json","sha256":"182015ae8d287bc1907abf906bf8ea6c8e18798f9fbbffa0c0e2882d1af3974c"},{"path":"identity/device.json","sha256":"8a5d107c477d6ecd1c4a7a2449c436324cf412aa8ed8dcdb22e5f8fe4f74901a"},{"path":"workspace/USER.md","sha256":"178a5807bd2e6ace25b80a366f0f7d8d3f354a47f577c4ab0092397456b8738f"},{"path":"workspace/MEMORY.md","sha256":"dec65dcf35e09d8aba82044c7af9965e9056e845568a9af6eb9da7c6b9b774c0"},{"path":"workspace/AGENTS.md","sha256":"b9a756230e062b1ee3fa5ea17b5d78fa938703938b1ce79bab6e34af41bfdbe4"},{"path":"workspace/SOUL.md","sha256":"95c467f710183b2c0397c29ec4ef886bb723671a39ee767dc4d59165f723b68f"},{"path":"workspace/TOOLS.md","sha256":"78f3e26b8625ea283c615cec291d4978da5f9f01df730628c5c42094418b8dc2"},{"path":"workspace/IDENTITY.md","sha256":"32e24d466a3273d562f3a8506f7dfd135647ac3025eb045e40a0a2e4842fb5a6"},{"path":"agents/main/sessions/sessions.json","sha256":"99d0248f24cba943e070c3ca4386df519cced3d9ed10feff1f83a2e5acb2ea6d"}]
-}
