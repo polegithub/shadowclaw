@@ -11,18 +11,11 @@
       "credentials/oauth.json",
       "credentials/feishu-pairing.json",
       "credentials/whatsapp/default/creds.json",
-      "memory/main.sqlite",
-      "workspace/AGENTS.md",
-      "workspace/SOUL.md",
-      "workspace/USER.md",
-      "workspace/IDENTITY.md",
-      "workspace/MEMORY.md",
-      "workspace/PEERS.md"
+      "memory/main.sqlite"
     ],
     "directories": [
       "memory/lancedb",
-      "workspace/memory",
-      "workspace/diary"
+      "workspace"
     ]
   },
   "important": {
@@ -32,23 +25,15 @@
       "cron/jobs.json",
       "identity/device.json",
       "identity/device-auth.json",
-      ".env",
-      "workspace/TOOLS.md",
-      "workspace/HEARTBEAT.md",
-      "workspace/BOOTSTRAP.md",
-      "workspace/tasks.json"
+      ".env"
     ],
     "directories": [
-      "workspace/skills",
-      "skills",
-      "workspace/diary",
-      "workspace/report"
+      "skills"
     ],
     "glob": [
       "agents/main/sessions/*.jsonl",
       "feishu/dedup/*.json",
-      "devices/*.json",
-      "workspace/*.md"
+      "devices/*.json"
     ]
   },
   "optional": {
@@ -72,7 +57,9 @@
       "**/__pycache__/**",
       "openclaw.json.bak*",
       "*.lock",
-      "snapshots/**"
+      "snapshots/**",
+      "workspace/.shadowclaw/**",
+      "workspace/**/*.pyc"
     ]
   },
   "size_limits": {
