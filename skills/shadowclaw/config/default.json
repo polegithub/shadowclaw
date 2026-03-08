@@ -59,7 +59,35 @@
       "*.lock",
       "snapshots/**",
       "workspace/.shadowclaw/**",
-      "workspace/**/*.pyc"
+      "workspace/**/*.pyc",
+      "workspace/**/*.sqlite",
+      "workspace/**/*.db",
+      "workspace/**/*.zip",
+      "workspace/**/*.tar",
+      "workspace/**/*.tar.gz",
+      "workspace/**/*.tgz",
+      "workspace/**/*.rar",
+      "workspace/**/*.7z",
+      "workspace/**/*.bin",
+      "workspace/**/*.dat",
+      "workspace/**/*.pkl",
+      "workspace/**/*.parquet",
+      "workspace/**/*.csv",
+      "workspace/**/*.mp4",
+      "workspace/**/*.mp3",
+      "workspace/**/*.wav",
+      "workspace/**/*.iso",
+      "workspace/**/.env",
+      "workspace/**/.env.*",
+      "workspace/**/secrets.*",
+      "workspace/**/credentials.*",
+      "workspace/**/*secret*",
+      "workspace/**/*private_key*",
+      "workspace/**/*.pem",
+      "workspace/**/*.key",
+      "workspace/**/*.p12",
+      "workspace/**/*.pfx",
+      "workspace/**/*.jks"
     ]
   },
   "size_limits": {
@@ -67,7 +95,8 @@
     "overrides": {
       "memory/main.sqlite": 100,
       "agents/main/sessions/*.jsonl": 50,
-      "memory/lancedb/**": 100
+      "memory/lancedb/**": 100,
+      "workspace/**": 5
     }
   },
   "desensitize": {
@@ -82,7 +111,14 @@
       ".env"
     ],
     "glob_files": [
-      "agents/main/sessions/*.jsonl"
+      "agents/main/sessions/*.jsonl",
+      "workspace/**/*.json",
+      "workspace/**/*.env",
+      "workspace/**/*.yml",
+      "workspace/**/*.yaml",
+      "workspace/**/*.toml",
+      "workspace/**/*.conf",
+      "workspace/**/*.cfg"
     ],
     "json_patterns": [
       "token",
